@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CINEXIS • Ad-Free Tamil Cinema & Series</title>
+    <meta name="description" content="Watch & stream the latest Tamil movies and web series in high quality with zero ads.">
+    <meta name="referrer" content="no-referrer">
+    <meta name="theme-color" content="#e50914">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-base: #060608;
+            --bg-surface: #101015;
+            --bg-card: rgba(22, 22, 28, 0.7);
+            --bg-card-hover: rgba(32, 32, 42, 0.9);
+            --accent: #e50914;
+            --accent-glow: rgba(229, 9, 20, 0.45);
+            --cyan: #00f0ff;
+            --text-main: #ffffff;
+            --text-muted: #8e8e9a;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(229, 9, 20, 0.3);
+            --bottom-nav-height: 64px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: calc(var(--bottom-nav-height) + 20px);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(229, 9, 20, 0.12) 0px, transparent 40%),
+                radial-gradient(at 100% 100%, rgba(0, 240, 255, 0.06) 0px, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+        /* Top Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(6, 6, 8, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-shadow: 0 0 15px var(--accent-glow);
+            text-transform: uppercase;
+        }
+
+        .brand-tag {
+            font-size: 0.65rem;
+            background: rgba(229, 9, 20, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--border-glow);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover, .icon-btn:active {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        /* Search Bar Drawer (Collapsible) */
+        .search-container {
+            padding: 0.8rem 1rem;
+            background: rgba(16, 16, 21, 0.95);
+            border-bottom: 1px solid var(--border);
+            display: none;
+            animation: slideDown 0.25s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input-box i {
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 0.75rem 1rem 0.75rem 2.6rem;
+            color: #fff;
+            font-size: 0.92rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            position: relative;
+            margin: 1rem;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: linear-gradient(135deg, #1c0809 0%, #101015 100%);
+            border: 1px solid var(--border);
+            padding: 2rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(229,9,20,0.25), transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--cyan);
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 50px;
+            width: fit-content;
+        }
+
+        .hero-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+            z-index: 2;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0.7rem 1.4rem;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px var(--accent-glow);
+            transition: all 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+
+        /* Year Filter Pills (Horizontal Scroll) */
+        .year-pills-wrapper {
+            padding: 0 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .year-pills {
+            display: flex;
+            gap: 0.6rem;
+            overflow-x: auto;
+            padding-bottom: 0.4rem;
+            scrollbar-width: none;
+        }
+
+        .year-pills::-webkit-scrollbar { display: none; }
+
+        .year-pill {
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.55rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .year-pill.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        /* Movies Grid */
+        .movies-grid-container {
+            padding: 0 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        @media (max-width: 599px) {
+            .movies-grid { grid-template-columns: 1fr; gap: .75rem; }
+        }
+
+        @media (min-width: 900px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.15rem;
+            }
+        }
+
+        .movie-card {
+            background: linear-gradient(145deg, rgba(22,22,28,.92), rgba(10,10,14,.95));
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, border-color .35s;
+            position: relative;
+            isolation: isolate;
+            animation: cardReveal .55s both;
+        }
+
+        .movie-card:nth-child(2n) { animation-delay: .04s; }
+        .movie-card:nth-child(3n) { animation-delay: .08s; }
+        .movie-card:nth-child(4n) { animation-delay: .12s; }
+
+        .movie-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(120deg, transparent 20%, rgba(229,9,20,.35), transparent 70%);
+            transform: translateX(-120%);
+            transition: transform .65s ease;
+            z-index: -1;
+        }
+
+        .movie-card:hover::before { transform: translateX(120%); }
+
+        .movie-card:hover, .movie-card:active {
+            transform: translateY(-7px) scale(1.015);
+            border-color: rgba(229, 9, 20, 0.6);
+            background: var(--bg-card-hover);
+            box-shadow: 0 18px 45px rgba(0,0,0,.6), 0 0 25px rgba(229,9,20,.12);
+        }
+
+        .card-poster {
+            aspect-ratio: 16 / 9;
+            width: 100%;
+            background: linear-gradient(135deg, #181822 0%, #0d0d12 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-poster .folder-icon {
+            font-size: 2.2rem;
+            color: var(--accent);
+            opacity: 0.85;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover .folder-icon {
+            transform: scale(1.22) rotate(-3deg);
+            filter: drop-shadow(0 0 12px rgba(229,9,20,.55));
+        }
+
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(18px) scale(.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes posterPulse {
+            0%,100% { opacity: .7; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 599px) {
+            .movie-card {
+                display: grid;
+                grid-template-columns: 145px 1fr;
+                min-height: 96px;
+            }
+            .card-poster {
+                aspect-ratio: 16 / 9;
+                height: 100%;
+                min-height: 96px;
+            }
+            .card-details { padding: .7rem .8rem; }
+            .card-title { font-size: .9rem; }
+        }
+
+        .quality-tag {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--cyan);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .card-details {
+            padding: 0.75rem 0.65rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--text-main);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-play-tag {
+            color: var(--accent);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Quality Bottom Sheet Modal (Drawer) */
+        .bottom-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .bottom-sheet {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            border-top-left-radius: var(--radius-lg);
+            border-top-right-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .sheet-handle-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            cursor: pointer;
+            padding-bottom: 0.4rem;
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.8rem;
+        }
+
+        .sheet-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .sheet-close {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .sheet-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .quality-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.9rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quality-card:hover, .quality-card:active {
+            background: rgba(229, 9, 20, 0.12);
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .quality-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            max-width: 70%;
+        }
+
+        .quality-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .quality-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .badge-pill {
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+
+        /* CINEXIS PREMIUM STREAM PLAYER */
+        .player-modal {
+            position: fixed; inset: 0; z-index: 2000;
+            display: none; align-items: center; justify-content: center;
+            background: radial-gradient(circle at 50% 0%, rgba(229,9,20,.14), transparent 45%), #020203;
+            opacity: 0;
+        }
+        .player-modal.player-opening {
+            display: flex;
+            animation: playerEnter .42s cubic-bezier(.16,1,.3,1) forwards;
+        }
+        .player-modal.player-closing {
+            display: flex;
+            animation: playerExit .22s ease forwards;
+        }
+        @keyframes playerEnter { from{opacity:0;transform:scale(1.025)} to{opacity:1;transform:scale(1)} }
+        @keyframes playerExit { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(.99)} }
+
+        .player-top-bar {
+            position:absolute; inset:0 0 auto 0; z-index:70;
+            display:flex; align-items:center; justify-content:space-between; gap:.7rem;
+            padding:max(.75rem,env(safe-area-inset-top)) 1rem 1rem;
+            background:linear-gradient(to bottom,rgba(0,0,0,.96),rgba(0,0,0,.35),transparent);
+            transition:opacity .28s ease, transform .28s ease;
+        }
+        .player-modal.controls-hidden .player-top-bar {
+            opacity:0; transform:translateY(-12px); pointer-events:none;
+        }
+        .player-back-btn,.player-action-link,.pctrl-btn {
+            border:1px solid rgba(255,255,255,.14);
+            background:rgba(255,255,255,.08);
+            color:#fff; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+            border-radius:12px; cursor:pointer;
+            transition:transform .18s,background .18s,border-color .18s;
+        }
+        .player-back-btn:hover,.player-action-link:hover,.pctrl-btn:hover {
+            transform:translateY(-1px); background:rgba(229,9,20,.72);
+            border-color:rgba(255,255,255,.25);
+        }
+        .player-back-btn,.player-action-link {
+            display:inline-flex; align-items:center; gap:.45rem;
+            padding:.52rem .8rem; font-size:.8rem; font-weight:800;
+            text-decoration:none;
+        }
+        .player-title-text {
+            flex:1; min-width:0; max-width:48%;
+            font-size:.94rem; font-weight:800; white-space:nowrap; overflow:hidden;
+            text-overflow:ellipsis; text-align:center; text-shadow:0 2px 16px #000;
+        }
+        .cinema-stage {
+            position:relative; width:min(96vw,1500px); aspect-ratio:16/9; max-height:84vh;
+            border-radius:16px; overflow:hidden; background:#000;
+            border:1px solid rgba(255,255,255,.09);
+            box-shadow:0 30px 100px rgba(0,0,0,.9),0 0 50px rgba(229,9,20,.08);
+        }
+        .video-wrapper {
+            width:100%; height:100%; position:relative; background:#000;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .video-wrapper video,.video-wrapper iframe {
+            width:100%; height:100%; border:0; outline:0; background:#000; object-fit:contain;
+        }
+        #cinemaVideo { display:block; width:100%; height:100%; object-fit:contain; cursor:pointer; }
+        #cinemaVideo::-webkit-media-controls { display:none !important; }
+
+        .player-click-layer { position:absolute; inset:0; z-index:10; pointer-events:none; }
+        .player-center-play {
+            position:absolute; left:50%; top:50%; width:72px; height:72px;
+            transform:translate(-50%,-50%) scale(.9); display:grid; place-items:center;
+            border:1px solid rgba(255,255,255,.2); border-radius:50%;
+            background:rgba(0,0,0,.44); color:#fff; font-size:1.45rem;
+            box-shadow:0 15px 45px rgba(0,0,0,.5),0 0 30px rgba(229,9,20,.12);
+            opacity:0; transition:opacity .18s,transform .18s;
+        }
+        .player-center-play.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+        .player-controls {
+            position:absolute; left:0; right:0; bottom:0; z-index:50;
+            padding:.9rem .9rem .8rem;
+            background:linear-gradient(to top,rgba(0,0,0,.96),rgba(0,0,0,.68),transparent);
+            transition:opacity .28s,transform .28s;
+        }
+        .player-modal.controls-hidden .player-controls {
+            opacity:0; transform:translateY(12px); pointer-events:none;
+        }
+        .player-progress-wrap { position:relative; padding:7px 0; cursor:pointer; }
+        .player-progress {
+            appearance:none; -webkit-appearance:none; width:100%; height:4px;
+            border-radius:999px; background:rgba(255,255,255,.22); outline:0; cursor:pointer;
+        }
+        .player-progress::-webkit-slider-thumb {
+            -webkit-appearance:none; width:13px; height:13px; border-radius:50%;
+            background:var(--accent); box-shadow:0 0 0 3px rgba(229,9,20,.17);
+        }
+        .player-progress::-moz-range-thumb { width:13px; height:13px; border:0; border-radius:50%; background:var(--accent); }
+
+        .player-control-row { display:flex; align-items:center; gap:.5rem; }
+        .pctrl-btn {
+            width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center;
+            padding:0; flex:0 0 auto; font-weight:800;
+        }
+        .time-readout {
+            min-width:98px; color:rgba(255,255,255,.85);
+            font-size:.76rem; font-weight:700; font-variant-numeric:tabular-nums;
+        }
+        .player-spacer { flex:1; }
+        .volume-wrap { display:flex; align-items:center; gap:.35rem; }
+        .volume-range { width:72px; accent-color:var(--accent); }
+        .player-status-pill {
+            position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+            padding:.45rem .8rem; border-radius:999px; background:rgba(0,0,0,.64);
+            color:rgba(255,255,255,.82); font-size:.72rem; font-weight:700;
+            pointer-events:none; opacity:0; transition:opacity .2s; z-index:35;
+        }
+        .player-status-pill.show { opacity:1; }
+
+        .player-loading {
+            position:absolute; inset:0; display:none; place-items:center; z-index:60;
+            background:radial-gradient(circle,rgba(18,18,22,.34),rgba(0,0,0,.76));
+        }
+        .player-loading.active { display:grid; }
+        .player-loading-ring {
+            width:54px; height:54px; border:3px solid rgba(255,255,255,.12);
+            border-top-color:var(--accent); border-radius:50%; animation:spin .75s linear infinite;
+        }
+        .player-hint {
+            position:absolute; left:50%; bottom:86px; z-index:36;
+            transform:translateX(-50%); padding:.42rem .72rem; border-radius:999px;
+            background:rgba(0,0,0,.56); color:rgba(255,255,255,.72);
+            font-size:.68rem; pointer-events:none; animation:hintPop 1.8s 1s forwards; opacity:0;
+        }
+        @keyframes hintPop {
+            0%{opacity:0;transform:translate(-50%,8px)}
+            20%,70%{opacity:1;transform:translate(-50%,0)}
+            100%{opacity:0;transform:translate(-50%,-4px)}
+        }
+
+        .cinema-stage:fullscreen,
+        .cinema-stage:-webkit-full-screen {
+            width:100vw; height:100vh; max-width:none; max-height:none;
+            aspect-ratio:auto; border:0; border-radius:0;
+        }
+        .player-modal.is-native-fullscreen .cinema-stage {
+            border-radius:0; width:100vw; height:100vh; max-width:none; max-height:none;
+        }
+
+        .history-section { margin:0 0 1.8rem; }
+        .history-row {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+            gap:.8rem; padding:0 1rem;
+        }
+        .history-card {
+            position:relative; min-height:116px; padding:1rem;
+            display:flex; flex-direction:column; justify-content:flex-end;
+            border:1px solid var(--border); border-radius:16px; overflow:hidden; cursor:pointer;
+            background:radial-gradient(circle at 80% 20%,rgba(229,9,20,.2),transparent 40%),linear-gradient(145deg,#18181f,#0b0b10);
+            transition:.25s ease;
+        }
+        .history-card:hover { transform:translateY(-4px); border-color:rgba(229,9,20,.55); box-shadow:0 12px 32px rgba(0,0,0,.45); }
+        .history-card-title { font-size:.86rem; font-weight:800; line-height:1.35; padding-right:1.7rem; }
+        .history-card-meta { display:flex; justify-content:space-between; gap:.5rem; margin-top:.4rem; color:var(--text-muted); font-size:.68rem; }
+        .history-progress { position:absolute; left:0; right:0; bottom:0; height:3px; background:rgba(255,255,255,.1); }
+        .history-progress > span { display:block; height:100%; background:var(--accent); }
+        .history-remove {
+            position:absolute; top:.55rem; right:.55rem; width:28px; height:28px; border-radius:50%;
+            border:1px solid rgba(255,255,255,.12); background:rgba(0,0,0,.48); color:#fff; cursor:pointer;
+        }
+        .history-empty {
+            margin:0 1rem; padding:1.3rem; border:1px dashed var(--border);
+            border-radius:14px; color:var(--text-muted); text-align:center; font-size:.8rem;
+        }
+
+        @media (max-width:700px) {
+            .player-top-bar { padding-left:.55rem; padding-right:.55rem; }
+            .player-action-link span { display:none; }
+            .player-title-text { max-width:43%; font-size:.78rem; }
+            .cinema-stage {
+                width:100vw; height:100dvh; max-height:none; aspect-ratio:auto; border:0; border-radius:0;
+            }
+            .time-readout { min-width:83px; font-size:.69rem; }
+            .volume-wrap { display:none; }
+            .pctrl-btn { width:36px; height:36px; }
+            .history-row { grid-template-columns:1fr; }
+        }
+
+        /* Loading Spinner */
+        .spinner-loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottom-nav-height);
+            background: rgba(10, 10, 14, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 99;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item i {
+            font-size: 1.15rem;
+        }
+
+        .nav-item.active, .nav-item:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="#" class="brand" onclick="selectYear(2026)">
+            <div class="brand-logo">CINEXIS</div>
+            <div class="brand-tag">AD-FREE</div>
+        </a>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="toggleSearch()" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="icon-btn" onclick="openWatchHistory()" title="Watch History"><i class="fa-solid fa-clock-rotate-left"></i></button>
+        </div>
+    </header>
+
+    <!-- Collapsible Search Bar -->
+    <div id="searchDrawer" class="search-container">
+        <div class="search-input-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search Tamil movies or series..." oninput="handleLiveSearch(this.value)">
+        </div>
+    </div>
+
+    <!-- Featured Hero Banner -->
+    <div class="hero-banner" id="heroBanner">
+        <div class="hero-badge"><i class="fa-solid fa-bolt"></i> 100% Ad-Free Streaming</div>
+        <div class="hero-title">Latest Tamil Cinema Hub</div>
+        <div class="hero-desc">Stream full HD Tamil movies & web series with instant zero-buffer video playback.</div>
+        <div class="hero-buttons">
+            <button class="btn-primary" onclick="selectYear(2026)"><i class="fa-solid fa-play"></i> Browse 2026 Releases</button>
+        </div>
+    </div>
+
+    <!-- Horizontal Year Chips Scroll -->
+    <div class="year-pills-wrapper">
+        <div class="section-header">
+            <div class="section-title"><i class="fa-solid fa-film"></i> Select Release Year</div>
+        </div>
+        <div class="year-pills" id="yearPills">
+            <!-- Rendered dynamically -->
+        </div>
+    </div>
+
+    <!-- Movies Grid Section -->
+    <div class="movies-grid-container">
+        <div class="section-header">
+            <div class="section-title" id="currentSectionTitle"><i class="fa-solid fa-clapperboard"></i> Tamil Movies</div>
+            <div id="pageIndicator" style="font-size: 0.8rem; color: var(--text-muted);"></div>
+        </div>
+        <div class="movies-grid" id="moviesGrid">
+            <!-- Movies injected dynamically -->
+        </div>
+    </div>
+
+
+    <!-- Continue Watching / Local Watch History -->
+    <section class="history-section" id="historySection">
+        <div class="section-header" style="padding:0 1rem;">
+            <div class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> Continue Watching</div>
+            <button class="player-action-link" style="font-size:.72rem;padding:.4rem .65rem;" onclick="clearWatchHistory()">
+                <i class="fa-solid fa-trash"></i> Clear
+            </button>
+        </div>
+        <div class="history-row" id="historyRow"></div>
+    </section>
+
+    <!-- Quality & Stream Bottom Sheet Modal -->
+    <div id="bottomSheet" class="bottom-sheet-overlay" onclick="closeBottomSheet(event)">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-handle-bar" onclick="closeBottomSheet()"><div class="sheet-handle"></div></div>
+            <div class="sheet-header">
+                <div class="sheet-title" id="sheetMovieTitle">Movie Title</div>
+                <button class="sheet-close" onclick="closeBottomSheet()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="sheet-body" id="sheetBody">
+                <!-- Quality options injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- CINEXIS Premium Movie Player -->
+    <div id="playerModal" class="player-modal" aria-hidden="true">
+        <div class="player-top-bar">
+            <button class="player-back-btn" onclick="closePlayer()"><i class="fa-solid fa-arrow-left"></i><span>Back</span></button>
+            <div class="player-title-text" id="playerTitle">Video Stream</div>
+            <div style="display:flex;align-items:center;gap:.45rem;">
+                <button class="player-action-link" id="engineToggleBtn" onclick="togglePlayerEngine()" title="Switch Player">
+                    <i class="fa-solid fa-repeat"></i><span id="engineLabel">Web Player</span>
+                </button>
+                <a id="playerDownloadBtn" href="#" target="_blank" download class="player-action-link" title="Open source">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                </a>
+                <a id="playerOpenTabBtn" href="#" target="_blank" class="player-action-link" title="Open stream">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="cinema-stage" id="cinemaStage">
+            <div class="video-wrapper" id="videoWrapper">
+                <div class="player-loading" id="playerLoading"><div class="player-loading-ring"></div></div>
+
+                <video id="cinemaVideo" playsinline webkit-playsinline autoplay preload="auto" fetchpriority="high" referrerpolicy="no-referrer"></video>
+
+                <iframe id="streamIframe"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowfullscreen
+                        sandbox="allow-scripts allow-same-origin allow-forms"
+                        style="display:none;"></iframe>
+
+                <div class="player-click-layer" id="playerClickLayer">
+                    <div class="player-center-play" id="playerCenterPlay"><i class="fa-solid fa-play"></i></div>
+                    <div class="player-status-pill" id="playerStatusPill"></div>
+                </div>
+
+                <div class="player-hint">Tap video for controls • Double tap to seek</div>
+
+                <div class="player-controls" id="playerControls">
+                    <div class="player-progress-wrap">
+                        <input id="playerProgress" class="player-progress" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+                    </div>
+                    <div class="player-control-row">
+                        <button class="pctrl-btn" id="playPauseBtn" title="Play / Pause"><i class="fa-solid fa-play"></i></button>
+                        <button class="pctrl-btn" id="back10Btn" title="Back 10 seconds"><i class="fa-solid fa-rotate-left"></i></button>
+                        <button class="pctrl-btn" id="forward10Btn" title="Forward 10 seconds"><i class="fa-solid fa-rotate-right"></i></button>
+                        <div class="volume-wrap">
+                            <button class="pctrl-btn" id="muteBtn" title="Mute"><i class="fa-solid fa-volume-high"></i></button>
+                            <input id="volumeRange" class="volume-range" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                        </div>
+                        <div class="time-readout"><span id="currentTimeLabel">0:00</span> / <span id="durationLabel">0:00</span></div>
+                        <div class="player-spacer"></div>
+                        <button class="pctrl-btn" id="speedBtn" title="Playback speed">1x</button>
+                        <button class="pctrl-btn" id="fullscreenBtn" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+                    </div>
+                </div>
+
+                <div id="playerErrorNotice" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.9);flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:2rem;text-align:center;z-index:65;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size:2.5rem;color:var(--accent);"></i>
+                    <div style="font-size:1.1rem;font-weight:800;color:#fff;">Direct stream could not start</div>
+                    <div style="font-size:.85rem;color:var(--text-muted);max-width:460px;line-height:1.45;">Try the alternate web player engine. Your resume position is stored locally.</div>
+                    <div style="display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;">
+                        <button class="btn-primary" onclick="switchEngine('stream')"><i class="fa-solid fa-play"></i> Use Web Player</button>
+                        <a id="fallbackOpenTabBtn" href="#" target="_blank" class="btn-primary" style="background:rgba(255,255,255,.13);box-shadow:none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Stream</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="selectYear(2026)"><i class="fa-solid fa-house"></i> Home</div>
+        <div class="nav-item" onclick="toggleSearch()"><i class="fa-solid fa-magnifying-glass"></i> Search</div>
+        <div class="nav-item" onclick="document.getElementById('yearPills').scrollIntoView({behavior: 'smooth'})"><i class="fa-solid fa-calendar"></i> Years</div>
+        <div class="nav-item" onclick="openWatchHistory()"><i class="fa-solid fa-clock-rotate-left"></i> History</div>
+    </div>
+
+    <script>
+        const PROXY_BASE = 'https://moviesaro-proxy.arotesting54.workers.dev/?url=';
+        const SOURCE_BASE = 'https://moviezda.com/';
+        const QUALITIES = ['1080p-hd-movie', '720p-hd-movie', '480p-hd-movie', '360p-hd-movie'];
+        const YEARS = [2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2012];
+
+        let currentYear = 2026;
+        let currentPage = 1;
+        let allYearMovies = [];
+        let activeQualityList = [];
+
+        let currentDirectVideoUrl = '';
+        let currentStreamPageUrl = '';
+        let activePlayerEngine = 'direct';
+
+        // Elements
+        const yearPills = document.getElementById('yearPills');
+        const moviesGrid = document.getElementById('moviesGrid');
+        const currentSectionTitle = document.getElementById('currentSectionTitle');
+        const searchDrawer = document.getElementById('searchDrawer');
+        const searchInput = document.getElementById('searchInput');
+        const bottomSheet = document.getElementById('bottomSheet');
+        const sheetMovieTitle = document.getElementById('sheetMovieTitle');
+        const sheetBody = document.getElementById('sheetBody');
+        const playerModal = document.getElementById('playerModal');
+        const cinemaVideo = document.getElementById('cinemaVideo');
+        const streamIframe = document.getElementById('streamIframe');
+        const playerTitle = document.getElementById('playerTitle');
+        const playerDownloadBtn = document.getElementById('playerDownloadBtn');
+        const playerOpenTabBtn = document.getElementById('playerOpenTabBtn');
+        const playerErrorNotice = document.getElementById('playerErrorNotice');
+        const engineLabel = document.getElementById('engineLabel');
+        const playerLoading = document.getElementById('playerLoading');
+        const cinemaStage = document.getElementById('cinemaStage');
+        const playerProgress = document.getElementById('playerProgress');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const back10Btn = document.getElementById('back10Btn');
+        const forward10Btn = document.getElementById('forward10Btn');
+        const muteBtn = document.getElementById('muteBtn');
+        const volumeRange = document.getElementById('volumeRange');
+        const currentTimeLabel = document.getElementById('currentTimeLabel');
+        const durationLabel = document.getElementById('durationLabel');
+        const speedBtn = document.getElementById('speedBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const playerCenterPlay = document.getElementById('playerCenterPlay');
+        const playerStatusPill = document.getElementById('playerStatusPill');
+        const historySection = document.getElementById('historySection');
+        const historyRow = document.getElementById('historyRow');
+
+        const HISTORY_KEY = 'cinexis_watch_history_v2';
+        const MAX_HISTORY = 30;
+        let controlsTimer = null;
+        let historyTimer = null;
+        let currentHistoryId = '';
+        let currentHistoryMeta = null;
+        let lastTapAt = 0;
+
+        // Init Year Pills
+        function initYearPills() {
+            yearPills.innerHTML = '';
+            YEARS.forEach(year => {
+                const pill = document.createElement('div');
+                pill.className = `year-pill ${year === currentYear ? 'active' : ''}`;
+                pill.id = `pill-${year}`;
+                pill.innerHTML = `<i class="fa-solid fa-folder"></i> ${year}`;
+                pill.onclick = () => selectYear(year);
+                yearPills.appendChild(pill);
+            });
+        }
+
+        function selectYear(year) {
+            currentYear = year;
+            document.querySelectorAll('.year-pill').forEach(p => p.classList.remove('active'));
+            const activePill = document.getElementById(`pill-${year}`);
+            if (activePill) activePill.classList.add('active');
+
+            currentSectionTitle.innerHTML = `<i class="fa-solid fa-clapperboard"></i> Tamil ${year} Movies`;
+            loadMovies(year);
+        }
+
+        function toggleSearch() {
+            if (searchDrawer.style.display === 'block') {
+                searchDrawer.style.display = 'none';
+            } else {
+                searchDrawer.style.display = 'block';
+                searchInput.focus();
+            }
+        }
+
+        async function loadMovies(year) {
+            moviesGrid.innerHTML = `
+                <div class="spinner-loader" style="grid-column: 1 / -1;">
+                    <div class="spinner"></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Fetching ${year} movies...</div>
+                </div>
+            `;
+
+            const targetUrl = `${SOURCE_BASE}/tamil-${year}-movies/`;
+            const proxyUrl = `${PROXY_BASE}${encodeURIComponent(targetUrl)}`;
+
+            try {
+                const res = await fetch(proxyUrl);
+                const html = await res.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                const divs = doc.querySelectorAll('div.f');
+                allYearMovies = [];
+
+                divs.forEach(div => {
+                    const a = div.querySelector('a');
+                    if (!a) return;
+                    let text = a.textContent.trim();
+                    if (!text || text.toLowerCase().includes('go home page')) return;
+
+                    let cleanTitle = text.replace(/\s*\(\d{4}\)/gi, '').trim();
+                    allYearMovies.push({
+                        rawTitle: text,
+                        title: cleanTitle,
+                        link: a.getAttribute('href') || ''
+                    });
+                });
+
+                renderMovies(allYearMovies);
+
+            } catch (err) {
+                moviesGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--accent);">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <div>Failed to load movies. Please check your network connection.</div>
+                    </div>
+                `;
+            }
+        }
+
+        let globalIndexedMovies = [];
+        let isIndexingGlobal = false;
+        let searchDebounceTimer = null;
+
+        // Preload & index all years for instant global searching
+        async function indexAllYears() {
+            if (isIndexingGlobal || globalIndexedMovies.length > 50) return;
+            isIndexingGlobal = true;
+
+            const fetchYearPromises = YEARS.map(async (yr) => {
+                try {
+                    const targetUrl = `${SOURCE_BASE}/tamil-${yr}-movies/`;
+                    const res = await fetch(`${PROXY_BASE}${encodeURIComponent(targetUrl)}`);
+                    const html = await res.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    const divs = doc.querySelectorAll('div.f');
+                    divs.forEach(div => {
+                        const a = div.querySelector('a');
+                        if (!a) return;
+                        let text = a.textContent.trim();
+                        if (!text || text.toLowerCase().includes('go home page')) return;
+
+                        let cleanTitle = text.replace(/\s*\(\d{4}\)/gi, '').trim();
+                        if (!globalIndexedMovies.some(existing => existing.title.toLowerCase() === cleanTitle.toLowerCase())) {
+                            globalIndexedMovies.push({
+                                rawTitle: text,
+                                title: cleanTitle,
+                                year: yr,
+                                link: a.getAttribute('href') || ''
+                            });
+                        }
+                    });
+                } catch (e) {}
+            });
+
+            await Promise.allSettled(fetchYearPromises);
+            isIndexingGlobal = false;
+        }
+
+        // Trigger pre-indexing quietly on page load
+        setTimeout(indexAllYears, 500);
+
+        function renderMovies(movies, isSearch = false, query = '') {
+            if (!movies || movies.length === 0) {
+                moviesGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 0.8rem; color: var(--accent);"></i>
+                        <div style="font-size: 1rem; font-weight: 700; color: #fff;">No movies found ${isSearch ? `for "${query}"` : ''}</div>
+                        <div style="font-size: 0.82rem; margin-top: 0.4rem;">Try searching for another movie title.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            moviesGrid.innerHTML = '';
+            movies.forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.onclick = () => openMovieQualities(m.title, m.link || m.url);
+
+                const movieYear = m.year || currentYear;
+
+                card.innerHTML = `
+                    <div class="card-poster">
+                        <i class="fa-solid fa-film folder-icon"></i>
+                        <span class="quality-tag">HD</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="card-title">${m.title}</div>
+                        <div class="card-meta">
+                            <span style="color: var(--cyan); font-weight: 800;">${movieYear}</span>
+                            <span class="card-play-tag"><i class="fa-solid fa-play"></i> Stream</span>
+                        </div>
+                    </div>
+                `;
+                moviesGrid.appendChild(card);
+            });
+        }
+
+        async function handleLiveSearch(query) {
+            clearTimeout(searchDebounceTimer);
+            const q = query.trim().toLowerCase();
+
+            if (!q) {
+                currentSectionTitle.innerHTML = `<i class="fa-solid fa-clapperboard"></i> Tamil ${currentYear} Movies`;
+                renderMovies(allYearMovies);
+                return;
+            }
+
+            currentSectionTitle.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Searching all years for "${query}"...`;
+
+            searchDebounceTimer = setTimeout(async () => {
+                if (globalIndexedMovies.length < 30) {
+                    await indexAllYears();
+                }
+
+                let results = globalIndexedMovies.filter(m => 
+                    m.title.toLowerCase().includes(q) || 
+                    m.rawTitle.toLowerCase().includes(q)
+                );
+
+                const cleanSlug = cleanTitleSlug(query);
+                if (cleanSlug && !results.some(r => cleanTitleSlug(r.title) === cleanSlug)) {
+                    results.unshift({
+                        rawTitle: query,
+                        title: query,
+                        year: 'Direct Match'
+                    });
+                }
+
+                currentSectionTitle.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Search Results: "${query}" (${results.length})`;
+                renderMovies(results, true, query);
+            }, 250);
+        }
+
+        function cleanTitleSlug(title) {
+            return title.replace(/\((?!\d{4}\))[^\)]*\)/g, '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+
+        function toAbsoluteUrl(href) {
+            if (!href) return '';
+            if (href.startsWith('http')) return href;
+            return `${SOURCE_BASE}${href.startsWith('/') ? href.slice(1) : href}`;
+        }
+
+        async function openMovieQualities(movieTitle, movieLink = '') {
+            sheetMovieTitle.textContent = movieTitle;
+            sheetBody.innerHTML = `
+                <div class="spinner-loader">
+                    <div class="spinner"></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Scanning quality options...</div>
+                </div>
+            `;
+            bottomSheet.style.display = 'flex';
+
+            activeQualityList = [];
+
+            function parseItems(pageHtml) {
+                let items = [];
+                const matches = [...pageHtml.matchAll(/<(?:div)[^>]+class=["\x27](?:f|folder)["\x27][\s\S]*?<a[^>]+href=["\x27]([^"\x27]+)["\x27][^>]*>([\s\S]*?)<\/a>([\s\S]*?)(?:<\/div>\s*<\/div>|<\/div>)/gi)];
+                
+                matches.forEach(m => {
+                    const href = m[1];
+                    const text = m[2].replace(/<[^>]+>/g, '').trim();
+                    const rest = m[3] || '';
+                    let size = 'HD';
+                    const sizeMatch = rest.match(/File\s*Size\s*:\s*([\d\.]+\s*(?:GB|MB|KB))/i) || pageHtml.match(/File\s*Size\s*:\s*([\d\.]+\s*(?:GB|MB|KB))/i);
+                    if (sizeMatch) size = sizeMatch[1];
+
+                    if (!href.includes('tamil-movies') && !href.includes('tamil-20') && !href.startsWith('#') && href !== '/') {
+                        items.push({ href, text, size });
+                    }
+                });
+                return items;
+            }
+
+            try {
+                if (movieLink) {
+                    const movieUrl = toAbsoluteUrl(movieLink);
+                    const res = await fetch(`${PROXY_BASE}${encodeURIComponent(movieUrl)}`);
+                    const movieHtml = await res.text();
+                    const l1 = parseItems(movieHtml);
+
+                    for (const item of l1) {
+                        if (item.href.includes('/download/')) {
+                            activeQualityList.push({
+                                name: item.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
+                                url: toAbsoluteUrl(item.href),
+                                size: item.size,
+                                label: item.text.includes('1080') ? '1080P' : item.text.includes('720') ? '720P' : item.text.includes('480') ? '480P' : 'HD'
+                            });
+                        } else {
+                            const l2Res = await fetch(`${PROXY_BASE}${encodeURIComponent(toAbsoluteUrl(item.href))}`);
+                            const l2Html = await l2Res.text();
+                            const l2 = parseItems(l2Html);
+
+                            for (const item2 of l2) {
+                                if (item2.href.includes('/download/')) {
+                                    activeQualityList.push({
+                                        name: item2.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
+                                        url: toAbsoluteUrl(item2.href),
+                                        size: item2.size,
+                                        label: item2.text.includes('1080') ? '1080P' : item2.text.includes('720') ? '720P' : item2.text.includes('480') ? '480P' : 'HD'
+                                    });
+                                } else {
+                                    const l3Res = await fetch(`${PROXY_BASE}${encodeURIComponent(toAbsoluteUrl(item2.href))}`);
+                                    const l3Html = await l3Res.text();
+                                    const l3 = parseItems(l3Html);
+
+                                    for (const item3 of l3) {
+                                        if (item3.href.includes('/download/')) {
+                                            activeQualityList.push({
+                                                name: item3.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
+                                                url: toAbsoluteUrl(item3.href),
+                                                size: item3.size,
+                                                label: item2.text.includes('1080') || item3.text.includes('1080') ? '1080P' : item2.text.includes('720') || item3.text.includes('720') ? '720P' : item2.text.includes('480') || item3.text.includes('480') ? '480P' : 'HD'
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Fallback direct quality scan
+                if (activeQualityList.length === 0) {
+                    const slug = cleanTitleSlug(movieTitle);
+                    for (const q of QUALITIES) {
+                        try {
+                            const qUrl = `${SOURCE_BASE}${slug}-${q}/`;
+                            const qRes = await fetch(`${PROXY_BASE}${encodeURIComponent(qUrl)}`);
+                            if (qRes.ok) {
+                                const qHtml = await qRes.text();
+                                const items = parseItems(qHtml);
+                                for (const it of items) {
+                                    if (it.href.includes('/download/')) {
+                                        activeQualityList.push({
+                                            name: it.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
+                                            url: toAbsoluteUrl(it.href),
+                                            size: it.size,
+                                            label: q.replace('-movie', '').toUpperCase()
+                                        });
+                                    }
+                                }
+                            }
+                        } catch (e) {}
+                    }
+                }
+
+            } catch (err) {
+                console.error("Quality fetch error:", err);
+            }
+
+            if (activeQualityList.length === 0) {
+                sheetBody.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--accent);">No quality streams found for this entry.</div>`;
+                return;
+            }
+
+            renderQualityList(movieTitle);
+        }
+
+        function renderQualityList(movieTitle) {
+            sheetBody.innerHTML = '';
+            activeQualityList.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'quality-card';
+                card.onclick = () => playQualityStream(idx, movieTitle);
+
+                card.innerHTML = `
+                    <div class="quality-info">
+                        <div class="quality-name">${q.name}</div>
+                        <div class="quality-meta">
+                            <span class="badge-pill">${q.label}</span>
+                            <span><i class="fa-solid fa-hard-drive"></i> ${q.size}</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                        <i class="fa-solid fa-play"></i> Play
+                    </button>
+                `;
+                sheetBody.appendChild(card);
+            });
+        }
+
+        async function playQualityStream(index, movieTitle) {
+            const folderObj = activeQualityList[index];
+            sheetBody.innerHTML = `
+                <div class="spinner-loader">
+                    <div class="spinner"></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Extracting direct stream link...</div>
+                </div>
+            `;
+
+            try {
+                // Fetch download file page
+                const fileRes = await fetch(`${PROXY_BASE}${encodeURIComponent(folderObj.url)}`);
+                const fileHtml = await fileRes.text();
+
+                // Extract file ID
+                const fileIdMatch = fileHtml.match(/\/download\/file\/(\d+)/i) || 
+                                    fileHtml.match(/\/shots\/(\d+)/i) || 
+                                    fileHtml.match(/class=["\x27]dlink["\x27][\s\S]*?href=["\x27][^"\x27]*\/(\d{4,8})["\x27]/i);
+
+                if (!fileIdMatch) throw new Error("Could not locate stream file ID");
+                const fileId = fileIdMatch[1];
+
+                const streamPageUrl = `https://play.onestream.today/stream/page/${fileId}`;
+                const streamRes = await fetch(`${PROXY_BASE}${encodeURIComponent(streamPageUrl)}`);
+                const streamHtml = await streamRes.text();
+
+                let directVideoUrl = null;
+                const match = streamHtml.match(/<source[^>]+src=["\x27]([^"\x27]+)["\x27]/i) || 
+                              streamHtml.match(/<video[^>]+src=["\x27]([^"\x27]+)["\x27]/i);
+
+                if (match && match[1]) directVideoUrl = match[1];
+
+                if (!directVideoUrl) directVideoUrl = streamPageUrl;
+                if (directVideoUrl.startsWith('//')) directVideoUrl = 'https:' + directVideoUrl;
+
+                closeBottomSheet();
+                // Open immediately. Buffering happens inside the player instead of
+                // keeping the user waiting on the quality sheet.
+                upsertWatchHistory({
+                    title: movieTitle,
+                    year: currentYear,
+                    directUrl: directVideoUrl,
+                    streamUrl: streamPageUrl,
+                    position: 0,
+                    duration: 0,
+                    progress: 0
+                });
+                openPlayer(directVideoUrl, movieTitle, streamPageUrl);
+
+            } catch (err) {
+                sheetBody.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--accent);">Failed to load stream: ${err.message}</div>`;
+            }
+        }
+
+        // ---------- Premium Player + Local Watch History ----------
+        function makeHistoryId(title, streamUrl = '') {
+            return (title || '').trim().toLowerCase() + '|' + (streamUrl || '').trim();
+        }
+
+        function loadWatchHistory() {
+            try {
+                const raw = localStorage.getItem(HISTORY_KEY);
+                const list = JSON.parse(raw || '[]');
+                return Array.isArray(list) ? list : [];
+            } catch (_) {
+                return [];
+            }
+        }
+
+        function saveWatchHistory(list) {
+            try {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, MAX_HISTORY)));
+            } catch (_) {}
+        }
+
+        function upsertWatchHistory(meta) {
+            const list = loadWatchHistory();
+            const id = makeHistoryId(meta.title, meta.streamUrl || meta.directUrl);
+            const existing = list.find(x => x.id === id);
+
+            const item = {
+                id,
+                title: meta.title || 'Untitled',
+                year: meta.year || currentYear,
+                streamUrl: meta.streamUrl || '',
+                directUrl: meta.directUrl || '',
+                position: Number(meta.position) || 0,
+                duration: Number(meta.duration) || 0,
+                progress: Number(meta.progress) || 0,
+                updatedAt: Date.now()
+            };
+
+            if (existing) Object.assign(existing, item);
+            else list.unshift(item);
+
+            list.sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+            saveWatchHistory(list);
+            renderWatchHistory();
+        }
+
+        function updateCurrentHistory(force = false) {
+            if (!currentHistoryMeta) return;
+            const duration = Number(cinemaVideo.duration) || currentHistoryMeta.duration || 0;
+            const position = Number(cinemaVideo.currentTime) || 0;
+            const progress = duration > 0 ? Math.min(100, (position / duration) * 100) : 0;
+
+            currentHistoryMeta.position = position;
+            currentHistoryMeta.duration = duration;
+            currentHistoryMeta.progress = progress;
+
+            if (force || activePlayerEngine === 'direct') {
+                upsertWatchHistory(currentHistoryMeta);
+            }
+        }
+
+        function removeWatchHistory(id) {
+            const list = loadWatchHistory().filter(item => item.id !== id);
+            saveWatchHistory(list);
+            renderWatchHistory();
+        }
+
+        function clearWatchHistory() {
+            try { localStorage.removeItem(HISTORY_KEY); } catch (_) {}
+            renderWatchHistory();
+        }
+
+        function formatHistoryDate(ts) {
+            try {
+                return new Date(ts).toLocaleDateString(undefined, { day:'2-digit', month:'short' });
+            } catch (_) { return ''; }
+        }
+
+        function renderWatchHistory() {
+            if (!historyRow) return;
+            const list = loadWatchHistory();
+
+            if (!list.length) {
+                historySection.style.display = 'block';
+                historyRow.innerHTML = `
+                    <div class="history-empty" style="grid-column:1/-1;">
+                        <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);font-size:1.2rem;margin-bottom:.4rem;"></i>
+                        <div style="font-weight:800;color:#fff;">No pending movies yet</div>
+                        <div style="margin-top:.25rem;">Start a movie and your resume position will be saved here automatically.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            historySection.style.display = 'block';
+            historyRow.innerHTML = '';
+
+            list.slice(0, 12).forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'history-card';
+
+                const progress = Math.max(0, Math.min(100, Number(item.progress) || 0));
+                const completed = progress >= 95;
+
+                card.innerHTML = `
+                    <button class="history-remove" title="Remove from history">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="history-card-title">${escapeHtml(item.title)}</div>
+                    <div class="history-card-meta">
+                        <span>${completed ? 'Watched' : `${Math.round(progress)}% watched`}</span>
+                        <span>${formatHistoryDate(item.updatedAt)}</span>
+                    </div>
+                    <div class="history-progress"><span style="width:${progress}%"></span></div>
+                `;
+
+                card.onclick = () => resumeFromHistory(item);
+                card.querySelector('.history-remove').onclick = (e) => {
+                    e.stopPropagation();
+                    removeWatchHistory(item.id);
+                };
+
+                historyRow.appendChild(card);
+            });
+        }
+
+        function openWatchHistory() {
+            renderWatchHistory();
+            historySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function resumeFromHistory(item) {
+            if (!item) return;
+
+            // Continue Watching must never run the quality/extraction scan again.
+            // Use the URL already saved in localStorage and open the player immediately.
+            const direct = item.directUrl || item.streamUrl || '';
+            if (!direct) return;
+
+            currentHistoryMeta = {
+                title: item.title,
+                year: item.year,
+                streamUrl: item.streamUrl || direct,
+                directUrl: direct,
+                position: Number(item.position) || 0,
+                duration: Number(item.duration) || 0,
+                progress: Number(item.progress) || 0
+            };
+
+            openPlayer(direct, item.title, item.streamUrl || direct, {
+                resumePosition: Number(item.position) || 0,
+                historyItem: item,
+                instantResume: true
+            });
+        }
+
+        function openPlayer(videoUrl, title, streamUrl = '', options = {}) {
+            playerTitle.textContent = title;
+            currentDirectVideoUrl = videoUrl || '';
+            currentStreamPageUrl = streamUrl || videoUrl || '';
+            activePlayerEngine = 'direct';
+
+            const resumePosition = Number(options.resumePosition || 0);
+            const savedItem = options.historyItem || null;
+
+            currentHistoryMeta = {
+                title: title || 'Untitled',
+                year: savedItem?.year || currentYear,
+                streamUrl: currentStreamPageUrl,
+                directUrl: currentDirectVideoUrl,
+                position: resumePosition,
+                duration: Number(savedItem?.duration || 0),
+                progress: Number(savedItem?.progress || 0)
+            };
+            currentHistoryId = makeHistoryId(title, currentStreamPageUrl);
+
+            playerDownloadBtn.href = currentDirectVideoUrl || currentStreamPageUrl;
+            playerOpenTabBtn.href = currentDirectVideoUrl || currentStreamPageUrl;
+            const fallbackTabBtn = document.getElementById('fallbackOpenTabBtn');
+            if (fallbackTabBtn) fallbackTabBtn.href = currentStreamPageUrl || currentDirectVideoUrl;
+
+            playerErrorNotice.style.display = 'none';
+            engineLabel.textContent = 'Web Player';
+            playerLoading.classList.add('active');
+            playerStatusPill.textContent = options.instantResume ? 'Resuming playback...' : 'Preparing stream...';
+            playerStatusPill.classList.add('show');
+            setTimeout(() => playerStatusPill.classList.remove('show'), 1400);
+
+            playerModal.classList.remove('player-closing', 'controls-hidden', 'is-native-fullscreen');
+            playerModal.setAttribute('aria-hidden', 'false');
+            playerModal.style.display = 'flex';
+            requestAnimationFrame(() => playerModal.classList.add('player-opening'));
+
+            cinemaVideo.style.display = 'block';
+            streamIframe.style.display = 'none';
+            streamIframe.src = 'about:blank';
+
+            cinemaVideo.pause();
+            cinemaVideo.src = currentDirectVideoUrl;
+            cinemaVideo.load();
+            setPlayIcon(false);
+            updateTimeUI();
+
+            // Store the movie immediately so it is never lost from the pending list.
+            upsertWatchHistory(currentHistoryMeta);
+
+            // Orientation locking is intentionally non-blocking. The video should start
+            // buffering immediately instead of waiting for the orientation API.
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+            }
+
+            clearInterval(historyTimer);
+            historyTimer = setInterval(() => updateCurrentHistory(false), 2500);
+
+            cinemaVideo.addEventListener('loadedmetadata', function restoreOnce() {
+                cinemaVideo.removeEventListener('loadedmetadata', restoreOnce);
+                if (resumePosition > 0 && resumePosition < cinemaVideo.duration - 5) {
+                    cinemaVideo.currentTime = resumePosition;
+                    showPlayerStatus(`Resume from ${formatTime(resumePosition)}`);
+                    setTimeout(() => hidePlayerStatus(), 1700);
+                }
+            });
+
+            cinemaVideo.play().catch(() => {
+                playerLoading.classList.remove('active');
+                setPlayIcon(true);
+            });
+
+            resetPlayerControlsTimer();
+        }
+
+        function resetPlayerControlsTimer() {
+            playerModal.classList.remove('controls-hidden');
+            clearTimeout(controlsTimer);
+            controlsTimer = setTimeout(() => {
+                if (!cinemaVideo.paused) playerModal.classList.add('controls-hidden');
+            }, 3500);
+        }
+
+        function setPlayIcon(paused) {
+            playPauseBtn.innerHTML = paused
+                ? '<i class="fa-solid fa-play"></i>'
+                : '<i class="fa-solid fa-pause"></i>';
+            playerCenterPlay.innerHTML = paused
+                ? '<i class="fa-solid fa-play"></i>'
+                : '<i class="fa-solid fa-pause"></i>';
+        }
+
+        function togglePlay() {
+            if (activePlayerEngine !== 'direct') {
+                togglePlayerEngine();
+                return;
+            }
+            if (cinemaVideo.paused) cinemaVideo.play().catch(() => {});
+            else cinemaVideo.pause();
+            resetPlayerControlsTimer();
+        }
+
+        function formatTime(sec) {
+            if (!Number.isFinite(sec) || sec < 0) return '0:00';
+            sec = Math.floor(sec);
+            const h = Math.floor(sec / 3600);
+            const m = Math.floor((sec % 3600) / 60);
+            const s = sec % 60;
+            return h ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
+        }
+
+        function updateTimeUI() {
+            const duration = Number(cinemaVideo.duration) || 0;
+            const current = Number(cinemaVideo.currentTime) || 0;
+            currentTimeLabel.textContent = formatTime(current);
+            durationLabel.textContent = formatTime(duration);
+            playerProgress.value = duration ? Math.round((current / duration) * 1000) : 0;
+        }
+
+        function showPlayerStatus(message) {
+            playerStatusPill.textContent = message;
+            playerStatusPill.classList.add('show');
+        }
+
+        function hidePlayerStatus() {
+            playerStatusPill.classList.remove('show');
+        }
+
+        function setVolumeIcon() {
+            if (cinemaVideo.muted || cinemaVideo.volume === 0) {
+                muteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+            } else if (cinemaVideo.volume < .5) {
+                muteBtn.innerHTML = '<i class="fa-solid fa-volume-low"></i>';
+            } else {
+                muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+            }
+        }
+
+        async function toggleFullscreen() {
+            try {
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    if (screen.orientation?.unlock) screen.orientation.unlock();
+                    playerModal.classList.remove('is-native-fullscreen');
+                } else {
+                    if (cinemaStage.requestFullscreen) await cinemaStage.requestFullscreen();
+                    else if (cinemaStage.webkitRequestFullscreen) cinemaStage.webkitRequestFullscreen();
+
+                    // This call happens from the user's fullscreen tap, so supported mobile
+                    // browsers can lock the same player stage to landscape.
+                    if (screen.orientation?.lock) {
+                        try { await screen.orientation.lock('landscape'); } catch (_) {}
+                    }
+                    playerModal.classList.add('is-native-fullscreen');
+                    showPlayerStatus('Landscape fullscreen');
+                    setTimeout(hidePlayerStatus, 1200);
+                }
+            } catch (_) {
+                showPlayerStatus('Fullscreen not supported here');
+                setTimeout(hidePlayerStatus, 1400);
+            }
+            resetPlayerControlsTimer();
+        }
+
+        function updateFullscreenIcon() {
+            const fs = document.fullscreenElement || document.webkitFullscreenElement;
+            fullscreenBtn.innerHTML = fs
+                ? '<i class="fa-solid fa-compress"></i>'
+                : '<i class="fa-solid fa-expand"></i>';
+        }
+
+        // Custom controls.
+        playPauseBtn.addEventListener('click', togglePlay);
+        back10Btn.addEventListener('click', () => {
+            cinemaVideo.currentTime = Math.max(0, (cinemaVideo.currentTime || 0) - 10);
+            showPlayerStatus('-10 sec');
+            setTimeout(hidePlayerStatus, 600);
+            updateCurrentHistory(true);
+            resetPlayerControlsTimer();
+        });
+        forward10Btn.addEventListener('click', () => {
+            cinemaVideo.currentTime = Math.min(cinemaVideo.duration || Infinity, (cinemaVideo.currentTime || 0) + 10);
+            showPlayerStatus('+10 sec');
+            setTimeout(hidePlayerStatus, 600);
+            updateCurrentHistory(true);
+            resetPlayerControlsTimer();
+        });
+        muteBtn.addEventListener('click', () => {
+            cinemaVideo.muted = !cinemaVideo.muted;
+            if (!cinemaVideo.muted && cinemaVideo.volume === 0) cinemaVideo.volume = .8;
+            volumeRange.value = cinemaVideo.volume;
+            setVolumeIcon();
+            resetPlayerControlsTimer();
+        });
+        volumeRange.addEventListener('input', () => {
+            cinemaVideo.volume = Number(volumeRange.value);
+            cinemaVideo.muted = cinemaVideo.volume === 0;
+            setVolumeIcon();
+        });
+        playerProgress.addEventListener('input', () => {
+            const duration = Number(cinemaVideo.duration) || 0;
+            if (duration) cinemaVideo.currentTime = (Number(playerProgress.value) / 1000) * duration;
+            resetPlayerControlsTimer();
+        });
+
+        const speeds = [1, 1.25, 1.5, 1.75, 2, .75];
+        let speedIndex = 0;
+        speedBtn.addEventListener('click', () => {
+            speedIndex = (speedIndex + 1) % speeds.length;
+            const speed = speeds[speedIndex];
+            cinemaVideo.playbackRate = speed;
+            speedBtn.textContent = `${speed}x`;
+            showPlayerStatus(`Speed ${speed}x`);
+            setTimeout(hidePlayerStatus, 700);
+            resetPlayerControlsTimer();
+        });
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        cinemaVideo.addEventListener('loadedmetadata', updateTimeUI);
+        cinemaVideo.addEventListener('durationchange', updateTimeUI);
+        cinemaVideo.addEventListener('timeupdate', () => {
+            updateTimeUI();
+            if (currentHistoryMeta && Math.floor(cinemaVideo.currentTime) % 5 === 0) updateCurrentHistory(false);
+        });
+        cinemaVideo.addEventListener('loadstart', () => {
+            playerLoading.classList.add('active');
+        });
+
+        cinemaVideo.addEventListener('loadeddata', () => {
+            playerLoading.classList.remove('active');
+        });
+
+        cinemaVideo.addEventListener('canplay', () => {
+            playerLoading.classList.remove('active');
+        });
+
+        cinemaVideo.addEventListener('playing', () => {
+            playerLoading.classList.remove('active');
+            setPlayIcon(false);
+            resetPlayerControlsTimer();
+        });
+        cinemaVideo.addEventListener('pause', () => {
+            playerLoading.classList.remove('active');
+            setPlayIcon(true);
+            playerModal.classList.remove('controls-hidden');
+            updateCurrentHistory(true);
+        });
+        cinemaVideo.addEventListener('waiting', () => {
+            playerLoading.classList.add('active');
+            showPlayerStatus('Buffering...');
+        });
+        cinemaVideo.addEventListener('stalled', () => {
+            playerLoading.classList.add('active');
+            showPlayerStatus('Reconnecting stream...');
+        });
+        cinemaVideo.addEventListener('volumechange', setVolumeIcon);
+        cinemaVideo.addEventListener('ended', () => {
+            updateCurrentHistory(true);
+            if (currentHistoryMeta) {
+                currentHistoryMeta.position = cinemaVideo.duration || currentHistoryMeta.position;
+                currentHistoryMeta.progress = 100;
+                upsertWatchHistory(currentHistoryMeta);
+            }
+        });
+        cinemaVideo.onerror = () => {
+            playerLoading.classList.remove('active');
+            playerErrorNotice.style.display = 'flex';
+        };
+
+        // Single tap shows controls. Double tap seeks.
+        videoWrapper.addEventListener('click', (e) => {
+            if (e.target.closest('.player-controls,.player-top-bar,#playerErrorNotice')) return;
+            const now = Date.now();
+            const delta = now - lastTapAt;
+            lastTapAt = now;
+
+            if (delta < 320) {
+                const rect = videoWrapper.getBoundingClientRect();
+                const goForward = e.clientX > rect.left + rect.width / 2;
+                cinemaVideo.currentTime = Math.max(0, Math.min(cinemaVideo.duration || Infinity, cinemaVideo.currentTime + (goForward ? 10 : -10)));
+                showPlayerStatus(goForward ? '+10 sec' : '-10 sec');
+                setTimeout(hidePlayerStatus, 650);
+                updateCurrentHistory(true);
+            } else {
+                playerModal.classList.toggle('controls-hidden');
+                if (!playerModal.classList.contains('controls-hidden')) resetPlayerControlsTimer();
+            }
+        });
+
+        // ---------- Engine fallback ----------
+        // Automatic error handler for native HTML5 video
+        cinemaVideo.onerror = () => {
+            console.warn("Direct video stream blocked or codec unsupported. Activating fallback options.");
+            playerErrorNotice.style.display = 'flex';
+        };
+
+        function switchEngine(engine) {
+            activePlayerEngine = engine;
+            playerErrorNotice.style.display = 'none';
+
+            if (engine === 'stream') {
+                cinemaVideo.pause();
+                cinemaVideo.removeAttribute('src');
+                cinemaVideo.style.display = 'none';
+                streamIframe.style.display = 'block';
+                playerLoading.classList.add('active');
+                streamIframe.src = currentStreamPageUrl;
+                engineLabel.textContent = 'Direct Player';
+                streamIframe.onload = () => playerLoading.classList.remove('active');
+                updateCurrentHistory(true);
+            } else {
+                streamIframe.style.display = 'none';
+                streamIframe.src = 'about:blank';
+                cinemaVideo.style.display = 'block';
+                cinemaVideo.src = currentDirectVideoUrl;
+                cinemaVideo.load();
+                cinemaVideo.play().catch(() => {});
+                engineLabel.textContent = 'Web Player';
+            }
+        }
+
+        function togglePlayerEngine() {
+            switchEngine(activePlayerEngine === 'direct' ? 'stream' : 'direct');
+            resetPlayerControlsTimer();
+        }
+
+        function closePlayer() {
+            updateCurrentHistory(true);
+            clearInterval(historyTimer);
+
+            cinemaVideo.pause();
+            cinemaVideo.removeAttribute('src');
+            cinemaVideo.load();
+            streamIframe.src = 'about:blank';
+            streamIframe.style.display = 'none';
+            playerErrorNotice.style.display = 'none';
+            playerLoading.classList.remove('active');
+            clearTimeout(controlsTimer);
+
+            const fs = document.fullscreenElement || document.webkitFullscreenElement;
+            if (fs) {
+                try {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                } catch (_) {}
+            }
+
+            if (screen.orientation?.unlock) screen.orientation.unlock();
+
+            playerModal.setAttribute('aria-hidden', 'true');
+            playerModal.classList.remove('player-opening','controls-hidden','is-native-fullscreen');
+            playerModal.classList.add('player-closing');
+
+            setTimeout(() => {
+                playerModal.style.display = 'none';
+                playerModal.classList.remove('player-closing');
+            }, 240);
+
+            renderWatchHistory();
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            updateFullscreenIcon();
+            playerModal.classList.toggle('is-native-fullscreen', !!document.fullscreenElement);
+        });
+        document.addEventListener('webkitfullscreenchange', () => {
+            updateFullscreenIcon();
+            playerModal.classList.toggle('is-native-fullscreen', !!document.webkitFullscreenElement);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (playerModal.style.display === 'none') return;
+
+            if (e.key === 'Escape') {
+                if (document.fullscreenElement || document.webkitFullscreenElement) toggleFullscreen();
+                else closePlayer();
+                return;
+            }
+
+            if (e.target.matches('input')) return;
+
+            if (e.key === ' ') {
+                e.preventDefault();
+                togglePlay();
+            } else if (e.key === 'ArrowLeft') {
+                cinemaVideo.currentTime = Math.max(0, (cinemaVideo.currentTime || 0) - 5);
+                resetPlayerControlsTimer();
+            } else if (e.key === 'ArrowRight') {
+                cinemaVideo.currentTime = Math.min(cinemaVideo.duration || Infinity, (cinemaVideo.currentTime || 0) + 5);
+                resetPlayerControlsTimer();
+            } else if (e.key.toLowerCase() === 'f') {
+                toggleFullscreen();
+            } else if (e.key.toLowerCase() === 'm') {
+                cinemaVideo.muted = !cinemaVideo.muted;
+                setVolumeIcon();
+            }
+        });
+
+        function closeBottomSheet(e) {
+            if (!e || e.target === bottomSheet) {
+                bottomSheet.style.display = 'none';
+            }
+        }
+
+        function openWatchlist() {
+            openWatchHistory();
+        }
+
+        // Init App
+        initYearPills();
+        renderWatchHistory();
+        loadMovies(2026);
+    </script>
+</body>
+</html>
