@@ -851,6 +851,260 @@
         .nav-item.active, .nav-item:hover {
             color: var(--accent);
         }
+
+        /* CINEXIS mobile refresh */
+        :root { --bg-base:#080a10; --bg-surface:#111520; --accent:#ff405d; --cyan:#7de6d2; --border:rgba(255,255,255,.09); --bottom-nav-height:72px; }
+        body { background-image:radial-gradient(ellipse at 50% -18%,rgba(255,64,93,.2),transparent 48%),linear-gradient(180deg,#0b0e16 0%,#080a10 45%); }
+        header { padding:max(.8rem,env(safe-area-inset-top)) 1.1rem .8rem; background:rgba(8,10,16,.88); }
+        .brand-logo { color:#fff; text-shadow:none; letter-spacing:.14em; }
+        .brand-tag { border:0; border-radius:999px; background:rgba(255,64,93,.16); color:#ff8093; }
+        .icon-btn { border-radius:14px; width:42px; height:42px; background:rgba(255,255,255,.06); }
+        .search-container { padding:.75rem 1rem; background:rgba(8,10,16,.96); }
+        .search-input-box { max-width:none; }
+        .search-input { border-radius:15px; min-height:50px; padding-right:3rem; background:#141925; }
+        .search-clear-btn { position:absolute; right:8px; width:36px; height:36px; border:0; border-radius:11px; background:rgba(255,255,255,.08); color:#fff; }
+        .hero-banner { margin:1rem; padding:1.4rem; min-height:185px; justify-content:flex-end; background:radial-gradient(ellipse at 88% 10%,rgba(255,64,93,.32),transparent 48%),linear-gradient(140deg,#20131d,#111520 68%); border-radius:24px; box-shadow:none; }
+        .hero-banner::after { background:linear-gradient(90deg,rgba(8,10,16,.25),transparent); }
+        .hero-title { font-size:clamp(1.55rem,7vw,2.3rem); max-width:340px; }
+        .hero-desc { max-width:360px; }
+        .btn-primary { border-radius:14px; box-shadow:0 8px 24px rgba(255,64,93,.22); }
+        .year-pills-wrapper { margin:0 0 1.3rem; padding:0 1rem; }
+        .year-pill { border-radius:13px; padding:.58rem .9rem; background:#121722; }
+        .year-pill.active { background:var(--accent); }
+        .section-title { font-size:1.12rem; letter-spacing:-.02em; }
+        .movies-grid-container { padding:0 1rem; }
+        .movies-grid { grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:1rem; }
+        .movie-card { display:flex; min-height:0; border:1px solid rgba(255,255,255,.08); border-radius:19px; background:#111520; animation:none; }
+        .movie-card:hover,.movie-card:active { transform:translateY(-2px); background:#151b27; box-shadow:0 12px 28px rgba(0,0,0,.28); }
+        .card-poster { aspect-ratio:2 / 3; min-height:0; height:auto; background:linear-gradient(145deg,#28202c,#141925); }
+        .card-poster img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+        .card-poster::after { content:''; position:absolute; inset:35% 0 0; background:linear-gradient(transparent,rgba(8,10,16,.6)); pointer-events:none; }
+        .card-poster .folder-icon { font-size:2.8rem; color:rgba(255,255,255,.45); }
+        .quality-tag { z-index:1; top:9px; right:9px; border:0; border-radius:8px; background:rgba(8,10,16,.82); color:#fff; padding:4px 8px; }
+        .card-details { gap:.65rem; padding:.8rem .82rem .9rem; }
+        .card-title { font-size:.91rem; line-height:1.35; }
+        .card-meta { font-size:.72rem; }
+        .card-play-tag { color:#ff8093; }
+        .bottom-nav { height:calc(var(--bottom-nav-height) + env(safe-area-inset-bottom)); padding:0 0 env(safe-area-inset-bottom); background:rgba(13,16,24,.96); border-color:rgba(255,255,255,.08); }
+        .nav-item { min-width:58px; gap:5px; font-size:.66rem; }
+        .nav-item i { font-size:1.08rem; }
+        .nav-item.active { color:#ff667c; }
+        .history-card { border-radius:18px; background:linear-gradient(145deg,#171c28,#10141d); }
+        .bottom-sheet { border-radius:25px 25px 0 0; padding:1.1rem 1rem max(1rem,env(safe-area-inset-bottom)); background:#111520; }
+        .sheet-title { font-size:1.18rem; }
+        .quality-card { border-radius:16px; padding:1rem; background:#171d29; }
+        .unavailable-state,.search-message { grid-column:1 / -1; display:flex; flex-direction:column; align-items:center; text-align:center; gap:.55rem; padding:2.5rem 1.2rem; color:var(--text-muted); }
+        .unavailable-state strong,.search-message strong { color:#fff; font-size:1.05rem; }
+        .unavailable-state p,.search-message small { max-width:340px; line-height:1.5; color:var(--text-muted); }
+        .unavailable-icon { width:54px; height:54px; display:grid; place-items:center; margin-bottom:.3rem; border-radius:18px; color:#ff8093; background:rgba(255,64,93,.13); font-size:1.3rem; }
+        .search-message .spinner { width:28px; height:28px; }
+        .search-active .hero-banner,.search-active .year-pills-wrapper,.search-active .history-section,.search-active .bottom-nav { display:none; }
+        .search-active .search-container { display:block!important; position:sticky; top:calc(62px + env(safe-area-inset-top)); z-index:120; border-bottom:0; }
+        .search-active .movies-grid-container { min-height:50vh; padding-top:.25rem; }
+        .search-active .movies-grid { grid-template-columns:1fr; gap:.55rem; }
+        .search-active .movie-card { display:grid; grid-template-columns:72px minmax(0,1fr); align-items:center; min-height:92px; border-radius:16px; }
+        .search-active .card-poster { width:72px; height:92px; aspect-ratio:auto; border-radius:15px 0 0 15px; }
+        .search-active .card-poster::after { display:none; }
+        .search-active .card-poster .folder-icon { font-size:1.45rem; }
+        .search-active .quality-tag { display:none; }
+        .search-active .card-details { padding:.7rem .8rem; }
+        .search-active .card-title { font-size:.94rem; }
+        .search-active .card-play-tag { padding:.34rem .55rem; border-radius:9px; background:rgba(255,64,93,.12); }
+        .search-active header { position:sticky; top:0; }
+        .player-modal { background:#05060a; }
+        .player-top-bar { padding:max(1rem,env(safe-area-inset-top)) 1rem 2.5rem; }
+        .player-back-btn,.player-action-link { min-height:42px; border-radius:14px; background:rgba(20,24,34,.78); }
+        .player-quality-button { color:#9bf0df; font-weight:900; }
+        .cinema-stage { width:min(100vw, calc((100dvh - 90px) * 16 / 9)); aspect-ratio:16 / 9; max-height:calc(100dvh - 90px); border:0; border-radius:0; box-shadow:none; }
+        .player-controls { padding:.8rem 1rem max(.8rem,env(safe-area-inset-bottom)); background:linear-gradient(transparent,rgba(0,0,0,.92) 35%); }
+        .player-progress { height:5px; accent-color:var(--accent); }
+        .player-progress-wrap { padding:12px 0; }
+        .player-control-row { gap:.38rem; }
+        .pctrl-btn { width:42px; height:42px; border-radius:14px; background:rgba(22,26,36,.8); }
+        .player-center-play { width:68px; height:68px; border:0; background:var(--accent); box-shadow:0 8px 35px rgba(255,64,93,.36); }
+        .player-status-pill { border-radius:13px; padding:.65rem .9rem; }
+        .player-loading-ring { border-top-color:#ff7187; }
+        @media(max-width:599px) {
+            body { padding-bottom:calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 12px); }
+            .hero-banner { min-height:174px; margin:.8rem .85rem 1.15rem; padding:1.15rem; }
+            .hero-desc { font-size:.79rem; }
+            .hero-badge { font-size:.67rem; }
+            .movies-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
+            .movie-card { border-radius:16px; }
+            .card-details { padding:.66rem .68rem .76rem; gap:.5rem; }
+            .card-title { font-size:.8rem; }
+            .card-meta { font-size:.66rem; }
+            .card-play-tag { font-size:.62rem; }
+            .player-top-bar { padding-left:.75rem; padding-right:.75rem; }
+            .player-title-text { max-width:36%; font-size:.77rem; }
+            .player-action-link span { display:none; }
+            .player-quality-button { display:inline-flex; }
+            .cinema-stage { width:100vw; height:auto; aspect-ratio:16 / 9; max-height:calc(100dvh - 96px); }
+            .time-readout { min-width:76px; font-size:.66rem; }
+            .volume-wrap { display:none; }
+            .pctrl-btn { width:38px; height:38px; }
+            .history-row { grid-template-columns:1fr; }
+        }
+        /* New CINEXIS art direction: Tamil cinema journal, away from the black/red streaming template. */
+        :root { --bg-base:#f3efe3; --bg-surface:#fffdf6; --bg-card:#fffdf6; --bg-card-hover:#fff; --accent:#bd641e; --accent-glow:rgba(189,100,30,.2); --cyan:#176b62; --text-main:#192f2b; --text-muted:#65736c; --border:rgba(25,47,43,.12); --border-glow:rgba(189,100,30,.24); }
+        body { color:#192f2b; background:#f3efe3; background-image:radial-gradient(circle at 92% 9%,rgba(232,188,85,.17),transparent 25%),linear-gradient(180deg,#faf7ed,#f0ecdf); }
+        header { background:rgba(250,247,237,.94); border-bottom:1px solid rgba(25,47,43,.1); box-shadow:0 6px 22px rgba(48,54,38,.04); }
+        .brand-logo { color:#174e47; text-shadow:none; }
+        .brand-tag { background:#e7d49d; color:#4a431f; border:1px solid rgba(74,67,31,.12); }
+        .icon-btn { color:#174e47; background:#ebe8dc; border-color:rgba(25,47,43,.1); }
+        .icon-btn:hover,.icon-btn:active { background:#176b62; color:white; border-color:#176b62; }
+        .search-container { background:#f7f3e8; border-color:rgba(25,47,43,.1); }
+        .search-input { background:#fffdf6; border-color:rgba(25,47,43,.15); color:#192f2b; box-shadow:0 5px 16px rgba(40,45,31,.04); }
+        .search-input::placeholder { color:#7b847a; }
+        .search-input:focus { border-color:#176b62; box-shadow:0 0 0 3px rgba(23,107,98,.12); }
+        .search-input-box>i { color:#176b62; }
+        .search-clear-btn { background:#e5e2d7; color:#264c46; }
+        .hero-banner { min-height:250px; margin:1.25rem 1rem 1.6rem; padding:1.6rem; border:0; border-radius:28px 28px 28px 8px; color:#fff9e9; background:linear-gradient(112deg,#15574e 0%,#1c6b5c 53%,#bd7b32 160%); box-shadow:0 16px 34px rgba(29,75,65,.18); }
+        .hero-banner::before { content:'சினிமா'; position:absolute; right:-.1em; bottom:-.42em; color:rgba(255,244,207,.1); font-family:Georgia,serif; font-weight:900; font-size:clamp(5rem,20vw,11rem); letter-spacing:-.09em; line-height:1; pointer-events:none; }
+        .hero-banner::after { inset:12px; border:1px solid rgba(255,246,213,.18); border-radius:21px 21px 21px 4px; background:radial-gradient(circle at 100% 0,rgba(236,190,92,.3),transparent 36%); }
+        .hero-badge { position:relative; z-index:1; color:#f4d783; border:1px solid rgba(244,215,131,.38); background:rgba(9,48,42,.27); letter-spacing:.12em; font-size:.62rem; }
+        .hero-title { position:relative; z-index:1; max-width:390px; font-family:Georgia,'Times New Roman',serif; font-size:clamp(1.9rem,7vw,2.65rem); font-weight:700; letter-spacing:-.045em; line-height:1.04; }
+        .hero-desc { position:relative; z-index:1; color:rgba(255,249,233,.78); max-width:360px; }
+        .hero-buttons { position:relative; z-index:2; }
+        .btn-primary { background:#e8bf60; color:#253d34; box-shadow:none; font-weight:800; }
+        .btn-primary:active { transform:translateY(1px); }
+        .section-title { color:#1a3832; font-family:Georgia,'Times New Roman',serif; font-size:1.22rem; }
+        .section-title i { color:#bd641e; }
+        .year-pill { color:#31554c; background:#e8e5d8; border-color:rgba(25,47,43,.07); }
+        .year-pill.active { color:#fffdf4; background:#176b62; border-color:#176b62; box-shadow:0 5px 14px rgba(23,107,98,.18); }
+        .movies-grid-container { margin-bottom:2.5rem; }
+        .movie-card { color:#203c35; background:#fffdf6; border-color:rgba(25,47,43,.1); box-shadow:0 4px 14px rgba(48,54,38,.055); }
+        .movie-card:hover,.movie-card:active { color:#203c35; background:#fffefa; border-color:rgba(23,107,98,.32); box-shadow:0 12px 25px rgba(41,68,58,.12); }
+        .card-poster { background:linear-gradient(145deg,#dbc987,#8eaa91); }
+        .movie-card:nth-child(5n+1) .card-poster { background:linear-gradient(145deg,#e9bf68,#b95639); }
+        .movie-card:nth-child(5n+2) .card-poster { background:linear-gradient(145deg,#78a99a,#286a61); }
+        .movie-card:nth-child(5n+3) .card-poster { background:linear-gradient(145deg,#d69b71,#734f61); }
+        .movie-card:nth-child(5n+4) .card-poster { background:linear-gradient(145deg,#d5bf76,#687c62); }
+        .movie-card:nth-child(5n) .card-poster { background:linear-gradient(145deg,#99b3be,#525d7a); }
+        .card-poster .folder-icon { color:rgba(255,250,225,.8); opacity:.95; }
+        .card-poster::after { background:linear-gradient(transparent,rgba(20,43,36,.34)); }
+        .card-title { color:#203c35; }
+        .card-meta { color:#718078; }
+        .card-meta span:first-child { color:#176b62!important; }
+        .card-play-tag { color:#a6581c; }
+        .quality-tag { color:#fff9e9; background:rgba(25,57,48,.78); }
+        .bottom-nav { background:rgba(250,247,237,.97); border-color:rgba(25,47,43,.12); box-shadow:0 -8px 24px rgba(48,54,38,.07); }
+        .nav-item { color:#748078; }
+        .nav-item.active,.nav-item:hover { color:#176b62; }
+        .history-card { border-color:rgba(25,47,43,.1); color:#203c35; background:linear-gradient(145deg,#fffdf6,#e9e5d7); }
+        .history-card-title { color:#203c35; }
+        .history-card-meta { color:#65736c; }
+        .history-empty { color:#65736c; }
+        .bottom-sheet { color:#203c35; background:#fffdf6; border-color:rgba(25,47,43,.12); }
+        .sheet-title { color:#203c35; }
+        .sheet-header { border-color:rgba(25,47,43,.12); }
+        .sheet-close { color:#203c35; background:#ede9dc; }
+        .quality-card { color:#203c35; background:#f1eee3; border-color:rgba(25,47,43,.1); }
+        .quality-card:hover,.quality-card:active { background:#e8f0e8; border-color:#176b62; }
+        .quality-name { color:#203c35; }
+        .quality-meta { color:#65736c; }
+        .badge-pill { color:#fff9e9; background:#176b62; }
+        .unavailable-state strong,.search-message strong { color:#203c35; }
+        .search-active { background:#f3efe3; }
+        .search-active .search-container { background:#f3efe3; }
+        .search-active .movie-card { background:#fffdf6; }
+        .search-active .card-title { color:#203c35; }
+        .search-active .card-play-tag { color:#176b62; background:rgba(23,107,98,.09); }
+        /* Keep the viewing surface atmospheric and low-glare; use warm gold controls. */
+        .player-modal { color:#fff8e9; background:radial-gradient(ellipse at 50% 0,rgba(23,107,98,.22),transparent 52%),#070c0c; }
+        .player-back-btn,.player-action-link,.pctrl-btn { color:#fff8e9; border-color:rgba(244,222,163,.16); background:rgba(21,34,32,.76); }
+        .player-back-btn:hover,.player-action-link:hover,.pctrl-btn:hover { background:rgba(23,107,98,.78); }
+        .player-quality-button { color:#f0cd71; }
+        .player-progress::-webkit-slider-thumb { background:#e8bf60; box-shadow:0 0 0 3px rgba(232,191,96,.18); }
+        .player-progress::-moz-range-thumb { background:#e8bf60; }
+        .player-center-play { color:#1c3932; background:#e8bf60; box-shadow:0 8px 35px rgba(232,191,96,.24); }
+        .player-loading-ring { border-top-color:#e8bf60; }
+        .player-status-pill { color:#fff8e9; }
+        .player-error-notice { color:#fff8e9; }
+        @media(max-width:599px) {
+            .hero-banner { min-height:220px; margin:.8rem .85rem 1.3rem; padding:1.25rem; }
+            .hero-title { max-width:300px; font-size:2.05rem; }
+            .hero-badge { font-size:.58rem; }
+            .movie-card { border-radius:18px; }
+        }
+        /* Layered 3D cinema gallery */
+        .hero-banner { perspective:1100px; transform-style:preserve-3d; isolation:isolate; }
+        .hero-scene { position:absolute; inset:0; z-index:0; overflow:hidden; perspective:900px; transform-style:preserve-3d; pointer-events:none; }
+        .hero-spotlight { position:absolute; width:42%; height:150%; right:9%; top:-35%; transform:rotate(24deg) translateZ(-40px); background:linear-gradient(180deg,rgba(250,219,142,.24),rgba(250,219,142,0)); filter:blur(8px); }
+        .hero-reel { position:absolute; right:24%; top:20%; width:150px; aspect-ratio:1; display:grid; place-items:center; border:2px solid rgba(248,223,161,.32); border-radius:50%; color:rgba(248,223,161,.44); font-size:4.5rem; transform:translateZ(-30px) rotateX(10deg) rotateY(-24deg); box-shadow:0 0 0 15px rgba(248,223,161,.045),0 0 0 33px rgba(248,223,161,.035); }
+        .hero-mini-poster { position:absolute; right:9%; top:17%; width:118px; height:164px; display:flex; flex-direction:column; justify-content:space-between; padding:13px; color:#fff7da; border:1px solid rgba(255,255,255,.45); border-radius:5px 14px 7px 5px; box-shadow:12px 18px 22px rgba(8,34,29,.3),inset 0 0 30px rgba(255,255,255,.1); transform-style:preserve-3d; font-family:Georgia,serif; }
+        .hero-mini-poster span { font-size:1.35rem; line-height:1.1; font-weight:800; text-shadow:0 2px 9px rgba(0,0,0,.25); }
+        .hero-mini-poster small { font:700 .48rem 'Plus Jakarta Sans',sans-serif; letter-spacing:.12em; opacity:.8; }
+        .hero-mini-poster-back { right:20%; top:24%; background:linear-gradient(145deg,#b95343,#502d45 65%,#25283a); transform:translateZ(25px) rotateY(-22deg) rotateZ(-9deg); animation:posterDriftBack 8s ease-in-out infinite; }
+        .hero-mini-poster-front { background:linear-gradient(145deg,#e9c96c,#ac663c 48%,#27695e); transform:translateZ(75px) rotateY(-13deg) rotateZ(7deg); animation:posterDriftFront 7s ease-in-out infinite; }
+        @keyframes posterDriftFront { 0%,100%{translate:0 0} 50%{translate:0 -9px} }
+        @keyframes posterDriftBack { 0%,100%{translate:0 0} 50%{translate:0 8px} }
+        .year-pills-wrapper { perspective:800px; }
+        .year-pills { transform-style:preserve-3d; padding:8px 6px 14px; }
+        .year-pill { box-shadow:0 4px 0 rgba(58,72,57,.12),0 7px 12px rgba(42,55,43,.07); transform:rotateX(7deg) translateZ(0); transition:transform .22s,box-shadow .22s,background .22s; }
+        .year-pill:hover,.year-pill.active { transform:rotateX(0) translateY(-3px) translateZ(8px); box-shadow:0 7px 0 rgba(35,75,64,.12),0 12px 18px rgba(42,55,43,.12); }
+        .movies-grid-container { perspective:1500px; }
+        .movies-grid { transform-style:preserve-3d; }
+        .movie-card { transform-style:preserve-3d; backface-visibility:hidden; transition:transform .24s cubic-bezier(.2,.7,.2,1),box-shadow .24s,border-color .24s; }
+        .movie-card .card-poster { transform:translateZ(10px); transform-style:preserve-3d; }
+        .movie-card .card-details { transform:translateZ(5px); }
+        .movie-card:hover,.movie-card:focus-visible { transform:perspective(900px) rotateX(2deg) rotateY(-3deg) translateY(-6px) translateZ(14px); }
+        .hero-badge,.hero-title,.hero-desc,.hero-buttons { transform:translateZ(42px); }
+        .hero-title { max-width:49%; }
+        .player-modal { isolation:isolate; overflow:hidden; }
+        .player-modal::before { content:''; position:absolute; width:min(90vw,900px); height:min(60vw,600px); left:50%; top:50%; z-index:-1; transform:translate(-50%,-50%); background:radial-gradient(ellipse,rgba(38,119,102,.2),rgba(205,157,72,.055) 42%,transparent 72%); filter:blur(12px); }
+        .cinema-stage { border:1px solid rgba(232,191,96,.22); border-radius:18px; box-shadow:0 28px 70px rgba(0,0,0,.65),0 0 0 10px rgba(241,215,157,.025),0 0 0 22px rgba(241,215,157,.018); }
+        .player-top-bar,.player-controls { transform-style:preserve-3d; }
+        .player-back-btn,.player-action-link,.pctrl-btn { box-shadow:0 6px 16px rgba(0,0,0,.22); }
+        @media(max-width:700px) {
+            .hero-title { max-width:72%; }
+            .hero-reel { right:10%; top:20%; width:120px; font-size:3.5rem; }
+            .hero-mini-poster { right:4%; top:21%; width:88px; height:126px; padding:9px; }
+            .hero-mini-poster span { font-size:1rem; }
+            .hero-mini-poster small { font-size:.4rem; }
+            .hero-mini-poster-back { right:16%; top:29%; }
+            .movie-card:hover,.movie-card:focus-visible { transform:translateY(-3px) translateZ(4px); }
+            .search-active .movie-card { transform:none; }
+            .cinema-stage { border-radius:0; box-shadow:0 16px 44px rgba(0,0,0,.55); }
+        }
+        @media(prefers-reduced-motion:reduce) {
+            *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+            .movie-card,.year-pill { transform:none!important; }
+        }
+        html { scroll-behavior:smooth; }
+        .scroll-reveal { opacity:0; transform:translate3d(0,22px,0) rotateX(2deg); transform-origin:50% 100%; filter:blur(2px); transition:opacity .48s ease,transform .58s cubic-bezier(.2,.7,.2,1),filter .48s ease; }
+        .scroll-reveal.is-visible { opacity:1; transform:translate3d(0,0,0) rotateX(0); filter:blur(0); }
+        .movie-card.scroll-reveal:nth-child(4n+2) { transition-delay:35ms; }
+        .movie-card.scroll-reveal:nth-child(4n+3) { transition-delay:70ms; }
+        .movie-card.scroll-reveal:nth-child(4n) { transition-delay:105ms; }
+        @media(max-width:700px) {
+            .scroll-reveal { transform:translate3d(0,16px,0); filter:none; transition-duration:.4s; }
+            .movie-card.scroll-reveal:nth-child(n) { transition-delay:0ms; }
+            .movie-card.scroll-reveal.is-visible { transform:translate3d(0,0,0); }
+        }
+        @media(max-width:599px) {
+            .movies-grid-container .movies-grid { grid-template-columns:minmax(0,1fr); gap:.78rem; }
+            .movies-grid-container .movie-card { display:grid; grid-template-columns:108px minmax(0,1fr); min-height:142px; border-radius:18px; }
+            .movies-grid-container .card-poster { width:108px; height:100%; min-height:142px; aspect-ratio:auto; }
+            .movies-grid-container .card-details { min-width:0; padding:.85rem .9rem; gap:.65rem; }
+            .movies-grid-container .card-title { font-size:.94rem; }
+            .movies-grid-container .card-meta { font-size:.72rem; }
+            .movies-grid-container .movie-card.scroll-reveal { transform:translate3d(26px,8px,0) rotateY(-3deg); }
+            .movies-grid-container .movie-card.scroll-reveal.is-visible { transform:translate3d(0,0,0) rotateY(0); }
+            .search-active .movies-grid-container .movies-grid { grid-template-columns:minmax(0,1fr); }
+            .search-active .movies-grid-container .movie-card { grid-template-columns:72px minmax(0,1fr); min-height:92px; }
+            .search-active .movies-grid-container .card-poster { width:72px; height:92px; min-height:92px; }
+        }
+        body.player-open { overflow:hidden; overscroll-behavior:none; }
+        .player-modal:fullscreen,.player-modal:-webkit-full-screen { position:fixed; inset:0; width:100vw; height:100dvh; display:flex!important; align-items:center; justify-content:center; background:#050909; }
+        .player-modal:fullscreen .cinema-stage,.player-modal:-webkit-full-screen .cinema-stage { width:100vw; height:100dvh; max-width:none; max-height:none; aspect-ratio:auto; border:0; border-radius:0; box-shadow:none; }
+        @media(max-width:700px) {
+            .player-modal { align-items:center; justify-content:center; background:#030707; }
+            .cinema-stage { width:100vw; height:100dvh; max-width:none; max-height:none; aspect-ratio:auto; border:0; border-radius:0; box-shadow:none; }
+            .video-wrapper { width:100%; height:100%; }
+            .player-top-bar { padding-top:max(.8rem,env(safe-area-inset-top)); }
+            .player-controls { padding-bottom:max(.9rem,env(safe-area-inset-bottom)); }
+        }
     </style>
 </head>
 <body>
@@ -859,7 +1113,7 @@
     <header>
         <a href="#" class="brand" onclick="selectYear(2026)">
             <div class="brand-logo">CINEXIS</div>
-            <div class="brand-tag">AD-FREE</div>
+            <div class="brand-tag">TAMIL FILMS</div>
         </a>
         <div class="header-actions">
             <button class="icon-btn" onclick="toggleSearch()" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -872,14 +1126,21 @@
         <div class="search-input-box">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" id="searchInput" class="search-input" placeholder="Search Tamil movies or series..." oninput="handleLiveSearch(this.value)">
+            <button class="search-clear-btn" type="button" aria-label="Clear search" onclick="searchInput.value=''; handleLiveSearch(''); searchInput.focus();"><i class="fa-solid fa-xmark"></i></button>
         </div>
     </div>
 
     <!-- Featured Hero Banner -->
     <div class="hero-banner" id="heroBanner">
-        <div class="hero-badge"><i class="fa-solid fa-bolt"></i> 100% Ad-Free Streaming</div>
-        <div class="hero-title">Latest Tamil Cinema Hub</div>
-        <div class="hero-desc">Stream full HD Tamil movies & web series with instant zero-buffer video playback.</div>
+        <div class="hero-scene" aria-hidden="true">
+            <div class="hero-spotlight"></div>
+            <div class="hero-reel"><i class="fa-solid fa-film"></i></div>
+            <div class="hero-mini-poster hero-mini-poster-back"><span>நினைவுகள்</span><small>A CINEXIS STORY</small></div>
+            <div class="hero-mini-poster hero-mini-poster-front"><span>புதிய<br>கதைகள்</span><small>NOW SHOWING</small></div>
+        </div>
+        <div class="hero-badge"><i class="fa-solid fa-ticket"></i> THE TAMIL FILM SHELF</div>
+        <div class="hero-title">Stories made to stay with you.</div>
+        <div class="hero-desc">Find your next favourite from a growing collection of Tamil cinema.</div>
         <div class="hero-buttons">
             <button class="btn-primary" onclick="selectYear(2026)"><i class="fa-solid fa-play"></i> Browse 2026 Releases</button>
         </div>
@@ -938,6 +1199,7 @@
             <button class="player-back-btn" onclick="closePlayer()"><i class="fa-solid fa-arrow-left"></i><span>Back</span></button>
             <div class="player-title-text" id="playerTitle">Video Stream</div>
             <div style="display:flex;align-items:center;gap:.45rem;">
+                <button class="player-action-link player-quality-button" id="playerQualityBtn" onclick="openPlayerQualityPicker()" title="Change video quality">1080p</button>
                 <button class="player-action-link" id="engineToggleBtn" onclick="togglePlayerEngine()" title="Switch Player">
                     <i class="fa-solid fa-repeat"></i><span id="engineLabel">Web Player</span>
                 </button>
@@ -1017,6 +1279,8 @@
 
         let currentYear = 2026;
         let currentPage = 1;
+        let movieLoadToken = 0;
+        let qualityRequestToken = 0;
         let allYearMovies = [];
         let activeQualityList = [];
 
@@ -1039,6 +1303,7 @@
         const playerTitle = document.getElementById('playerTitle');
         const playerDownloadBtn = document.getElementById('playerDownloadBtn');
         const playerOpenTabBtn = document.getElementById('playerOpenTabBtn');
+        const playerQualityBtn = document.getElementById('playerQualityBtn');
         const playerErrorNotice = document.getElementById('playerErrorNotice');
         const engineLabel = document.getElementById('engineLabel');
         const playerLoading = document.getElementById('playerLoading');
@@ -1057,6 +1322,56 @@
         const playerStatusPill = document.getElementById('playerStatusPill');
         const historySection = document.getElementById('historySection');
         const historyRow = document.getElementById('historyRow');
+        const heroBanner = document.getElementById('heroBanner');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const scrollRevealObserver = ('IntersectionObserver' in window && !prefersReducedMotion.matches)
+            ? new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('is-visible');
+                    scrollRevealObserver.unobserve(entry.target);
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' })
+            : null;
+
+        function revealOnScroll(element) {
+            if (!element) return;
+            if (!scrollRevealObserver) {
+                element.classList.add('is-visible');
+                return;
+            }
+            element.classList.add('scroll-reveal');
+            scrollRevealObserver.observe(element);
+        }
+
+        [heroBanner, document.querySelector('.year-pills-wrapper'), document.querySelector('.movies-grid-container .section-header'), historySection.querySelector('.section-header')]
+            .forEach(revealOnScroll);
+
+        heroBanner.addEventListener('pointermove', (event) => {
+            if (event.pointerType === 'touch') return;
+            const scene = heroBanner.querySelector('.hero-scene');
+            const rect = heroBanner.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width - .5;
+            const y = (event.clientY - rect.top) / rect.height - .5;
+            scene.style.transform = `rotateX(${(-y * 3).toFixed(2)}deg) rotateY(${(x * 4).toFixed(2)}deg)`;
+        });
+        heroBanner.addEventListener('pointerleave', () => {
+            heroBanner.querySelector('.hero-scene').style.transform = '';
+        });
+
+        moviesGrid.addEventListener('pointermove', (event) => {
+            if (event.pointerType === 'touch') return;
+            const card = event.target.closest('.movie-card');
+            if (!card) return;
+            const rect = card.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width - .5;
+            const y = (event.clientY - rect.top) / rect.height - .5;
+            card.style.transform = `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg) translateY(-5px) translateZ(12px)`;
+        });
+        moviesGrid.addEventListener('pointerout', (event) => {
+            const card = event.target.closest('.movie-card');
+            if (card && !card.contains(event.relatedTarget)) card.style.transform = '';
+        });
 
         const HISTORY_KEY = 'cinexis_watch_history_v2';
         const MAX_HISTORY = 30;
@@ -1092,6 +1407,8 @@
         function toggleSearch() {
             if (searchDrawer.style.display === 'block') {
                 searchDrawer.style.display = 'none';
+                searchInput.value = '';
+                handleLiveSearch('');
             } else {
                 searchDrawer.style.display = 'block';
                 searchInput.focus();
@@ -1099,108 +1416,166 @@
         }
 
         async function loadMovies(year) {
-            moviesGrid.innerHTML = `
-                <div class="spinner-loader" style="grid-column: 1 / -1;">
-                    <div class="spinner"></div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">Fetching ${year} movies...</div>
-                </div>
-            `;
-
-            const targetUrl = `${SOURCE_BASE}/tamil-${year}-movies/`;
-            const proxyUrl = `${PROXY_BASE}${encodeURIComponent(targetUrl)}`;
-
+            const loadToken = ++movieLoadToken;
+            const pageIndicator = document.getElementById('pageIndicator');
+            const cacheKey = `cinexis_movies_${year}_v1`;
+            let cachedMovies = [];
             try {
-                const res = await fetch(proxyUrl);
-                const html = await res.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-
-                const divs = doc.querySelectorAll('div.f');
-                allYearMovies = [];
-
-                divs.forEach(div => {
-                    const a = div.querySelector('a');
-                    if (!a) return;
-                    let text = a.textContent.trim();
-                    if (!text || text.toLowerCase().includes('go home page')) return;
-
-                    let cleanTitle = text.replace(/\s*\(\d{4}\)/gi, '').trim();
-                    allYearMovies.push({
-                        rawTitle: text,
-                        title: cleanTitle,
-                        link: a.getAttribute('href') || ''
-                    });
-                });
-
-                renderMovies(allYearMovies);
-
-            } catch (err) {
+                cachedMovies = JSON.parse(localStorage.getItem(cacheKey) || '[]');
+                if (!Array.isArray(cachedMovies)) cachedMovies = [];
+            } catch (e) { cachedMovies = []; }
+            allYearMovies = cachedMovies;
+            if (cachedMovies.length) {
+                renderMovies(cachedMovies);
+                pageIndicator.textContent = `${cachedMovies.length} movies · refreshing`;
+            } else {
+                pageIndicator.textContent = '';
                 moviesGrid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--accent);">
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                        <div>Failed to load movies. Please check your network connection.</div>
+                    <div class="spinner-loader" style="grid-column: 1 / -1;">
+                        <div class="spinner"></div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Loading ${year} movies…</div>
                     </div>
                 `;
+            }
+
+            try {
+                const targetUrl = `${SOURCE_BASE}/tamil-${year}-movies/`;
+                const fetchPage = async (page) => {
+                    const pageUrl = page === 1 ? targetUrl : `${targetUrl}?page=${page}`;
+                    const res = await fetch(`${PROXY_BASE}${encodeURIComponent(pageUrl)}`);
+                    if (!res.ok) throw new Error(`Page ${page} could not be loaded`);
+                    return await res.text();
+                };
+                const parsePage = (html) => {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const entries = [];
+                    doc.querySelectorAll('div.f').forEach(div => {
+                        const a = div.querySelector('a');
+                        if (!a) return;
+                        const rawTitle = a.textContent.trim();
+                        if (!rawTitle || rawTitle.toLowerCase().includes('go home page')) return;
+                        entries.push({
+                            rawTitle,
+                            title: rawTitle.replace(/\s*\(\d{4}\)/gi, '').trim(),
+                            link: a.getAttribute('href') || '',
+                            poster: div.querySelector('img')?.getAttribute('data-src') || div.querySelector('img')?.getAttribute('src') || ''
+                        });
+                    });
+                    const pageCountMatch = (doc.body.innerText || '').match(/Showing\s+Page\s+\d+\s+of\s+(\d+)/i);
+                    let pageCount = pageCountMatch ? Number(pageCountMatch[1]) : 1;
+                    doc.querySelectorAll('a[href]').forEach(a => {
+                        const match = (a.getAttribute('href') || '').match(/[?&]page=(\d+)/i);
+                        if (match) pageCount = Math.max(pageCount, Number(match[1]));
+                    });
+                    return { entries, pageCount };
+                };
+
+                const firstPage = parsePage(await fetchPage(1));
+                if (loadToken !== movieLoadToken) return;
+                const pageCount = Math.max(1, firstPage.pageCount);
+                const pages = Array.from({ length: pageCount - 1 }, (_, i) => i + 2);
+                const seen = new Set();
+                const addUnique = (entries) => entries.filter(movie => {
+                        const key = (movie.link || movie.rawTitle).toLowerCase().trim();
+                        if (seen.has(key)) return false;
+                        seen.add(key);
+                        return true;
+                    });
+                const firstMovies = addUnique(firstPage.entries);
+                allYearMovies = firstMovies;
+                renderMovies(firstMovies);
+                pageIndicator.textContent = `${allYearMovies.length} movies${pages.length ? ' · loading more' : ''}`;
+
+                // Fetch remaining pages concurrently, while adding them in page order.
+                for (let i = 0; i < pages.length; i += 6) {
+                    const batchPages = pages.slice(i, i + 6);
+                    const batch = await Promise.all(batchPages.map(async page => ({
+                        page,
+                        entries: parsePage(await fetchPage(page)).entries
+                    })));
+                    if (loadToken !== movieLoadToken) return;
+                    batch.sort((a, b) => a.page - b.page).forEach(result => {
+                        const added = addUnique(result.entries);
+                        allYearMovies.push(...added);
+                        if (added.length) renderMovies(added, false, '', true);
+                    });
+                    pageIndicator.textContent = `${allYearMovies.length} movies · loaded ${Math.min(i + batchPages.length + 1, pageCount)} / ${pageCount} pages`;
+                }
+
+                if (loadToken !== movieLoadToken) return;
+                try { localStorage.setItem(cacheKey, JSON.stringify(allYearMovies)); } catch (e) {}
+                pageIndicator.textContent = `${allYearMovies.length} movies`;
+
+            } catch (err) {
+                if (loadToken !== movieLoadToken) return;
+                if (allYearMovies.length) {
+                    pageIndicator.innerHTML = `${allYearMovies.length} movies · some pages failed <button onclick="loadMovies(${year})" style="border:0;background:none;color:var(--cyan);cursor:pointer;font:inherit;text-decoration:underline;">Retry</button>`;
+                } else {
+                    moviesGrid.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--accent);">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div>Failed to load movies. Please check your connection and try again.</div>
+                            <button class="btn-primary" style="margin-top:1rem;" onclick="loadMovies(${year})">Try again</button>
+                        </div>
+                    `;
+                }
             }
         }
 
         let globalIndexedMovies = [];
         let isIndexingGlobal = false;
+        let globalIndexPromise = null;
         let searchDebounceTimer = null;
+        let searchRequestToken = 0;
 
-        // Preload & index all years for instant global searching
-        async function indexAllYears() {
-            if (isIndexingGlobal || globalIndexedMovies.length > 50) return;
+        // Build the global catalog only when the user starts searching.
+        function indexAllYears() {
+            if (globalIndexedMovies.length > 50) return Promise.resolve();
+            if (globalIndexPromise) return globalIndexPromise;
             isIndexingGlobal = true;
-
-            const fetchYearPromises = YEARS.map(async (yr) => {
-                try {
-                    const targetUrl = `${SOURCE_BASE}/tamil-${yr}-movies/`;
-                    const res = await fetch(`${PROXY_BASE}${encodeURIComponent(targetUrl)}`);
-                    const html = await res.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-
-                    const divs = doc.querySelectorAll('div.f');
-                    divs.forEach(div => {
-                        const a = div.querySelector('a');
-                        if (!a) return;
-                        let text = a.textContent.trim();
-                        if (!text || text.toLowerCase().includes('go home page')) return;
-
-                        let cleanTitle = text.replace(/\s*\(\d{4}\)/gi, '').trim();
-                        if (!globalIndexedMovies.some(existing => existing.title.toLowerCase() === cleanTitle.toLowerCase())) {
-                            globalIndexedMovies.push({
-                                rawTitle: text,
-                                title: cleanTitle,
-                                year: yr,
-                                link: a.getAttribute('href') || ''
-                            });
-                        }
-                    });
-                } catch (e) {}
+            globalIndexPromise = (async () => {
+                const fetchYearPromises = YEARS.map(async (yr) => {
+                    try {
+                        const targetUrl = `${SOURCE_BASE}/tamil-${yr}-movies/`;
+                        const res = await fetch(`${PROXY_BASE}${encodeURIComponent(targetUrl)}`);
+                        const html = await res.text();
+                        const doc = new DOMParser().parseFromString(html, 'text/html');
+                        doc.querySelectorAll('div.f').forEach(div => {
+                            const a = div.querySelector('a');
+                            if (!a) return;
+                            const rawTitle = a.textContent.trim();
+                            if (!rawTitle || rawTitle.toLowerCase().includes('go home page')) return;
+                            const title = rawTitle.replace(/\s*\(\d{4}\)/gi, '').trim();
+                            if (!globalIndexedMovies.some(existing => existing.title.toLowerCase() === title.toLowerCase())) {
+                                globalIndexedMovies.push({
+                                    rawTitle, title, year: yr, link: a.getAttribute('href') || '',
+                                    poster: div.querySelector('img')?.getAttribute('data-src') || div.querySelector('img')?.getAttribute('src') || ''
+                                });
+                            }
+                        });
+                    } catch (e) {}
+                });
+                await Promise.allSettled(fetchYearPromises);
+            })().finally(() => {
+                isIndexingGlobal = false;
+                globalIndexPromise = null;
             });
-
-            await Promise.allSettled(fetchYearPromises);
-            isIndexingGlobal = false;
+            return globalIndexPromise;
         }
 
-        // Trigger pre-indexing quietly on page load
-        setTimeout(indexAllYears, 500);
-
-        function renderMovies(movies, isSearch = false, query = '') {
+        function renderMovies(movies, isSearch = false, query = '', append = false) {
             if (!movies || movies.length === 0) {
                 moviesGrid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
                         <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 0.8rem; color: var(--accent);"></i>
-                        <div style="font-size: 1rem; font-weight: 700; color: #fff;">No movies found ${isSearch ? `for "${query}"` : ''}</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: #fff;">No movies found ${isSearch ? `for "${escapeHtml(query)}"` : ''}</div>
                         <div style="font-size: 0.82rem; margin-top: 0.4rem;">Try searching for another movie title.</div>
                     </div>
                 `;
                 return;
             }
 
-            moviesGrid.innerHTML = '';
+            if (!append) moviesGrid.innerHTML = '';
             movies.forEach(m => {
                 const card = document.createElement('div');
                 card.className = 'movie-card';
@@ -1214,51 +1589,65 @@
                         <span class="quality-tag">HD</span>
                     </div>
                     <div class="card-details">
-                        <div class="card-title">${m.title}</div>
+                        <div class="card-title">${escapeHtml(m.title)}</div>
                         <div class="card-meta">
                             <span style="color: var(--cyan); font-weight: 800;">${movieYear}</span>
-                            <span class="card-play-tag"><i class="fa-solid fa-play"></i> Stream</span>
+                            <span class="card-play-tag">${m.link || m.url ? '<i class="fa-solid fa-play"></i> Play' : 'Unavailable'}</span>
                         </div>
                     </div>
                 `;
+                if (m.poster) {
+                    const posterImage = document.createElement('img');
+                    posterImage.src = toAbsoluteUrl(m.poster);
+                    posterImage.alt = '';
+                    posterImage.loading = 'lazy';
+                    card.querySelector('.card-poster').prepend(posterImage);
+                    card.querySelector('.folder-icon').style.display = 'none';
+                }
                 moviesGrid.appendChild(card);
+                revealOnScroll(card);
             });
         }
 
         async function handleLiveSearch(query) {
             clearTimeout(searchDebounceTimer);
+            const requestToken = ++searchRequestToken;
             const q = query.trim().toLowerCase();
 
             if (!q) {
+                document.body.classList.remove('search-active');
                 currentSectionTitle.innerHTML = `<i class="fa-solid fa-clapperboard"></i> Tamil ${currentYear} Movies`;
                 renderMovies(allYearMovies);
                 return;
             }
 
-            currentSectionTitle.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Searching all years for "${query}"...`;
+            document.body.classList.add('search-active');
+            currentSectionTitle.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Matching movies`;
+            const findMatches = () => {
+                const combined = [...allYearMovies, ...globalIndexedMovies];
+                const unique = new Map();
+                combined.forEach(movie => {
+                    if (!movie?.title) return;
+                    const key = (movie.link || `${movie.year || ''}:${movie.title}`).toLowerCase();
+                    if (!unique.has(key)) unique.set(key, movie);
+                });
+                return [...unique.values()].filter(movie =>
+                    movie.title.toLowerCase().includes(q) ||
+                    (movie.rawTitle || '').toLowerCase().includes(q)
+                );
+            };
+
+            const initialResults = findMatches();
+            if (initialResults.length) renderMovies(initialResults, true, query);
+            else moviesGrid.innerHTML = `<div class="search-message"><span class="spinner"></span><strong>Searching movies…</strong><small>Checking the catalog for “${escapeHtml(query)}”</small></div>`;
 
             searchDebounceTimer = setTimeout(async () => {
-                if (globalIndexedMovies.length < 30) {
-                    await indexAllYears();
-                }
-
-                let results = globalIndexedMovies.filter(m => 
-                    m.title.toLowerCase().includes(q) || 
-                    m.rawTitle.toLowerCase().includes(q)
-                );
-
-                const cleanSlug = cleanTitleSlug(query);
-                if (cleanSlug && !results.some(r => cleanTitleSlug(r.title) === cleanSlug)) {
-                    results.unshift({
-                        rawTitle: query,
-                        title: query,
-                        year: 'Direct Match'
-                    });
-                }
-
-                currentSectionTitle.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Search Results: "${query}" (${results.length})`;
+                await indexAllYears();
+                if (requestToken !== searchRequestToken || searchInput.value.trim().toLowerCase() !== q) return;
+                const results = findMatches();
+                currentSectionTitle.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> ${results.length} matching ${results.length === 1 ? 'movie' : 'movies'}`;
                 renderMovies(results, true, query);
-            }, 250);
+            }, 180);
         }
 
         function cleanTitleSlug(title) {
@@ -1268,20 +1657,45 @@
         function toAbsoluteUrl(href) {
             if (!href) return '';
             if (href.startsWith('http')) return href;
+            if (href.startsWith('//')) return `https:${href}`;
             return `${SOURCE_BASE}${href.startsWith('/') ? href.slice(1) : href}`;
         }
 
-        async function openMovieQualities(movieTitle, movieLink = '') {
-            sheetMovieTitle.textContent = movieTitle;
-            sheetBody.innerHTML = `
-                <div class="spinner-loader">
-                    <div class="spinner"></div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">Scanning quality options...</div>
-                </div>
-            `;
-            bottomSheet.style.display = 'flex';
+        function fetchWithTimeout(url, timeoutMs = 10000) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), timeoutMs);
+            return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeout));
+        }
 
+        async function openMovieQualities(movieTitle, movieLink = '') {
+            const qualityLoadToken = ++qualityRequestToken;
+            sheetMovieTitle.textContent = movieTitle;
+            if (!movieLink) {
+                sheetBody.innerHTML = `
+                    <div class="unavailable-state">
+                        <div class="unavailable-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+                        <strong>Movie not available</strong>
+                        <p>We found “${escapeHtml(movieTitle)}” in the catalog, but there isn’t a working movie page to play right now.</p>
+                    </div>
+                `;
+                bottomSheet.style.display = 'flex';
+                return;
+            }
             activeQualityList = [];
+            const streamCacheKey = `cinexis_stream_${cleanTitleSlug(movieTitle)}_1080p`;
+            let cachedStream = null;
+            try {
+                cachedStream = JSON.parse(localStorage.getItem(streamCacheKey) || 'null');
+                if (!cachedStream || cachedStream.expiresAt < Date.now()) cachedStream = null;
+            } catch (e) { cachedStream = null; }
+            if (cachedStream?.directUrl && cachedStream?.streamPageUrl && cachedStream?.folderUrl) {
+                activeQualityList.push({ name: '1080P', url: cachedStream.folderUrl, size: cachedStream.size || 'HD', label: '1080P' });
+                openPlayer(cachedStream.directUrl, movieTitle, cachedStream.streamPageUrl);
+                playerQualityBtn.textContent = '1080p';
+            } else {
+                openPlayer('', movieTitle, '', { deferred: true });
+                showPlayerStatus('Finding 1080p stream…');
+            }
 
             function parseItems(pageHtml) {
                 let items = [];
@@ -1302,90 +1716,130 @@
                 return items;
             }
 
-            try {
-                if (movieLink) {
-                    const movieUrl = toAbsoluteUrl(movieLink);
-                    const res = await fetch(`${PROXY_BASE}${encodeURIComponent(movieUrl)}`);
-                    const movieHtml = await res.text();
-                    const l1 = parseItems(movieHtml);
-
-                    for (const item of l1) {
-                        if (item.href.includes('/download/')) {
-                            activeQualityList.push({
-                                name: item.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
-                                url: toAbsoluteUrl(item.href),
-                                size: item.size,
-                                label: item.text.includes('1080') ? '1080P' : item.text.includes('720') ? '720P' : item.text.includes('480') ? '480P' : 'HD'
-                            });
-                        } else {
-                            const l2Res = await fetch(`${PROXY_BASE}${encodeURIComponent(toAbsoluteUrl(item.href))}`);
-                            const l2Html = await l2Res.text();
-                            const l2 = parseItems(l2Html);
-
-                            for (const item2 of l2) {
-                                if (item2.href.includes('/download/')) {
-                                    activeQualityList.push({
-                                        name: item2.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
-                                        url: toAbsoluteUrl(item2.href),
-                                        size: item2.size,
-                                        label: item2.text.includes('1080') ? '1080P' : item2.text.includes('720') ? '720P' : item2.text.includes('480') ? '480P' : 'HD'
-                                    });
-                                } else {
-                                    const l3Res = await fetch(`${PROXY_BASE}${encodeURIComponent(toAbsoluteUrl(item2.href))}`);
-                                    const l3Html = await l3Res.text();
-                                    const l3 = parseItems(l3Html);
-
-                                    for (const item3 of l3) {
-                                        if (item3.href.includes('/download/')) {
-                                            activeQualityList.push({
-                                                name: item3.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
-                                                url: toAbsoluteUrl(item3.href),
-                                                size: item3.size,
-                                                label: item2.text.includes('1080') || item3.text.includes('1080') ? '1080P' : item2.text.includes('720') || item3.text.includes('720') ? '720P' : item2.text.includes('480') || item3.text.includes('480') ? '480P' : 'HD'
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                        }
+            const loadOtherQualities = () => Promise.allSettled(QUALITIES.slice(1).map(async quality => {
+                const qualityUrl = `${SOURCE_BASE}${cleanTitleSlug(movieTitle)}-${quality}/`;
+                const qualityRes = await fetchWithTimeout(`${PROXY_BASE}${encodeURIComponent(qualityUrl)}`, 8000);
+                if (qualityLoadToken !== qualityRequestToken || !qualityRes.ok) return;
+                const qualityItems = parseItems(await qualityRes.text());
+                qualityItems.forEach(item => {
+                    if (!item.href.includes('/download/')) return;
+                    const label = quality.replace('-hd-movie', '').replace('-movie', '').toUpperCase();
+                    const url = toAbsoluteUrl(item.href);
+                    if (!activeQualityList.some(existing => existing.url === url)) {
+                        activeQualityList.push({ name: item.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'), url, size: item.size, label });
                     }
-                }
+                });
+            }));
 
-                // Fallback direct quality scan
-                if (activeQualityList.length === 0) {
-                    const slug = cleanTitleSlug(movieTitle);
-                    for (const q of QUALITIES) {
-                        try {
-                            const qUrl = `${SOURCE_BASE}${slug}-${q}/`;
-                            const qRes = await fetch(`${PROXY_BASE}${encodeURIComponent(qUrl)}`);
-                            if (qRes.ok) {
-                                const qHtml = await qRes.text();
-                                const items = parseItems(qHtml);
-                                for (const it of items) {
-                                    if (it.href.includes('/download/')) {
-                                        activeQualityList.push({
-                                            name: it.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
-                                            url: toAbsoluteUrl(it.href),
-                                            size: it.size,
-                                            label: q.replace('-movie', '').toUpperCase()
-                                        });
-                                    }
-                                }
-                            }
-                        } catch (e) {}
-                    }
-                }
-
-            } catch (err) {
-                console.error("Quality fetch error:", err);
-            }
-
-            if (activeQualityList.length === 0) {
-                sheetBody.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--accent);">No quality streams found for this entry.</div>`;
+            if (cachedStream) {
+                loadOtherQualities();
                 return;
             }
 
-            renderQualityList(movieTitle);
+            // Try all direct quality folders together. This avoids serial folder scans
+            // and still selects 1080p whenever that version exists.
+            try {
+                const slug = cleanTitleSlug(movieTitle);
+                const directResults = await Promise.allSettled(QUALITIES.map(async quality => {
+                    const qualityUrl = `${SOURCE_BASE}${slug}-${quality}/`;
+                    const qualityRes = await fetchWithTimeout(`${PROXY_BASE}${encodeURIComponent(qualityUrl)}`, 7000);
+                    if (!qualityRes.ok) return [];
+                    return parseItems(await qualityRes.text()).filter(item => item.href.includes('/download/')).map(item => ({
+                        name: item.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
+                        url: toAbsoluteUrl(item.href),
+                        size: item.size,
+                        label: quality === QUALITIES[0] ? '1080P' : quality.replace('-hd-movie', '').replace('-movie', '').toUpperCase()
+                    }));
+                }));
+                if (qualityLoadToken !== qualityRequestToken) return;
+                directResults.forEach(result => {
+                    if (result.status === 'fulfilled') activeQualityList.push(...result.value);
+                });
+                if (activeQualityList.length) {
+                    const selectedIndex = activeQualityList.reduce((best, item, index, list) => {
+                        const value = Number((item.label || '').match(/\d+/)?.[0]) || 0;
+                        const bestValue = Number((list[best]?.label || '').match(/\d+/)?.[0]) || 0;
+                        return value > bestValue ? index : best;
+                    }, 0);
+                    const streamStarted = await playQualityStream(selectedIndex, movieTitle, true, qualityLoadToken);
+                    if (!streamStarted) activeQualityList = [];
+                    if (streamStarted) return;
+                }
+            } catch (directQualityError) {
+                // Keep the movie-page route as a last resort.
+            }
+
+            try {
+                if (movieLink) {
+                    showPlayerStatus('Checking alternate stream folders…');
+                    const movieUrl = toAbsoluteUrl(movieLink);
+                    const res = await fetchWithTimeout(`${PROXY_BASE}${encodeURIComponent(movieUrl)}`, 7000);
+                    const movieHtml = await res.text();
+                    if (qualityLoadToken !== qualityRequestToken) return;
+                    const l1 = parseItems(movieHtml);
+                    const toQuality = (item, parentText = '') => {
+                        const qualityText = `${parentText} ${item.text}`;
+                        return {
+                            name: item.text.replace(/Moviesda(\.Mobi)?/gi, 'Cinexis'),
+                            url: toAbsoluteUrl(item.href),
+                            size: item.size,
+                            label: /1080/i.test(qualityText) ? '1080P' : /720/i.test(qualityText) ? '720P' : /480/i.test(qualityText) ? '480P' : 'HD'
+                        };
+                    };
+                    activeQualityList.push(...l1.filter(item => item.href.includes('/download/')).map(item => toQuality(item)));
+
+                    // Limit the legacy path to the most relevant branches and fetch each
+                    // level concurrently; avoid waiting through every folder in sequence.
+                    const firstLevel = l1.filter(item => !item.href.includes('/download/'))
+                        .sort((a, b) => Number(/1080/i.test(b.text)) - Number(/1080/i.test(a.text)))
+                        .slice(0, 4);
+                    const secondLevelResults = await Promise.allSettled(firstLevel.map(async item => {
+                        const l2Res = await fetchWithTimeout(`${PROXY_BASE}${encodeURIComponent(toAbsoluteUrl(item.href))}`, 6000);
+                        const l2 = parseItems(await l2Res.text());
+                        const direct = l2.filter(child => child.href.includes('/download/')).map(child => toQuality(child, item.text));
+                        const secondLevel = l2.filter(child => !child.href.includes('/download/'))
+                            .sort((a, b) => Number(/1080/i.test(b.text)) - Number(/1080/i.test(a.text)))
+                            .slice(0, 2);
+                        const thirdLevelResults = await Promise.allSettled(secondLevel.map(async item2 => {
+                            const l3Res = await fetchWithTimeout(`${PROXY_BASE}${encodeURIComponent(toAbsoluteUrl(item2.href))}`, 6000);
+                            const l3 = parseItems(await l3Res.text());
+                            return l3.filter(file => file.href.includes('/download/')).map(file => toQuality(file, `${item.text} ${item2.text}`));
+                        }));
+                        thirdLevelResults.forEach(result => { if (result.status === 'fulfilled') direct.push(...result.value); });
+                        return direct;
+                    }));
+                    if (qualityLoadToken !== qualityRequestToken) return;
+                    secondLevelResults.forEach(result => { if (result.status === 'fulfilled') activeQualityList.push(...result.value); });
+                }
+            } catch (err) {
+                console.warn('Alternate stream lookup failed:', err);
+            }
+
+            if (qualityLoadToken !== qualityRequestToken) return;
+
+            if (activeQualityList.length === 0) {
+                playerLoading.classList.remove('active');
+                playerErrorNotice.style.display = 'flex';
+                playerErrorNotice.querySelector('div:nth-of-type(1)').textContent = 'Movie not available';
+                playerErrorNotice.querySelector('div:nth-of-type(2)').textContent = 'We couldn’t find a playable stream for this movie.';
+                playerErrorNotice.querySelector('div:last-child').style.display = 'none';
+                return;
+            }
+
+            const preferredIndex = activeQualityList.findIndex(q => /1080/i.test(q.label + ' ' + q.name));
+            const selectedIndex = preferredIndex >= 0 ? preferredIndex : activeQualityList.reduce((best, q, i, list) => {
+                const quality = Number((q.label || '').match(/\d+/)?.[0]) || 0;
+                const bestQuality = Number((list[best]?.label || '').match(/\d+/)?.[0]) || 0;
+                return quality > bestQuality ? i : best;
+            }, 0);
+            await playQualityStream(selectedIndex, movieTitle, true);
+        }
+
+        function openPlayerQualityPicker() {
+            if (!activeQualityList.length) return;
+            sheetMovieTitle.textContent = 'Video quality';
+            renderQualityList(playerTitle.textContent);
+            bottomSheet.style.display = 'flex';
         }
 
         function renderQualityList(movieTitle) {
@@ -1411,19 +1865,22 @@
             });
         }
 
-        async function playQualityStream(index, movieTitle) {
+        async function playQualityStream(index, movieTitle, automatic = false, requestToken = qualityRequestToken) {
             const folderObj = activeQualityList[index];
-            sheetBody.innerHTML = `
-                <div class="spinner-loader">
-                    <div class="spinner"></div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">Extracting direct stream link...</div>
-                </div>
-            `;
+            if (!automatic) {
+                sheetBody.innerHTML = `
+                    <div class="spinner-loader">
+                        <div class="spinner"></div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Switching quality…</div>
+                    </div>
+                `;
+            }
 
             try {
                 // Fetch download file page
-                const fileRes = await fetch(`${PROXY_BASE}${encodeURIComponent(folderObj.url)}`);
+                const fileRes = await fetchWithTimeout(`${PROXY_BASE}${encodeURIComponent(folderObj.url)}`, 10000);
                 const fileHtml = await fileRes.text();
+                if (requestToken !== qualityRequestToken) return false;
 
                 // Extract file ID
                 const fileIdMatch = fileHtml.match(/\/download\/file\/(\d+)/i) || 
@@ -1434,8 +1891,9 @@
                 const fileId = fileIdMatch[1];
 
                 const streamPageUrl = `https://play.onestream.today/stream/page/${fileId}`;
-                const streamRes = await fetch(`${PROXY_BASE}${encodeURIComponent(streamPageUrl)}`);
+                const streamRes = await fetchWithTimeout(`${PROXY_BASE}${encodeURIComponent(streamPageUrl)}`, 10000);
                 const streamHtml = await streamRes.text();
+                if (requestToken !== qualityRequestToken) return false;
 
                 let directVideoUrl = null;
                 const match = streamHtml.match(/<source[^>]+src=["\x27]([^"\x27]+)["\x27]/i) || 
@@ -1447,21 +1905,60 @@
                 if (directVideoUrl.startsWith('//')) directVideoUrl = 'https:' + directVideoUrl;
 
                 closeBottomSheet();
-                // Open immediately. Buffering happens inside the player instead of
-                // keeping the user waiting on the quality sheet.
-                upsertWatchHistory({
+                const resumeAt = Number(cinemaVideo.currentTime) || 0;
+                currentDirectVideoUrl = directVideoUrl;
+                currentStreamPageUrl = streamPageUrl;
+                currentHistoryMeta = {
+                    ...(currentHistoryMeta || {}),
                     title: movieTitle,
                     year: currentYear,
                     directUrl: directVideoUrl,
                     streamUrl: streamPageUrl,
-                    position: 0,
-                    duration: 0,
-                    progress: 0
+                    position: resumeAt
+                };
+                cinemaVideo.src = directVideoUrl;
+                cinemaVideo.load();
+                playerLoading.classList.add('active');
+                cinemaVideo.addEventListener('canplay', () => playerLoading.classList.remove('active'), { once: true });
+                cinemaVideo.addEventListener('playing', () => playerLoading.classList.remove('active'), { once: true });
+                cinemaVideo.addEventListener('loadedmetadata', function restoreOnSwitch() {
+                    cinemaVideo.removeEventListener('loadedmetadata', restoreOnSwitch);
+                    if (resumeAt > 0 && resumeAt < cinemaVideo.duration - 2) cinemaVideo.currentTime = resumeAt;
                 });
-                openPlayer(directVideoUrl, movieTitle, streamPageUrl);
+                cinemaVideo.play().catch(() => {
+                    playerLoading.classList.remove('active');
+                    setPlayIcon(true);
+                    showPlayerStatus('Tap play to start');
+                });
+                playerDownloadBtn.href = directVideoUrl;
+                playerOpenTabBtn.href = directVideoUrl;
+                playerQualityBtn.textContent = folderObj.label || 'Auto';
+                upsertWatchHistory(currentHistoryMeta);
+                if (/1080/i.test(folderObj.label || '') && directVideoUrl !== streamPageUrl) {
+                    try {
+                        localStorage.setItem(`cinexis_stream_${cleanTitleSlug(movieTitle)}_1080p`, JSON.stringify({
+                            directUrl: directVideoUrl,
+                            streamPageUrl,
+                            folderUrl: folderObj.url,
+                            label: folderObj.label,
+                            size: folderObj.size,
+                            expiresAt: Date.now() + 30 * 60 * 1000
+                        }));
+                    } catch (e) {}
+                }
+                return true;
 
             } catch (err) {
-                sheetBody.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--accent);">Failed to load stream: ${err.message}</div>`;
+                if (requestToken !== qualityRequestToken) return false;
+                playerLoading.classList.remove('active');
+                if (automatic) {
+                    playerErrorNotice.style.display = 'flex';
+                    playerErrorNotice.querySelector('div:nth-of-type(1)').textContent = 'Could not start this movie';
+                    playerErrorNotice.querySelector('div:nth-of-type(2)').textContent = 'The stream link failed to load. Try another quality or open the stream directly.';
+                } else {
+                    sheetBody.innerHTML = `<div class="unavailable-state"><strong>Could not switch quality</strong><p>${escapeHtml(err.message)}</p></div>`;
+                }
+                return false;
             }
         }
 
@@ -1512,7 +2009,7 @@
         }
 
         function updateCurrentHistory(force = false) {
-            if (!currentHistoryMeta) return;
+            if (!currentHistoryMeta || (!currentDirectVideoUrl && !currentStreamPageUrl)) return;
             const duration = Number(cinemaVideo.duration) || currentHistoryMeta.duration || 0;
             const position = Number(cinemaVideo.currentTime) || 0;
             const progress = duration > 0 ? Math.min(100, (position / duration) * 100) : 0;
@@ -1588,6 +2085,7 @@
                 };
 
                 historyRow.appendChild(card);
+                revealOnScroll(card);
             });
         }
 
@@ -1656,7 +2154,11 @@
             if (fallbackTabBtn) fallbackTabBtn.href = currentStreamPageUrl || currentDirectVideoUrl;
 
             playerErrorNotice.style.display = 'none';
+            playerErrorNotice.querySelector('div:last-child').style.display = '';
+            playerErrorNotice.querySelector('div:nth-of-type(1)').textContent = 'Direct stream could not start';
+            playerErrorNotice.querySelector('div:nth-of-type(2)').textContent = 'Try the alternate web player engine. Your resume position is stored locally.';
             engineLabel.textContent = 'Web Player';
+            playerQualityBtn.textContent = options.deferred ? '1080p' : 'Auto';
             playerLoading.classList.add('active');
             playerStatusPill.textContent = options.instantResume ? 'Resuming playback...' : 'Preparing stream...';
             playerStatusPill.classList.add('show');
@@ -1665,6 +2167,8 @@
             playerModal.classList.remove('player-closing', 'controls-hidden', 'is-native-fullscreen');
             playerModal.setAttribute('aria-hidden', 'false');
             playerModal.style.display = 'flex';
+            document.body.classList.add('player-open');
+            requestMobileFullscreen();
             requestAnimationFrame(() => playerModal.classList.add('player-opening'));
 
             cinemaVideo.style.display = 'block';
@@ -1672,13 +2176,14 @@
             streamIframe.src = 'about:blank';
 
             cinemaVideo.pause();
-            cinemaVideo.src = currentDirectVideoUrl;
+            if (options.deferred) cinemaVideo.removeAttribute('src');
+            else cinemaVideo.src = currentDirectVideoUrl;
             cinemaVideo.load();
-            setPlayIcon(false);
+            setPlayIcon(!!options.deferred);
             updateTimeUI();
 
-            // Store the movie immediately so it is never lost from the pending list.
-            upsertWatchHistory(currentHistoryMeta);
+            // Save only after a stream URL exists; avoid a blank pending history card.
+            if (!options.deferred) upsertWatchHistory(currentHistoryMeta);
 
             // Orientation locking is intentionally non-blocking. The video should start
             // buffering immediately instead of waiting for the orientation API.
@@ -1689,21 +2194,41 @@
             clearInterval(historyTimer);
             historyTimer = setInterval(() => updateCurrentHistory(false), 2500);
 
-            cinemaVideo.addEventListener('loadedmetadata', function restoreOnce() {
-                cinemaVideo.removeEventListener('loadedmetadata', restoreOnce);
-                if (resumePosition > 0 && resumePosition < cinemaVideo.duration - 5) {
-                    cinemaVideo.currentTime = resumePosition;
-                    showPlayerStatus(`Resume from ${formatTime(resumePosition)}`);
-                    setTimeout(() => hidePlayerStatus(), 1700);
-                }
-            });
+            if (!options.deferred) {
+                cinemaVideo.addEventListener('loadedmetadata', function restoreOnce() {
+                    cinemaVideo.removeEventListener('loadedmetadata', restoreOnce);
+                    if (resumePosition > 0 && resumePosition < cinemaVideo.duration - 5) {
+                        cinemaVideo.currentTime = resumePosition;
+                        showPlayerStatus(`Resume from ${formatTime(resumePosition)}`);
+                        setTimeout(() => hidePlayerStatus(), 1700);
+                    }
+                });
 
-            cinemaVideo.play().catch(() => {
-                playerLoading.classList.remove('active');
-                setPlayIcon(true);
-            });
+                cinemaVideo.play().catch(() => {
+                    playerLoading.classList.remove('active');
+                    setPlayIcon(true);
+                });
+            } else {
+                playerStatusPill.textContent = 'Finding the best quality…';
+                playerStatusPill.classList.add('show');
+            }
 
             resetPlayerControlsTimer();
+        }
+
+        function requestMobileFullscreen() {
+            if (!window.matchMedia('(max-width: 700px)').matches) return;
+            if (document.fullscreenElement || document.webkitFullscreenElement) return;
+            const request = playerModal.requestFullscreen || playerModal.webkitRequestFullscreen;
+            if (!request) return;
+            try {
+                const result = request.call(playerModal);
+                if (result && typeof result.then === 'function') {
+                    result.then(() => {
+                        if (screen.orientation?.lock) screen.orientation.lock('landscape').catch(() => {});
+                    }).catch(() => {});
+                }
+            } catch (_) {}
         }
 
         function resetPlayerControlsTimer() {
@@ -1777,8 +2302,9 @@
                     if (screen.orientation?.unlock) screen.orientation.unlock();
                     playerModal.classList.remove('is-native-fullscreen');
                 } else {
-                    if (cinemaStage.requestFullscreen) await cinemaStage.requestFullscreen();
-                    else if (cinemaStage.webkitRequestFullscreen) cinemaStage.webkitRequestFullscreen();
+                    if (playerModal.requestFullscreen) await playerModal.requestFullscreen();
+                    else if (playerModal.webkitRequestFullscreen) playerModal.webkitRequestFullscreen();
+                    else if (cinemaVideo.webkitEnterFullscreen) cinemaVideo.webkitEnterFullscreen();
 
                     // This call happens from the user's fullscreen tap, so supported mobile
                     // browsers can lock the same player stage to landscape.
@@ -1926,6 +2452,10 @@
         // Automatic error handler for native HTML5 video
         cinemaVideo.onerror = () => {
             console.warn("Direct video stream blocked or codec unsupported. Activating fallback options.");
+            playerLoading.classList.remove('active');
+            if (currentHistoryMeta?.title) {
+                try { localStorage.removeItem(`cinexis_stream_${cleanTitleSlug(currentHistoryMeta.title)}_1080p`); } catch (e) {}
+            }
             playerErrorNotice.style.display = 'flex';
         };
 
@@ -1960,6 +2490,7 @@
         }
 
         function closePlayer() {
+            qualityRequestToken++;
             updateCurrentHistory(true);
             clearInterval(historyTimer);
 
@@ -1983,6 +2514,7 @@
             if (screen.orientation?.unlock) screen.orientation.unlock();
 
             playerModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('player-open');
             playerModal.classList.remove('player-opening','controls-hidden','is-native-fullscreen');
             playerModal.classList.add('player-closing');
 
