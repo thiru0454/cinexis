@@ -437,6 +437,17 @@
         .catalog-filter { min-height:38px; border:1px solid var(--border); border-radius:12px; padding:.45rem .7rem; color:var(--text); background:var(--bg-card); font:inherit; font-size:.78rem; }
         .catalog-filter-toggle { cursor:pointer; }
         .catalog-filter-toggle.active { border-color:var(--accent); color:#fff; background:var(--accent); }
+        .ott-section { margin:0 0 1.35rem; }
+        .ott-row { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(132px,164px); gap:.75rem; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; padding:.25rem 1rem .9rem; scrollbar-width:thin; }
+        .ott-card { min-width:0; overflow:hidden; border:1px solid var(--border); border-radius:16px; background:var(--bg-card); cursor:pointer; scroll-snap-align:start; transition:transform .2s,border-color .2s,box-shadow .2s; }
+        .ott-card:hover { transform:translateY(-3px); border-color:var(--accent); box-shadow:0 10px 24px rgba(0,0,0,.13); }
+        .ott-card-poster { position:relative; aspect-ratio:2/3; overflow:hidden; display:grid; place-items:center; background:linear-gradient(145deg,#183b36,#c0843c); color:#fff; }
+        .ott-card-poster img { width:100%; height:100%; position:absolute; inset:0; object-fit:cover; }
+        .ott-card-poster .ott-placeholder { font-size:2rem; opacity:.8; }
+        .ott-card-info { padding:.65rem .7rem .75rem; }
+        .ott-card-title { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; color:var(--text-main); font-size:.79rem; font-weight:800; line-height:1.35; }
+        .ott-card-meta { margin-top:.35rem; color:var(--text-muted); font-size:.68rem; }
+        .ott-empty { padding:1rem; color:var(--text-muted); font-size:.82rem; }
         .subtitle-file-label { display:inline-flex; align-items:center; gap:.4rem; cursor:pointer; }
         .subtitle-file-label input { display:none; }
 
@@ -787,6 +798,9 @@
             margin:0 1rem; padding:1.3rem; border:1px dashed var(--border);
             border-radius:14px; color:var(--text-muted); text-align:center; font-size:.8rem;
         }
+        .ott-card { color:#203c35; background:#fffdf6; border-color:rgba(25,47,43,.1); }
+        .ott-card-title { color:#203c35; }
+        .ott-card-meta { color:#65736c; }
 
         @media (max-width:700px) {
             .player-top-bar { gap:.35rem; padding-left:.55rem; padding-right:.55rem; }
@@ -802,6 +816,7 @@
             .volume-wrap { display:none; }
             .pctrl-btn { width:36px; height:36px; }
             .history-row { grid-template-columns:1fr; }
+            .ott-row { grid-auto-columns:128px; gap:.65rem; }
         }
 
         /* Loading Spinner */
@@ -912,7 +927,7 @@
         .unavailable-state p,.search-message small { max-width:340px; line-height:1.5; color:var(--text-muted); }
         .unavailable-icon { width:54px; height:54px; display:grid; place-items:center; margin-bottom:.3rem; border-radius:18px; color:#ff8093; background:rgba(255,64,93,.13); font-size:1.3rem; }
         .search-message .spinner { width:28px; height:28px; }
-        .search-active .hero-banner,.search-active .year-pills-wrapper,.search-active .history-section,.search-active .bottom-nav { display:none; }
+        .search-active .hero-banner,.search-active .year-pills-wrapper,.search-active .history-section,.search-active .ott-section,.search-active .bottom-nav { display:none; }
         .search-active .search-container { display:block!important; position:sticky; top:calc(62px + env(safe-area-inset-top)); z-index:120; border-bottom:0; }
         .search-active .movies-grid-container { min-height:50vh; padding-top:.25rem; }
         .search-active .movies-grid { grid-template-columns:1fr; gap:.55rem; }
@@ -1138,6 +1153,7 @@
         </a>
         <div class="header-actions">
             <button class="icon-btn" onclick="toggleSearch()" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="icon-btn" onclick="document.getElementById('myListSection').scrollIntoView({behavior:'smooth'})" title="My List"><i class="fa-solid fa-bookmark"></i></button>
             <button class="icon-btn" onclick="openWatchHistory()" title="Watch History"><i class="fa-solid fa-clock-rotate-left"></i></button>
         </div>
     </header>
@@ -1164,6 +1180,7 @@
         <div class="hero-desc">Find your next favourite from a growing collection of Tamil cinema.</div>
         <div class="hero-buttons">
             <button class="btn-primary" onclick="selectYear(2026)"><i class="fa-solid fa-play"></i> Browse 2026 Releases</button>
+            <button class="btn-primary" id="heroResumeBtn" type="button" style="display:none;"><i class="fa-solid fa-play"></i> Continue watching</button>
         </div>
     </div>
 
@@ -1188,6 +1205,9 @@
             <select class="catalog-filter" id="filterQuality" aria-label="Filter by quality">
                 <option value="all">Any quality</option><option value="1080">1080p available</option><option value="720">720p available</option><option value="480">480p available</option>
             </select>
+            <select class="catalog-filter" id="sortCatalog" aria-label="Sort movies">
+                <option value="default">Catalog order</option><option value="title-asc">Title A–Z</option><option value="title-desc">Title Z–A</option><option value="quality-desc">Best quality</option>
+            </select>
             <button class="catalog-filter catalog-filter-toggle" id="favoritesFilterBtn" type="button" aria-pressed="false"><i class="fa-regular fa-heart"></i> Favorites</button>
         </div>
         <div class="movies-grid" id="moviesGrid">
@@ -1205,6 +1225,19 @@
             </button>
         </div>
         <div class="history-row" id="historyRow"></div>
+    </section>
+
+    <section class="ott-section" id="myListSection">
+        <div class="section-header" style="padding:0 1rem;"><div class="section-title"><i class="fa-solid fa-bookmark"></i> My List</div></div>
+        <div class="ott-row" id="myListRow"></div>
+    </section>
+    <section class="ott-section" id="recommendedSection">
+        <div class="section-header" style="padding:0 1rem;"><div class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Picked for you</div></div>
+        <div class="ott-row" id="recommendedRow"></div>
+    </section>
+    <section class="ott-section" id="recentSection">
+        <div class="section-header" style="padding:0 1rem;"><div class="section-title"><i class="fa-solid fa-sparkles"></i> New in the catalog</div></div>
+        <div class="ott-row" id="recentRow"></div>
     </section>
 
     <!-- Quality & Stream Bottom Sheet Modal -->
@@ -1316,6 +1349,7 @@
         const yearPills = document.getElementById('yearPills');
         const moviesGrid = document.getElementById('moviesGrid');
         const currentSectionTitle = document.getElementById('currentSectionTitle');
+        const sortCatalog = document.getElementById('sortCatalog');
         const searchDrawer = document.getElementById('searchDrawer');
         const searchInput = document.getElementById('searchInput');
         const bottomSheet = document.getElementById('bottomSheet');
@@ -1351,6 +1385,13 @@
         const playerStatusPill = document.getElementById('playerStatusPill');
         const historySection = document.getElementById('historySection');
         const historyRow = document.getElementById('historyRow');
+        const myListSection = document.getElementById('myListSection');
+        const myListRow = document.getElementById('myListRow');
+        const recommendedSection = document.getElementById('recommendedSection');
+        const recommendedRow = document.getElementById('recommendedRow');
+        const recentSection = document.getElementById('recentSection');
+        const recentRow = document.getElementById('recentRow');
+        const heroResumeBtn = document.getElementById('heroResumeBtn');
         const heroBanner = document.getElementById('heroBanner');
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
         const scrollRevealObserver = ('IntersectionObserver' in window && !prefersReducedMotion.matches)
@@ -1373,7 +1414,8 @@
             scrollRevealObserver.observe(element);
         }
 
-        [heroBanner, document.querySelector('.year-pills-wrapper'), document.querySelector('.movies-grid-container .section-header'), historySection.querySelector('.section-header')]
+        heroBanner.after(historySection, myListSection, recommendedSection, recentSection);
+        [heroBanner, historySection.querySelector('.section-header'), myListSection.querySelector('.section-header'), recommendedSection.querySelector('.section-header'), recentSection.querySelector('.section-header'), document.querySelector('.year-pills-wrapper'), document.querySelector('.movies-grid-container .section-header')]
             .forEach(revealOnScroll);
 
         heroBanner.addEventListener('pointermove', (event) => {
@@ -1404,8 +1446,11 @@
 
         const HISTORY_KEY = 'cinexis_watch_history_v2';
         const FAVORITES_KEY = 'cinexis_favorites_v1';
+        const FAVORITE_DETAILS_KEY = 'cinexis_favorite_details_v1';
+        const PREFERRED_QUALITY_KEY = 'cinexis_preferred_quality_v1';
         const MAX_HISTORY = 30;
         let favoriteMovies = loadFavorites();
+        let favoriteMovieDetails = loadFavoriteDetails();
         let favoritesOnly = false;
         let catalogSourceMovies = [];
         let controlsTimer = null;
@@ -1426,6 +1471,17 @@
             } catch (_) { return new Set(); }
         }
 
+        function loadFavoriteDetails() {
+            try {
+                const items = JSON.parse(localStorage.getItem(FAVORITE_DETAILS_KEY) || '[]');
+                return new Map(Array.isArray(items) ? items.map(movie => [movieFavoriteKey(movie), movie]) : []);
+            } catch (_) { return new Map(); }
+        }
+
+        function saveFavoriteDetails() {
+            try { localStorage.setItem(FAVORITE_DETAILS_KEY, JSON.stringify([...favoriteMovieDetails.values()])); } catch (_) {}
+        }
+
         function movieFavoriteKey(movie) {
             return String(movie.link || movie.url || movie.rawTitle || movie.title || '').trim().toLowerCase();
         }
@@ -1433,8 +1489,15 @@
         function toggleMovieFavorite(movie) {
             const key = movieFavoriteKey(movie);
             if (!key) return;
-            favoriteMovies.has(key) ? favoriteMovies.delete(key) : favoriteMovies.add(key);
+            if (favoriteMovies.has(key)) {
+                favoriteMovies.delete(key);
+                favoriteMovieDetails.delete(key);
+            } else {
+                favoriteMovies.add(key);
+                favoriteMovieDetails.set(key, movie);
+            }
             try { localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favoriteMovies])); } catch (_) {}
+            saveFavoriteDetails();
             applyCatalogFilters();
         }
 
@@ -1448,9 +1511,14 @@
                     (!favoritesOnly || favoriteMovies.has(movieFavoriteKey(movie))) &&
                     (requiredQuality === 'all' || quality >= Number(requiredQuality));
             });
+            const sortMode = sortCatalog.value;
+            if (sortMode === 'title-asc') filtered.sort((a, b) => a.title.localeCompare(b.title));
+            else if (sortMode === 'title-desc') filtered.sort((a, b) => b.title.localeCompare(a.title));
+            else if (sortMode === 'quality-desc') filtered.sort((a, b) => getCachedMovieQuality(b) - getCachedMovieQuality(a));
             renderMovies(filtered, false, '', false, true);
             const pageIndicator = document.getElementById('pageIndicator');
             if (pageIndicator) pageIndicator.textContent = `${filtered.length} movies${favoritesOnly ? ' · favorites' : ''}`;
+            renderHomeShelves();
         }
 
         function populateYearFilter() {
@@ -1474,12 +1542,39 @@
             } catch (_) {}
         }
 
+        function preferredQualityValue() {
+            try { return Number(localStorage.getItem(PREFERRED_QUALITY_KEY)) || 1080; }
+            catch (_) { return 1080; }
+        }
+
+        function rememberPreferredQuality(label) {
+            const value = Number(String(label || '').match(/\d+/)?.[0]);
+            if (!value) return;
+            try { localStorage.setItem(PREFERRED_QUALITY_KEY, String(value)); } catch (_) {}
+        }
+
+        function choosePreferredQualityIndex(qualities) {
+            if (!qualities.length) return -1;
+            const values = qualities.map(item => Number(String(item.label || '').match(/\d+/)?.[0]) || 0);
+            const preferred = preferredQualityValue();
+            const exact = values.findIndex(value => value === preferred);
+            if (exact >= 0) return exact;
+
+            // When the preferred resolution is unavailable, choose the best lower
+            // option first to avoid unexpectedly using more mobile data.
+            const lower = values.reduce((best, value, index) =>
+                value > 0 && value < preferred && (best < 0 || value > values[best]) ? index : best, -1);
+            if (lower >= 0) return lower;
+            return values.reduce((best, value, index) => value > values[best] ? index : best, 0);
+        }
+
         filterYear.addEventListener('change', () => {
             const year = Number(filterYear.value);
             if (year && year !== currentYear) selectYear(year);
             else applyCatalogFilters();
         });
         filterQuality.addEventListener('change', applyCatalogFilters);
+        sortCatalog.addEventListener('change', applyCatalogFilters);
         favoritesFilterBtn.addEventListener('click', () => {
             favoritesOnly = !favoritesOnly;
             favoritesFilterBtn.classList.toggle('active', favoritesOnly);
@@ -1582,6 +1677,7 @@
             allYearMovies = cachedMovies;
             if (cachedMovies.length) {
                 renderMovies(cachedMovies);
+                applyCatalogFilters();
                 pageIndicator.textContent = `${cachedMovies.length} movies · refreshing`;
             } else {
                 pageIndicator.textContent = '';
@@ -1639,6 +1735,7 @@
                 const firstMovies = addUnique(firstPage.entries);
                 allYearMovies = firstMovies;
                 renderMovies(firstMovies);
+                applyCatalogFilters();
                 pageIndicator.textContent = `${allYearMovies.length} movies${pages.length ? ' · loading more' : ''}`;
 
                 // Fetch remaining pages concurrently, while adding them in page order.
@@ -1654,12 +1751,14 @@
                         allYearMovies.push(...added);
                         if (added.length) renderMovies(added, false, '', true);
                     });
+                    renderHomeShelves();
                     pageIndicator.textContent = `${allYearMovies.length} movies · loaded ${Math.min(i + batchPages.length + 1, pageCount)} / ${pageCount} pages`;
                 }
 
                 if (loadToken !== movieLoadToken) return;
                 try { localStorage.setItem(cacheKey, JSON.stringify(allYearMovies)); } catch (e) {}
                 pageIndicator.textContent = `${allYearMovies.length} movies`;
+                applyCatalogFilters();
 
             } catch (err) {
                 if (loadToken !== movieLoadToken) return;
@@ -1771,6 +1870,103 @@
             });
         }
 
+        function getHomeCatalog() {
+            const unique = new Map();
+            [...allYearMovies, ...globalIndexedMovies, ...favoriteMovieDetails.values()].forEach(movie => {
+                if (!movie?.title) return;
+                const key = movieFavoriteKey(movie) || movie.title.toLowerCase();
+                if (!unique.has(key)) unique.set(key, movie);
+            });
+            return [...unique.values()];
+        }
+
+        function createOttCard(movie) {
+            const card = document.createElement('article');
+            card.className = 'ott-card';
+            const key = movieFavoriteKey(movie);
+            const favorite = favoriteMovies.has(key);
+            const poster = document.createElement('div');
+            poster.className = 'ott-card-poster';
+            poster.innerHTML = '<i class="fa-solid fa-film ott-placeholder"></i>';
+            if (movie.poster) {
+                const image = document.createElement('img');
+                image.src = toAbsoluteUrl(movie.poster);
+                image.alt = '';
+                image.loading = 'lazy';
+                poster.prepend(image);
+            }
+            const favoriteButton = document.createElement('button');
+            favoriteButton.type = 'button';
+            favoriteButton.className = `movie-favorite-btn${favorite ? ' active' : ''}`;
+            favoriteButton.setAttribute('aria-label', favorite ? 'Remove from My List' : 'Add to My List');
+            favoriteButton.innerHTML = `<i class="fa-${favorite ? 'solid' : 'regular'} fa-heart"></i>`;
+            favoriteButton.onclick = event => {
+                event.stopPropagation();
+                toggleMovieFavorite(movie);
+            };
+            poster.appendChild(favoriteButton);
+
+            const info = document.createElement('div');
+            info.className = 'ott-card-info';
+            info.innerHTML = `<div class="ott-card-title">${escapeHtml(movie.title)}</div><div class="ott-card-meta">${escapeHtml(movie.year || currentYear)} · <i class="fa-solid fa-play"></i> Play</div>`;
+            card.append(poster, info);
+            card.onclick = () => openMovieQualities(movie.title, movie.link || movie.url || '');
+            return card;
+        }
+
+        function renderOttRow(row, movies, emptyMessage) {
+            if (!row) return;
+            row.replaceChildren();
+            if (!movies.length) {
+                const empty = document.createElement('div');
+                empty.className = 'ott-empty';
+                empty.textContent = emptyMessage;
+                row.appendChild(empty);
+                return;
+            }
+            movies.forEach(movie => row.appendChild(createOttCard(movie)));
+        }
+
+        function titleWords(title) {
+            return String(title || '').toLowerCase().split(/[^a-z0-9\u0B80-\u0BFF]+/).filter(word => word.length > 2);
+        }
+
+        function renderHomeShelves() {
+            const catalog = getHomeCatalog();
+            for (const movie of catalog) {
+                const key = movieFavoriteKey(movie);
+                if (favoriteMovies.has(key) && !favoriteMovieDetails.has(key)) favoriteMovieDetails.set(key, movie);
+            }
+            saveFavoriteDetails();
+            const myList = [...favoriteMovieDetails.values()].filter(movie => favoriteMovies.has(movieFavoriteKey(movie)));
+            renderOttRow(myListRow, myList.slice(0, 24), 'Your list is empty. Tap a heart on any movie to save it here.');
+
+            const watched = loadWatchHistory();
+            const excluded = new Set([...favoriteMovies, ...watched.flatMap(item => [String(item.id || '').split('|')[0], String(item.title || '').toLowerCase()])]);
+            const seeds = [...watched.slice(0, 5).map(item => item.title), ...myList.slice(0, 5).map(item => item.title)];
+            const interests = new Set(seeds.flatMap(titleWords));
+            const candidates = catalog.filter(movie => !excluded.has(movieFavoriteKey(movie)) && !excluded.has(String(movie.title || '').toLowerCase()));
+            const scored = candidates.map((movie, order) => ({
+                movie,
+                order,
+                score: titleWords(movie.title).reduce((total, word) => total + (interests.has(word) ? 1 : 0), 0)
+            })).sort((a, b) => b.score - a.score || a.order - b.order);
+            renderOttRow(recommendedRow, scored.slice(0, 12).map(item => item.movie), 'Browse a few movies and save favorites to build recommendations.');
+            renderOttRow(recentRow, allYearMovies.slice(0, 12), 'The latest catalog will appear here as soon as it loads.');
+        }
+
+        function updateHeroResumeButton() {
+            if (!heroResumeBtn) return;
+            const item = loadWatchHistory().find(entry => Number(entry.progress) > 0 && Number(entry.progress) < 95);
+            if (!item) {
+                heroResumeBtn.style.display = 'none';
+                return;
+            }
+            heroResumeBtn.style.display = 'inline-flex';
+            heroResumeBtn.innerHTML = `<i class="fa-solid fa-play"></i> Resume ${escapeHtml(item.title)}`;
+            heroResumeBtn.onclick = () => resumeFromHistory(item);
+        }
+
         async function handleLiveSearch(query) {
             clearTimeout(searchDebounceTimer);
             const requestToken = ++searchRequestToken;
@@ -1780,6 +1976,7 @@
                 document.body.classList.remove('search-active');
                 currentSectionTitle.innerHTML = `<i class="fa-solid fa-clapperboard"></i> Tamil ${currentYear} Movies`;
                 renderMovies(allYearMovies);
+                applyCatalogFilters();
                 return;
             }
 
@@ -1900,7 +2097,12 @@
                     if (qualityLoadToken !== qualityRequestToken) return;
                     saveMovieQualities(movieTitle);
                     renderPlayerQualityMenu();
-                    playerQualityBtn.textContent = '1080p';
+                    const selectedIndex = choosePreferredQualityIndex(activeQualityList);
+                    if (selectedIndex > 0) {
+                        playQualityStream(selectedIndex, movieTitle, true, qualityLoadToken);
+                    } else {
+                        playerQualityBtn.textContent = '1080p';
+                    }
                 });
                 return;
             }
@@ -1926,11 +2128,7 @@
                 });
                 if (activeQualityList.length) {
                     saveMovieQualities(movieTitle);
-                    const selectedIndex = activeQualityList.reduce((best, item, index, list) => {
-                        const value = Number((item.label || '').match(/\d+/)?.[0]) || 0;
-                        const bestValue = Number((list[best]?.label || '').match(/\d+/)?.[0]) || 0;
-                        return value > bestValue ? index : best;
-                    }, 0);
+                    const selectedIndex = choosePreferredQualityIndex(activeQualityList);
                     const streamStarted = await playQualityStream(selectedIndex, movieTitle, true, qualityLoadToken);
                     if (!streamStarted) activeQualityList = [];
                     if (streamStarted) return;
@@ -1996,12 +2194,7 @@
                 return;
             }
 
-            const preferredIndex = activeQualityList.findIndex(q => /1080/i.test(q.label + ' ' + q.name));
-            const selectedIndex = preferredIndex >= 0 ? preferredIndex : activeQualityList.reduce((best, q, i, list) => {
-                const quality = Number((q.label || '').match(/\d+/)?.[0]) || 0;
-                const bestQuality = Number((list[best]?.label || '').match(/\d+/)?.[0]) || 0;
-                return quality > bestQuality ? i : best;
-            }, 0);
+            const selectedIndex = choosePreferredQualityIndex(activeQualityList);
             renderPlayerQualityMenu();
             saveMovieQualities(movieTitle);
             await playQualityStream(selectedIndex, movieTitle, true);
@@ -2078,6 +2271,7 @@
             const folderObj = activeQualityList[index];
             if (!folderObj) return false;
             if (!automatic) {
+                rememberPreferredQuality(folderObj.label);
                 closeBottomSheet();
                 playerLoading.classList.add('active');
                 showPlayerStatus(`Switching to ${folderObj.label || 'selected'}…`);
@@ -2286,11 +2480,13 @@
             const list = loadWatchHistory().filter(item => item.id !== id);
             saveWatchHistory(list);
             renderWatchHistory();
+            renderHomeShelves();
         }
 
         function clearWatchHistory() {
             try { localStorage.removeItem(HISTORY_KEY); } catch (_) {}
             renderWatchHistory();
+            renderHomeShelves();
         }
 
         function formatHistoryDate(ts) {
@@ -2301,6 +2497,7 @@
 
         function renderWatchHistory() {
             if (!historyRow) return;
+            updateHeroResumeButton();
             const list = loadWatchHistory();
 
             if (!list.length) {
@@ -2848,6 +3045,7 @@
             }, 240);
 
             renderWatchHistory();
+            renderHomeShelves();
             if (shouldRestoreRoute) clearPlayerRoute();
         }
 
@@ -2902,6 +3100,7 @@
         populateYearFilter();
         initYearPills();
         renderWatchHistory();
+        renderHomeShelves();
         loadMovies(2026);
         const initialPlayerRoute = readPlayerRoute();
         if (initialPlayerRoute?.title) {
