@@ -634,7 +634,7 @@
 
         .player-top-bar {
             position:absolute; inset:0 0 auto 0; z-index:70;
-            display:flex; align-items:center; justify-content:space-between; gap:.7rem;
+            display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:.7rem;
             padding:max(.75rem,env(safe-area-inset-top)) 1rem 1rem;
             background:linear-gradient(to bottom,rgba(0,0,0,.96),rgba(0,0,0,.35),transparent);
             transition:opacity .28s ease, transform .28s ease;
@@ -658,12 +658,13 @@
             padding:.52rem .8rem; font-size:.8rem; font-weight:800;
             text-decoration:none;
         }
-        .external-player-trigger { display:inline-flex!important; flex:0 0 42px; min-width:42px; justify-content:center; }
+        .external-player-trigger { display:inline-flex!important; flex:0 0 42px; width:42px; min-width:42px; justify-content:center; }
         .player-title-text {
-            flex:1; min-width:0; max-width:48%;
+            min-width:0; width:100%; max-width:none;
             font-size:.94rem; font-weight:800; white-space:nowrap; overflow:hidden;
             text-overflow:ellipsis; text-align:center; text-shadow:0 2px 16px #000;
         }
+        .player-top-actions { display:flex; align-items:center; gap:.45rem; position:relative; min-width:0; }
         .cinema-stage {
             position:relative; width:min(96vw,1500px); aspect-ratio:16/9; max-height:84vh;
             border-radius:16px; overflow:hidden; background:#000;
@@ -788,9 +789,12 @@
         }
 
         @media (max-width:700px) {
-            .player-top-bar { padding-left:.55rem; padding-right:.55rem; }
+            .player-top-bar { gap:.35rem; padding-left:.55rem; padding-right:.55rem; }
+            .player-back-btn,.player-action-link { padding:.45rem .55rem; }
+            .external-player-trigger { flex-basis:38px; width:38px; min-width:38px; }
+            .player-top-actions { gap:.28rem; }
             .player-action-link span { display:none; }
-            .player-title-text { max-width:43%; font-size:.78rem; }
+            .player-title-text { font-size:.76rem; }
             .cinema-stage {
                 width:100vw; height:100dvh; max-height:none; aspect-ratio:auto; border:0; border-radius:0;
             }
@@ -952,8 +956,8 @@
             .card-title { font-size:.8rem; }
             .card-meta { font-size:.66rem; }
             .card-play-tag { font-size:.62rem; }
-            .player-top-bar { padding-left:.75rem; padding-right:.75rem; }
-            .player-title-text { max-width:36%; font-size:.77rem; }
+            .player-top-bar { padding-left:.55rem; padding-right:.55rem; }
+            .player-title-text { font-size:.72rem; }
             .player-action-link span { display:none; }
             .player-quality-button { display:inline-flex; }
             .cinema-stage { width:100vw; height:auto; aspect-ratio:16 / 9; max-height:calc(100dvh - 96px); }
@@ -1222,7 +1226,7 @@
         <div class="player-top-bar">
             <button class="player-back-btn" onclick="closePlayer()"><i class="fa-solid fa-arrow-left"></i><span>Back</span></button>
             <div class="player-title-text" id="playerTitle">Video Stream</div>
-            <div style="display:flex;align-items:center;gap:.45rem;position:relative;">
+            <div class="player-top-actions">
                 <button class="player-action-link player-quality-button" id="playerQualityBtn" onclick="openPlayerQualityPicker()" title="Change video quality">1080p</button>
                 <div class="player-quality-menu" id="playerQualityMenu" role="menu" aria-label="Video quality"></div>
                 <button class="player-action-link external-player-trigger" id="externalPlayerBtn" type="button" onclick="toggleExternalPlayerMenu()" title="Open with an external player" aria-label="Open with an external player" aria-expanded="false">
