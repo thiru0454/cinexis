@@ -431,6 +431,14 @@
             padding: 2px 6px;
             border-radius: 4px;
         }
+        .movie-favorite-btn { position:absolute; z-index:2; top:8px; left:8px; width:34px; height:34px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.2); border-radius:50%; color:#fff; background:rgba(0,0,0,.68); cursor:pointer; }
+        .movie-favorite-btn.active { color:#ff6079; }
+        .catalog-filters { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; padding:.25rem 1rem .8rem; }
+        .catalog-filter { min-height:38px; border:1px solid var(--border); border-radius:12px; padding:.45rem .7rem; color:var(--text); background:var(--bg-card); font:inherit; font-size:.78rem; }
+        .catalog-filter-toggle { cursor:pointer; }
+        .catalog-filter-toggle.active { border-color:var(--accent); color:#fff; background:var(--accent); }
+        .subtitle-file-label { display:inline-flex; align-items:center; gap:.4rem; cursor:pointer; }
+        .subtitle-file-label input { display:none; }
 
         .card-details {
             padding: 0.75rem 0.65rem;
@@ -915,6 +923,13 @@
         .player-top-bar { padding:max(1rem,env(safe-area-inset-top)) 1rem 2.5rem; }
         .player-back-btn,.player-action-link { min-height:42px; border-radius:14px; background:rgba(20,24,34,.78); }
         .player-quality-button { color:#9bf0df; font-weight:900; }
+        .player-quality-menu { position:absolute; z-index:80; top:calc(100% + .55rem); right:0; width:min(290px,calc(100vw - 2rem)); max-height:min(55vh,360px); overflow:auto; padding:.45rem; border:1px solid rgba(255,255,255,.14); border-radius:16px; background:rgba(13,17,24,.97); box-shadow:0 16px 48px rgba(0,0,0,.55); backdrop-filter:blur(18px); display:none; flex-direction:column; gap:.25rem; }
+        .player-quality-menu.open { display:flex; }
+        .player-quality-option { width:100%; display:flex; align-items:center; justify-content:space-between; gap:.7rem; padding:.75rem .8rem; border:0; border-radius:11px; color:#fff; background:transparent; text-align:left; cursor:pointer; }
+        .player-quality-option:hover,.player-quality-option:focus-visible,.player-quality-option.selected { background:rgba(255,255,255,.1); outline:none; }
+        .player-quality-option:disabled { opacity:.6; cursor:wait; }
+        .player-quality-option-label { font-weight:800; }
+        .player-quality-option-meta { color:rgba(255,255,255,.62); font-size:.75rem; }
         .cinema-stage { width:min(100vw, calc((100dvh - 90px) * 16 / 9)); aspect-ratio:16 / 9; max-height:calc(100dvh - 90px); border:0; border-radius:0; box-shadow:none; }
         .player-controls { padding:.8rem 1rem max(.8rem,env(safe-area-inset-bottom)); background:linear-gradient(transparent,rgba(0,0,0,.92) 35%); }
         .player-progress { height:5px; accent-color:var(--accent); }
@@ -1162,6 +1177,13 @@
             <div class="section-title" id="currentSectionTitle"><i class="fa-solid fa-clapperboard"></i> Tamil Movies</div>
             <div id="pageIndicator" style="font-size: 0.8rem; color: var(--text-muted);"></div>
         </div>
+        <div class="catalog-filters" aria-label="Movie filters">
+            <select class="catalog-filter" id="filterYear" aria-label="Filter by release year"><option value="all">Any year</option></select>
+            <select class="catalog-filter" id="filterQuality" aria-label="Filter by quality">
+                <option value="all">Any quality</option><option value="1080">1080p available</option><option value="720">720p available</option><option value="480">480p available</option>
+            </select>
+            <button class="catalog-filter catalog-filter-toggle" id="favoritesFilterBtn" type="button" aria-pressed="false"><i class="fa-regular fa-heart"></i> Favorites</button>
+        </div>
         <div class="movies-grid" id="moviesGrid">
             <!-- Movies injected dynamically -->
         </div>
@@ -1198,11 +1220,16 @@
         <div class="player-top-bar">
             <button class="player-back-btn" onclick="closePlayer()"><i class="fa-solid fa-arrow-left"></i><span>Back</span></button>
             <div class="player-title-text" id="playerTitle">Video Stream</div>
-            <div style="display:flex;align-items:center;gap:.45rem;">
+            <div style="display:flex;align-items:center;gap:.45rem;position:relative;">
                 <button class="player-action-link player-quality-button" id="playerQualityBtn" onclick="openPlayerQualityPicker()" title="Change video quality">1080p</button>
+                <div class="player-quality-menu" id="playerQualityMenu" role="menu" aria-label="Video quality"></div>
                 <button class="player-action-link" id="engineToggleBtn" onclick="togglePlayerEngine()" title="Switch Player">
                     <i class="fa-solid fa-repeat"></i><span id="engineLabel">Web Player</span>
                 </button>
+                <button class="player-action-link" id="externalPlayerBtn" type="button" onclick="toggleExternalPlayerMenu()" title="Open with an external player" style="display:none;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i><span>External</span>
+                </button>
+                <div class="player-quality-menu" id="externalPlayerMenu" role="menu" aria-label="External video players"></div>
                 <a id="playerDownloadBtn" href="#" target="_blank" download class="player-action-link" title="Open source">
                     <i class="fa-solid fa-cloud-arrow-down"></i>
                 </a>
@@ -1246,6 +1273,7 @@
                         <div class="time-readout"><span id="currentTimeLabel">0:00</span> / <span id="durationLabel">0:00</span></div>
                         <div class="player-spacer"></div>
                         <button class="pctrl-btn" id="speedBtn" title="Playback speed">1x</button>
+                        <label class="pctrl-btn subtitle-file-label" title="Load subtitles"><i class="fa-solid fa-closed-captioning"></i><input type="file" id="subtitleFileInput" accept=".srt,.vtt,text/vtt,application/x-subrip" aria-label="Load subtitle file"></label>
                         <button class="pctrl-btn" id="fullscreenBtn" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
                     </div>
                 </div>
@@ -1304,6 +1332,13 @@
         const playerDownloadBtn = document.getElementById('playerDownloadBtn');
         const playerOpenTabBtn = document.getElementById('playerOpenTabBtn');
         const playerQualityBtn = document.getElementById('playerQualityBtn');
+        const playerQualityMenu = document.getElementById('playerQualityMenu');
+        const externalPlayerBtn = document.getElementById('externalPlayerBtn');
+        const externalPlayerMenu = document.getElementById('externalPlayerMenu');
+        const filterYear = document.getElementById('filterYear');
+        const filterQuality = document.getElementById('filterQuality');
+        const favoritesFilterBtn = document.getElementById('favoritesFilterBtn');
+        const subtitleFileInput = document.getElementById('subtitleFileInput');
         const playerErrorNotice = document.getElementById('playerErrorNotice');
         const engineLabel = document.getElementById('engineLabel');
         const playerLoading = document.getElementById('playerLoading');
@@ -1374,12 +1409,136 @@
         });
 
         const HISTORY_KEY = 'cinexis_watch_history_v2';
+        const FAVORITES_KEY = 'cinexis_favorites_v1';
         const MAX_HISTORY = 30;
+        let favoriteMovies = loadFavorites();
+        let favoritesOnly = false;
+        let catalogSourceMovies = [];
         let controlsTimer = null;
         let historyTimer = null;
+        let mediaStallTimer = null;
+        let mediaFallbackAttempted = false;
+        let subtitleObjectUrl = '';
+        let subtitleMovieTitle = '';
         let currentHistoryId = '';
         let currentHistoryMeta = null;
         let lastTapAt = 0;
+
+        function loadFavorites() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
+                return new Set(Array.isArray(saved) ? saved : []);
+            } catch (_) { return new Set(); }
+        }
+
+        function movieFavoriteKey(movie) {
+            return String(movie.link || movie.url || movie.rawTitle || movie.title || '').trim().toLowerCase();
+        }
+
+        function toggleMovieFavorite(movie) {
+            const key = movieFavoriteKey(movie);
+            if (!key) return;
+            favoriteMovies.has(key) ? favoriteMovies.delete(key) : favoriteMovies.add(key);
+            try { localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favoriteMovies])); } catch (_) {}
+            applyCatalogFilters();
+        }
+
+        function applyCatalogFilters() {
+            const selectedYear = filterYear.value;
+            const requiredQuality = filterQuality.value;
+            const filtered = catalogSourceMovies.filter(movie => {
+                const year = String(movie.year || currentYear);
+                const quality = getCachedMovieQuality(movie);
+                return (selectedYear === 'all' || year === selectedYear) &&
+                    (!favoritesOnly || favoriteMovies.has(movieFavoriteKey(movie))) &&
+                    (requiredQuality === 'all' || quality >= Number(requiredQuality));
+            });
+            renderMovies(filtered, false, '', false, true);
+            const pageIndicator = document.getElementById('pageIndicator');
+            if (pageIndicator) pageIndicator.textContent = `${filtered.length} movies${favoritesOnly ? ' · favorites' : ''}`;
+        }
+
+        function populateYearFilter() {
+            filterYear.innerHTML = '<option value="all">Any year</option>' + YEARS.map(year => `<option value="${year}">${year}</option>`).join('');
+            filterYear.value = String(currentYear);
+        }
+
+        function getCachedMovieQuality(movie) {
+            const supplied = Number(movie.quality || movie.qualityLevel || 0);
+            if (supplied) return supplied;
+            try {
+                const labels = JSON.parse(localStorage.getItem(`cinexis_qualities_${cleanTitleSlug(movie.title || movie.rawTitle || '')}`) || '[]');
+                return Array.isArray(labels) ? Math.max(0, ...labels.map(label => Number(String(label).match(/\d+/)?.[0]) || 0)) : 0;
+            } catch (_) { return 0; }
+        }
+
+        function saveMovieQualities(title) {
+            try {
+                const labels = [...new Set(activeQualityList.map(item => item.label).filter(Boolean))];
+                localStorage.setItem(`cinexis_qualities_${cleanTitleSlug(title)}`, JSON.stringify(labels));
+            } catch (_) {}
+        }
+
+        filterYear.addEventListener('change', () => {
+            const year = Number(filterYear.value);
+            if (year && year !== currentYear) selectYear(year);
+            else applyCatalogFilters();
+        });
+        filterQuality.addEventListener('change', applyCatalogFilters);
+        favoritesFilterBtn.addEventListener('click', () => {
+            favoritesOnly = !favoritesOnly;
+            favoritesFilterBtn.classList.toggle('active', favoritesOnly);
+            favoritesFilterBtn.setAttribute('aria-pressed', String(favoritesOnly));
+            favoritesFilterBtn.innerHTML = `<i class="fa-${favoritesOnly ? 'solid' : 'regular'} fa-heart"></i> Favorites`;
+            applyCatalogFilters();
+        });
+        let playerRouteActive = false;
+        let suppressPlayerRoutePop = false;
+
+        function buildPlayerUrl(title, streamUrl, movieLink = '') {
+            const route = new URLSearchParams({ title: title || 'Movie' });
+            if (streamUrl) route.set('stream', streamUrl);
+            if (movieLink) route.set('movie', movieLink);
+            return `${location.pathname}${location.search}#watch/${route.toString()}`;
+        }
+
+        function syncPlayerRoute(title, streamUrl, movieLink = '') {
+            const state = { ...(history.state || {}), cinexisPlayer: true };
+            const url = buildPlayerUrl(title, streamUrl, movieLink);
+            if (playerRouteActive && history.state?.cinexisPlayer) history.replaceState(state, '', url);
+            else history.pushState(state, '', url);
+            playerRouteActive = true;
+        }
+
+        function clearPlayerRoute() {
+            if (!playerRouteActive || !history.state?.cinexisPlayer) {
+                playerRouteActive = false;
+                return;
+            }
+            suppressPlayerRoutePop = true;
+            history.back();
+        }
+
+        function readPlayerRoute() {
+            const match = location.hash.match(/^#watch\/(.+)$/);
+            if (!match) return null;
+            try {
+                const params = new URLSearchParams(match[1]);
+                return { title: params.get('title') || '', streamUrl: params.get('stream') || '', movieLink: params.get('movie') || '' };
+            } catch (_) { return null; }
+        }
+
+        window.addEventListener('popstate', () => {
+            if (suppressPlayerRoutePop) {
+                suppressPlayerRoutePop = false;
+                playerRouteActive = false;
+                return;
+            }
+            if (playerRouteActive || playerModal.style.display !== 'none') {
+                playerRouteActive = false;
+                closePlayer(false);
+            }
+        });
 
         // Init Year Pills
         function initYearPills() {
@@ -1396,6 +1555,7 @@
 
         function selectYear(year) {
             currentYear = year;
+            if (filterYear) filterYear.value = String(year);
             document.querySelectorAll('.year-pill').forEach(p => p.classList.remove('active'));
             const activePill = document.getElementById(`pill-${year}`);
             if (activePill) activePill.classList.add('active');
@@ -1563,7 +1723,9 @@
             return globalIndexPromise;
         }
 
-        function renderMovies(movies, isSearch = false, query = '', append = false) {
+        function renderMovies(movies, isSearch = false, query = '', append = false, preserveCatalogSource = false) {
+            if (append) catalogSourceMovies = [...catalogSourceMovies, ...(movies || [])];
+            else if (!preserveCatalogSource) catalogSourceMovies = movies || [];
             if (!movies || movies.length === 0) {
                 moviesGrid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
@@ -1587,6 +1749,7 @@
                     <div class="card-poster">
                         <i class="fa-solid fa-film folder-icon"></i>
                         <span class="quality-tag">HD</span>
+                        <button class="movie-favorite-btn${favoriteMovies.has(movieFavoriteKey(m)) ? ' active' : ''}" type="button" aria-label="${favoriteMovies.has(movieFavoriteKey(m)) ? 'Remove from' : 'Add to'} favorites" aria-pressed="${favoriteMovies.has(movieFavoriteKey(m))}"><i class="fa-${favoriteMovies.has(movieFavoriteKey(m)) ? 'solid' : 'regular'} fa-heart"></i></button>
                     </div>
                     <div class="card-details">
                         <div class="card-title">${escapeHtml(m.title)}</div>
@@ -1596,6 +1759,10 @@
                         </div>
                     </div>
                 `;
+                card.querySelector('.movie-favorite-btn').addEventListener('click', event => {
+                    event.stopPropagation();
+                    toggleMovieFavorite(m);
+                });
                 if (m.poster) {
                     const posterImage = document.createElement('img');
                     posterImage.src = toAbsoluteUrl(m.poster);
@@ -1667,8 +1834,9 @@
             return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeout));
         }
 
-        async function openMovieQualities(movieTitle, movieLink = '') {
+        async function openMovieQualities(movieTitle, movieLink = '', options = {}) {
             const qualityLoadToken = ++qualityRequestToken;
+            activeQualityList = [];
             sheetMovieTitle.textContent = movieTitle;
             if (!movieLink) {
                 sheetBody.innerHTML = `
@@ -1681,7 +1849,6 @@
                 bottomSheet.style.display = 'flex';
                 return;
             }
-            activeQualityList = [];
             const streamCacheKey = `cinexis_stream_${cleanTitleSlug(movieTitle)}_1080p`;
             let cachedStream = null;
             try {
@@ -1690,11 +1857,13 @@
             } catch (e) { cachedStream = null; }
             if (cachedStream?.directUrl && cachedStream?.streamPageUrl && cachedStream?.folderUrl) {
                 activeQualityList.push({ name: '1080P', url: cachedStream.folderUrl, size: cachedStream.size || 'HD', label: '1080P' });
-                openPlayer(cachedStream.directUrl, movieTitle, cachedStream.streamPageUrl);
+                openPlayer(cachedStream.directUrl, movieTitle, cachedStream.streamPageUrl, { routeAlreadyActive: !!options.routeAlreadyActive, movieLink });
                 playerQualityBtn.textContent = '1080p';
+                renderPlayerQualityMenu();
             } else {
-                openPlayer('', movieTitle, '', { deferred: true });
+                openPlayer('', movieTitle, '', { deferred: true, routeAlreadyActive: !!options.routeAlreadyActive, movieLink });
                 showPlayerStatus('Finding 1080p stream…');
+                playerQualityBtn.textContent = 'Loading…';
             }
 
             function parseItems(pageHtml) {
@@ -1732,7 +1901,12 @@
             }));
 
             if (cachedStream) {
-                loadOtherQualities();
+                loadOtherQualities().then(() => {
+                    if (qualityLoadToken !== qualityRequestToken) return;
+                    saveMovieQualities(movieTitle);
+                    renderPlayerQualityMenu();
+                    playerQualityBtn.textContent = '1080p';
+                });
                 return;
             }
 
@@ -1756,6 +1930,7 @@
                     if (result.status === 'fulfilled') activeQualityList.push(...result.value);
                 });
                 if (activeQualityList.length) {
+                    saveMovieQualities(movieTitle);
                     const selectedIndex = activeQualityList.reduce((best, item, index, list) => {
                         const value = Number((item.label || '').match(/\d+/)?.[0]) || 0;
                         const bestValue = Number((list[best]?.label || '').match(/\d+/)?.[0]) || 0;
@@ -1818,6 +1993,7 @@
             if (qualityLoadToken !== qualityRequestToken) return;
 
             if (activeQualityList.length === 0) {
+                playerQualityBtn.textContent = 'Unavailable';
                 playerLoading.classList.remove('active');
                 playerErrorNotice.style.display = 'flex';
                 playerErrorNotice.querySelector('div:nth-of-type(1)').textContent = 'Movie not available';
@@ -1832,15 +2008,54 @@
                 const bestQuality = Number((list[best]?.label || '').match(/\d+/)?.[0]) || 0;
                 return quality > bestQuality ? i : best;
             }, 0);
+            renderPlayerQualityMenu();
+            saveMovieQualities(movieTitle);
             await playQualityStream(selectedIndex, movieTitle, true);
         }
 
         function openPlayerQualityPicker() {
-            if (!activeQualityList.length) return;
-            sheetMovieTitle.textContent = 'Video quality';
-            renderQualityList(playerTitle.textContent);
-            bottomSheet.style.display = 'flex';
+            if (!activeQualityList.length) {
+                if (playerQualityBtn.textContent === 'Loading…') showPlayerStatus('Finding available qualities…');
+                return;
+            }
+            const isOpen = playerQualityMenu.classList.toggle('open');
+            playerQualityBtn.setAttribute('aria-expanded', String(isOpen));
+            if (isOpen) renderPlayerQualityMenu();
         }
+
+        function closePlayerQualityPicker() {
+            playerQualityMenu.classList.remove('open');
+            playerQualityBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        function renderPlayerQualityMenu() {
+            playerQualityMenu.innerHTML = '';
+            const currentLabel = playerQualityBtn.textContent.trim().toUpperCase();
+            activeQualityList.forEach((quality, index) => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.className = 'player-quality-option' + (currentLabel === String(quality.label || '').toUpperCase() ? ' selected' : '');
+                option.setAttribute('role', 'menuitem');
+                option.innerHTML = `<span class="player-quality-option-label">${escapeHtml(quality.label || 'Auto')}</span><span class="player-quality-option-meta">${escapeHtml(quality.size || '')}</span>`;
+                option.onclick = async () => {
+                    const requestToken = qualityRequestToken;
+                    playerQualityMenu.querySelectorAll('button').forEach(button => { button.disabled = true; });
+                    option.querySelector('.player-quality-option-meta').textContent = 'Switching…';
+                    const started = await playQualityStream(index, playerTitle.textContent, false, requestToken);
+                    if (started) closePlayerQualityPicker();
+                    else renderPlayerQualityMenu();
+                };
+                playerQualityMenu.appendChild(option);
+            });
+        }
+
+        document.addEventListener('click', event => {
+            if (!event.target.closest('#playerQualityBtn, #playerQualityMenu')) closePlayerQualityPicker();
+            if (!event.target.closest('#externalPlayerBtn, #externalPlayerMenu')) {
+                externalPlayerMenu.classList.remove('open');
+                externalPlayerBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
 
         function renderQualityList(movieTitle) {
             sheetBody.innerHTML = '';
@@ -1867,13 +2082,11 @@
 
         async function playQualityStream(index, movieTitle, automatic = false, requestToken = qualityRequestToken) {
             const folderObj = activeQualityList[index];
+            if (!folderObj) return false;
             if (!automatic) {
-                sheetBody.innerHTML = `
-                    <div class="spinner-loader">
-                        <div class="spinner"></div>
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Switching quality…</div>
-                    </div>
-                `;
+                closeBottomSheet();
+                playerLoading.classList.add('active');
+                showPlayerStatus(`Switching to ${folderObj.label || 'selected'}…`);
             }
 
             try {
@@ -1901,40 +2114,49 @@
 
                 if (match && match[1]) directVideoUrl = match[1];
 
-                if (!directVideoUrl) directVideoUrl = streamPageUrl;
-                if (directVideoUrl.startsWith('//')) directVideoUrl = 'https:' + directVideoUrl;
+                if (directVideoUrl?.startsWith('//')) directVideoUrl = 'https:' + directVideoUrl;
 
                 closeBottomSheet();
                 const resumeAt = Number(cinemaVideo.currentTime) || 0;
-                currentDirectVideoUrl = directVideoUrl;
+                currentDirectVideoUrl = directVideoUrl || '';
                 currentStreamPageUrl = streamPageUrl;
                 currentHistoryMeta = {
                     ...(currentHistoryMeta || {}),
                     title: movieTitle,
                     year: currentYear,
-                    directUrl: directVideoUrl,
+                    directUrl: directVideoUrl || streamPageUrl,
                     streamUrl: streamPageUrl,
                     position: resumeAt
                 };
-                cinemaVideo.src = directVideoUrl;
-                cinemaVideo.load();
-                playerLoading.classList.add('active');
-                cinemaVideo.addEventListener('canplay', () => playerLoading.classList.remove('active'), { once: true });
-                cinemaVideo.addEventListener('playing', () => playerLoading.classList.remove('active'), { once: true });
-                cinemaVideo.addEventListener('loadedmetadata', function restoreOnSwitch() {
-                    cinemaVideo.removeEventListener('loadedmetadata', restoreOnSwitch);
-                    if (resumeAt > 0 && resumeAt < cinemaVideo.duration - 2) cinemaVideo.currentTime = resumeAt;
-                });
-                cinemaVideo.play().catch(() => {
-                    playerLoading.classList.remove('active');
-                    setPlayIcon(true);
-                    showPlayerStatus('Tap play to start');
-                });
-                playerDownloadBtn.href = directVideoUrl;
-                playerOpenTabBtn.href = directVideoUrl;
+                mediaFallbackAttempted = false;
+                if (directVideoUrl) {
+                    activePlayerEngine = 'direct';
+                    cinemaVideo.style.display = 'block';
+                    streamIframe.style.display = 'none';
+                    streamIframe.src = 'about:blank';
+                    cinemaVideo.src = directVideoUrl;
+                    cinemaVideo.load();
+                    playerLoading.classList.add('active');
+                    cinemaVideo.addEventListener('loadedmetadata', function restoreOnSwitch() {
+                        cinemaVideo.removeEventListener('loadedmetadata', restoreOnSwitch);
+                        if (resumeAt > 0 && resumeAt < cinemaVideo.duration - 2) cinemaVideo.currentTime = resumeAt;
+                    });
+                    cinemaVideo.play().catch(() => {
+                        playerLoading.classList.remove('active');
+                        setPlayIcon(true);
+                        showPlayerStatus('Tap play to start');
+                    });
+                } else {
+                    // A stream page is HTML, not a video file. Play it in the iframe engine.
+                    switchEngine('stream');
+                }
+                playerDownloadBtn.href = directVideoUrl || streamPageUrl;
+                playerOpenTabBtn.href = directVideoUrl || streamPageUrl;
+                updateExternalPlayerOptions(directVideoUrl, movieTitle);
                 playerQualityBtn.textContent = folderObj.label || 'Auto';
+                renderPlayerQualityMenu();
                 upsertWatchHistory(currentHistoryMeta);
-                if (/1080/i.test(folderObj.label || '') && directVideoUrl !== streamPageUrl) {
+                if (/1080/i.test(folderObj.label || '') && directVideoUrl) {
                     try {
                         localStorage.setItem(`cinexis_stream_${cleanTitleSlug(movieTitle)}_1080p`, JSON.stringify({
                             directUrl: directVideoUrl,
@@ -1956,7 +2178,8 @@
                     playerErrorNotice.querySelector('div:nth-of-type(1)').textContent = 'Could not start this movie';
                     playerErrorNotice.querySelector('div:nth-of-type(2)').textContent = 'The stream link failed to load. Try another quality or open the stream directly.';
                 } else {
-                    sheetBody.innerHTML = `<div class="unavailable-state"><strong>Could not switch quality</strong><p>${escapeHtml(err.message)}</p></div>`;
+                    showPlayerStatus('Could not switch quality');
+                    setTimeout(hidePlayerStatus, 1800);
                 }
                 return false;
             }
@@ -1965,6 +2188,42 @@
         // ---------- Premium Player + Local Watch History ----------
         function makeHistoryId(title, streamUrl = '') {
             return (title || '').trim().toLowerCase() + '|' + (streamUrl || '').trim();
+        }
+
+        function updateExternalPlayerOptions(videoUrl, title) {
+            const isAndroid = /Android/i.test(navigator.userAgent || '');
+            const isDirectFile = !!videoUrl && videoUrl !== currentStreamPageUrl && !/\.(?:html?|php)(?:[?#]|$)/i.test(videoUrl);
+            if (!isAndroid || !isDirectFile) {
+                externalPlayerBtn.style.display = 'none';
+                externalPlayerMenu.innerHTML = '';
+                return;
+            }
+            let mediaUrl;
+            try { mediaUrl = new URL(videoUrl); } catch (_) {
+                externalPlayerBtn.style.display = 'none';
+                return;
+            }
+            if (!['http:', 'https:'].includes(mediaUrl.protocol)) {
+                externalPlayerBtn.style.display = 'none';
+                return;
+            }
+            const path = `${mediaUrl.host}${mediaUrl.pathname}${mediaUrl.search}`;
+            const encodedTitle = encodeURIComponent(title || 'Video');
+            const createIntent = (packageName, appStoreId) => {
+                const fallback = encodeURIComponent(`https://play.google.com/store/apps/details?id=${appStoreId}`);
+                return `intent://${path}#Intent;scheme=${mediaUrl.protocol.slice(0, -1)};package=${packageName};type=video/*;S.title=${encodedTitle};S.browser_fallback_url=${fallback};end`;
+            };
+            const options = [
+                { label: 'VLC', href: createIntent('org.videolan.vlc', 'org.videolan.vlc') },
+                { label: 'MX Player', href: createIntent('com.mxtech.videoplayer.ad', 'com.mxtech.videoplayer.ad') }
+            ];
+            externalPlayerMenu.innerHTML = options.map(option => `<a class="player-quality-option" role="menuitem" href="${escapeHtml(option.href)}"><span class="player-quality-option-label"><i class="fa-solid fa-play"></i> ${option.label}</span><span class="player-quality-option-meta">Open app</span></a>`).join('');
+            externalPlayerBtn.style.display = 'inline-flex';
+        }
+
+        function toggleExternalPlayerMenu() {
+            const isOpen = externalPlayerMenu.classList.toggle('open');
+            externalPlayerBtn.setAttribute('aria-expanded', String(isOpen));
         }
 
         function loadWatchHistory() {
@@ -2129,7 +2388,12 @@
         }
 
         function openPlayer(videoUrl, title, streamUrl = '', options = {}) {
+            const routeAlreadyActive = !!options.routeAlreadyActive;
+            if (routeAlreadyActive) playerRouteActive = true;
+            else syncPlayerRoute(title, streamUrl || videoUrl || '', options.movieLink || '');
             playerTitle.textContent = title;
+            if (subtitleMovieTitle && subtitleMovieTitle !== title) clearLocalSubtitles();
+            subtitleMovieTitle = title;
             currentDirectVideoUrl = videoUrl || '';
             currentStreamPageUrl = streamUrl || videoUrl || '';
             activePlayerEngine = 'direct';
@@ -2150,6 +2414,7 @@
 
             playerDownloadBtn.href = currentDirectVideoUrl || currentStreamPageUrl;
             playerOpenTabBtn.href = currentDirectVideoUrl || currentStreamPageUrl;
+            updateExternalPlayerOptions(currentDirectVideoUrl, title);
             const fallbackTabBtn = document.getElementById('fallbackOpenTabBtn');
             if (fallbackTabBtn) fallbackTabBtn.href = currentStreamPageUrl || currentDirectVideoUrl;
 
@@ -2176,6 +2441,7 @@
             streamIframe.src = 'about:blank';
 
             cinemaVideo.pause();
+            mediaFallbackAttempted = false;
             if (options.deferred) cinemaVideo.removeAttribute('src');
             else cinemaVideo.src = currentDirectVideoUrl;
             cinemaVideo.load();
@@ -2377,6 +2643,40 @@
 
         fullscreenBtn.addEventListener('click', toggleFullscreen);
 
+        function clearLocalSubtitles() {
+            cinemaVideo.querySelectorAll('track[data-local-subtitle="true"]').forEach(track => track.remove());
+            if (subtitleObjectUrl) URL.revokeObjectURL(subtitleObjectUrl);
+            subtitleObjectUrl = '';
+        }
+
+        subtitleFileInput.addEventListener('change', async () => {
+            const file = subtitleFileInput.files?.[0];
+            if (!file) return;
+            try {
+                let subtitleText = await file.text();
+                if (/\.srt$/i.test(file.name)) subtitleText = `WEBVTT\n\n${subtitleText.replace(/\r?\n/g, '\n').replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2')}`;
+                else if (!subtitleText.trimStart().startsWith('WEBVTT')) subtitleText = `WEBVTT\n\n${subtitleText}`;
+                clearLocalSubtitles();
+                subtitleObjectUrl = URL.createObjectURL(new Blob([subtitleText], { type: 'text/vtt' }));
+                const track = document.createElement('track');
+                track.kind = 'subtitles';
+                track.label = file.name.replace(/\.(srt|vtt)$/i, '');
+                track.srclang = 'en';
+                track.src = subtitleObjectUrl;
+                track.default = true;
+                track.dataset.localSubtitle = 'true';
+                cinemaVideo.appendChild(track);
+                track.track.mode = 'showing';
+                showPlayerStatus(`Subtitles loaded: ${track.label}`);
+                setTimeout(hidePlayerStatus, 1600);
+            } catch (_) {
+                showPlayerStatus('Could not load subtitle file');
+                setTimeout(hidePlayerStatus, 1800);
+            } finally {
+                subtitleFileInput.value = '';
+            }
+        });
+
         cinemaVideo.addEventListener('loadedmetadata', updateTimeUI);
         cinemaVideo.addEventListener('durationchange', updateTimeUI);
         cinemaVideo.addEventListener('timeupdate', () => {
@@ -2389,14 +2689,19 @@
 
         cinemaVideo.addEventListener('loadeddata', () => {
             playerLoading.classList.remove('active');
+            hidePlayerStatus();
         });
 
         cinemaVideo.addEventListener('canplay', () => {
+            clearTimeout(mediaStallTimer);
             playerLoading.classList.remove('active');
+            hidePlayerStatus();
         });
 
         cinemaVideo.addEventListener('playing', () => {
+            clearTimeout(mediaStallTimer);
             playerLoading.classList.remove('active');
+            hidePlayerStatus();
             setPlayIcon(false);
             resetPlayerControlsTimer();
         });
@@ -2407,12 +2712,27 @@
             updateCurrentHistory(true);
         });
         cinemaVideo.addEventListener('waiting', () => {
+            if (cinemaVideo.paused) return;
             playerLoading.classList.add('active');
             showPlayerStatus('Buffering...');
         });
         cinemaVideo.addEventListener('stalled', () => {
+            if (cinemaVideo.paused) return;
+            clearTimeout(mediaStallTimer);
             playerLoading.classList.add('active');
-            showPlayerStatus('Reconnecting stream...');
+            showPlayerStatus('Connection stalled…');
+            mediaStallTimer = setTimeout(() => {
+                if (cinemaVideo.paused || cinemaVideo.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return;
+                playerLoading.classList.remove('active');
+                if (activePlayerEngine === 'direct' && currentStreamPageUrl && !mediaFallbackAttempted) {
+                    mediaFallbackAttempted = true;
+                    showPlayerStatus('Trying alternate player…');
+                    switchEngine('stream');
+                } else {
+                    showPlayerStatus('Stream stopped responding. Try another quality or player.');
+                    playerErrorNotice.style.display = 'flex';
+                }
+            }, 12000);
         });
         cinemaVideo.addEventListener('volumechange', setVolumeIcon);
         cinemaVideo.addEventListener('ended', () => {
@@ -2423,10 +2743,7 @@
                 upsertWatchHistory(currentHistoryMeta);
             }
         });
-        cinemaVideo.onerror = () => {
-            playerLoading.classList.remove('active');
-            playerErrorNotice.style.display = 'flex';
-        };
+        cinemaVideo.addEventListener('error', handleDirectVideoError);
 
         // Single tap shows controls. Double tap seeks.
         videoWrapper.addEventListener('click', (e) => {
@@ -2449,15 +2766,20 @@
         });
 
         // ---------- Engine fallback ----------
-        // Automatic error handler for native HTML5 video
-        cinemaVideo.onerror = () => {
-            console.warn("Direct video stream blocked or codec unsupported. Activating fallback options.");
+        // If the direct file cannot play, try its source page in the iframe engine.
+        function handleDirectVideoError() {
             playerLoading.classList.remove('active');
             if (currentHistoryMeta?.title) {
                 try { localStorage.removeItem(`cinexis_stream_${cleanTitleSlug(currentHistoryMeta.title)}_1080p`); } catch (e) {}
             }
-            playerErrorNotice.style.display = 'flex';
-        };
+            if (activePlayerEngine === 'direct' && currentStreamPageUrl && !mediaFallbackAttempted) {
+                mediaFallbackAttempted = true;
+                showPlayerStatus('Trying alternate player…');
+                switchEngine('stream');
+            } else {
+                playerErrorNotice.style.display = 'flex';
+            }
+        }
 
         function switchEngine(engine) {
             activePlayerEngine = engine;
@@ -2471,9 +2793,13 @@
                 playerLoading.classList.add('active');
                 streamIframe.src = currentStreamPageUrl;
                 engineLabel.textContent = 'Direct Player';
-                streamIframe.onload = () => playerLoading.classList.remove('active');
+                streamIframe.onload = () => {
+                    playerLoading.classList.remove('active');
+                    hidePlayerStatus();
+                };
                 updateCurrentHistory(true);
             } else {
+                mediaFallbackAttempted = false;
                 streamIframe.style.display = 'none';
                 streamIframe.src = 'about:blank';
                 cinemaVideo.style.display = 'block';
@@ -2489,14 +2815,18 @@
             resetPlayerControlsTimer();
         }
 
-        function closePlayer() {
+        function closePlayer(updateRoute = true) {
+            const shouldRestoreRoute = updateRoute && playerRouteActive;
             qualityRequestToken++;
+            clearTimeout(mediaStallTimer);
             updateCurrentHistory(true);
             clearInterval(historyTimer);
 
             cinemaVideo.pause();
             cinemaVideo.removeAttribute('src');
             cinemaVideo.load();
+            clearLocalSubtitles();
+            subtitleMovieTitle = '';
             streamIframe.src = 'about:blank';
             streamIframe.style.display = 'none';
             playerErrorNotice.style.display = 'none';
@@ -2524,6 +2854,7 @@
             }, 240);
 
             renderWatchHistory();
+            if (shouldRestoreRoute) clearPlayerRoute();
         }
 
         document.addEventListener('fullscreenchange', () => {
@@ -2574,9 +2905,16 @@
         }
 
         // Init App
+        populateYearFilter();
         initYearPills();
         renderWatchHistory();
         loadMovies(2026);
+        const initialPlayerRoute = readPlayerRoute();
+        if (initialPlayerRoute?.title) {
+            playerRouteActive = true;
+            openPlayer('', initialPlayerRoute.title, initialPlayerRoute.streamUrl, { deferred: true, routeAlreadyActive: true });
+            openMovieQualities(initialPlayerRoute.title, initialPlayerRoute.movieLink, { routeAlreadyActive: true });
+        }
     </script>
 </body>
 </html>
