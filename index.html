@@ -1486,6 +1486,19 @@
             return String(movie.link || movie.url || movie.rawTitle || movie.title || '').trim().toLowerCase();
         }
 
+        function isTamilWebSeries(movie) {
+            return /(?:tamil\s*)?web\s*series|\bseason\s*\d+\b/i.test(`${movie?.rawTitle || ''} ${movie?.title || ''} ${movie?.link || movie?.url || ''}`);
+        }
+
+        function openCatalogEntry(movie) {
+            const link = movie?.link || movie?.url || '';
+            if (isTamilWebSeries(movie)) {
+                openSeriesEpisodes(movie, link);
+                return;
+            }
+            openMovieQualities(movie.title, link);
+        }
+
         function toggleMovieFavorite(movie) {
             const key = movieFavoriteKey(movie);
             if (!key) return;
@@ -1616,6 +1629,10 @@
                 const params = new URLSearchParams(match[1]);
                 return { title: params.get('title') || '', streamUrl: params.get('stream') || '', movieLink: params.get('movie') || '' };
             } catch (_) { return null; }
+        }
+
+        function isSeriesCatalogLink(link) {
+            return /(?:tamil[-\s]*)?(?:web[-\s]*series|series)(?:[-/]|$)|\bseason[-\s]*\d+/i.test(String(link || ''));
         }
 
         window.addEventListener('popstate', () => {
@@ -1835,7 +1852,7 @@
             movies.forEach(m => {
                 const card = document.createElement('div');
                 card.className = 'movie-card';
-                card.onclick = () => openMovieQualities(m.title, m.link || m.url);
+                card.onclick = () => openCatalogEntry(m);
 
                 const movieYear = m.year || currentYear;
 
@@ -1910,8 +1927,56 @@
             info.className = 'ott-card-info';
             info.innerHTML = `<div class="ott-card-title">${escapeHtml(movie.title)}</div><div class="ott-card-meta">${escapeHtml(movie.year || currentYear)} · <i class="fa-solid fa-play"></i> Play</div>`;
             card.append(poster, info);
-            card.onclick = () => openMovieQualities(movie.title, movie.link || movie.url || '');
+            card.onclick = () => openCatalogEntry(movie);
             return card;
+        }
+
+        async function openSeriesEpisodes(series, seriesLink, options = {}) {
+            const requestToken = ++qualityRequestToken;
+            activeQualityList = [];
+            sheetMovieTitle.textContent = series.title;
+            sheetBody.innerHTML = '<div class="spinner-loader"><div class="spinner"></div><div>Loading episodes…</div></div>';
+            bottomSheet.style.display = 'flex';
+            if (options.routeAlreadyActive) playerRouteActive = true;
+            else syncPlayerRoute(series.title, '', seriesLink);
+            if (!seriesLink) {
+                sheetBody.innerHTML = '<div class="unavailable-state"><strong>Series page unavailable</strong><p>This catalog entry has no episode page link.</p></div>';
+                return;
+            }
+            try {
+                const response = await fetchWithTimeout(`${PROXY_BASE}${encodeURIComponent(toAbsoluteUrl(seriesLink))}`, 10000);
+                if (!response.ok) throw new Error('Could not load series page');
+                const html = await response.text();
+                if (requestToken !== qualityRequestToken) return;
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const seen = new Set();
+                const episodes = [...doc.querySelectorAll('div.f a[href]')].map(anchor => ({
+                    title: (anchor.textContent || '').trim(),
+                    link: anchor.getAttribute('href') || ''
+                })).filter(episode => {
+                    if (!episode.title || !episode.link || /go home page|web\s*series|\bseason\s*\d+\b/i.test(episode.title)) return false;
+                    const key = episode.link.toLowerCase();
+                    if (seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                });
+                if (!episodes.length) {
+                    sheetBody.innerHTML = '<div class="unavailable-state"><strong>No episodes found</strong><p>This series page did not contain any episode links.</p></div>';
+                    return;
+                }
+                sheetBody.replaceChildren();
+                episodes.forEach((episode, index) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'quality-card';
+                    button.innerHTML = `<div class="quality-info"><div class="quality-name">${escapeHtml(episode.title)}</div><div class="quality-meta"><span class="badge-pill">Episode ${index + 1}</span></div></div><span class="btn-primary" style="padding:.5rem 1rem;font-size:.8rem"><i class="fa-solid fa-play"></i> Play</span>`;
+                    button.onclick = () => openMovieQualities(episode.title, episode.link);
+                    sheetBody.appendChild(button);
+                });
+            } catch (error) {
+                if (requestToken !== qualityRequestToken) return;
+                sheetBody.innerHTML = '<div class="unavailable-state"><strong>Could not load episodes</strong><p>Please try opening this series again.</p></div>';
+            }
         }
 
         function renderOttRow(row, movies, emptyMessage) {
@@ -1938,7 +2003,10 @@
                 if (favoriteMovies.has(key) && !favoriteMovieDetails.has(key)) favoriteMovieDetails.set(key, movie);
             }
             saveFavoriteDetails();
-            const myList = [...favoriteMovieDetails.values()].filter(movie => favoriteMovies.has(movieFavoriteKey(movie)));
+            const seriesEntries = catalog.filter(isTamilWebSeries);
+            const myListByKey = new Map();
+            [...favoriteMovieDetails.values(), ...seriesEntries].forEach(movie => myListByKey.set(movieFavoriteKey(movie), movie));
+            const myList = [...myListByKey.values()].filter(movie => isTamilWebSeries(movie) || favoriteMovies.has(movieFavoriteKey(movie)));
             renderOttRow(myListRow, myList.slice(0, 24), 'Your list is empty. Tap a heart on any movie to save it here.');
 
             const watched = loadWatchHistory();
@@ -2049,11 +2117,11 @@
             } catch (e) { cachedStream = null; }
             if (cachedStream?.directUrl && cachedStream?.streamPageUrl && cachedStream?.folderUrl) {
                 activeQualityList.push({ name: '1080P', url: cachedStream.folderUrl, size: cachedStream.size || 'HD', label: '1080P' });
-                openPlayer(cachedStream.directUrl, movieTitle, cachedStream.streamPageUrl, { routeAlreadyActive: !!options.routeAlreadyActive, movieLink });
+                openPlayer(cachedStream.directUrl, movieTitle, cachedStream.streamPageUrl, { routeAlreadyActive: !!options.routeAlreadyActive, movieLink, resumePosition: options.resumePosition, historyItem: options.historyItem });
                 playerQualityBtn.textContent = '1080p';
                 renderPlayerQualityMenu();
             } else {
-                openPlayer('', movieTitle, '', { deferred: true, routeAlreadyActive: !!options.routeAlreadyActive, movieLink });
+                openPlayer('', movieTitle, '', { deferred: true, routeAlreadyActive: !!options.routeAlreadyActive, movieLink, resumePosition: options.resumePosition, historyItem: options.historyItem });
                 showPlayerStatus('Finding 1080p stream…');
                 playerQualityBtn.textContent = 'Loading…';
             }
@@ -2129,7 +2197,7 @@
                 if (activeQualityList.length) {
                     saveMovieQualities(movieTitle);
                     const selectedIndex = choosePreferredQualityIndex(activeQualityList);
-                    const streamStarted = await playQualityStream(selectedIndex, movieTitle, true, qualityLoadToken);
+                    const streamStarted = await playQualityStream(selectedIndex, movieTitle, true, qualityLoadToken, options.resumePosition);
                     if (!streamStarted) activeQualityList = [];
                     if (streamStarted) return;
                 }
@@ -2197,7 +2265,7 @@
             const selectedIndex = choosePreferredQualityIndex(activeQualityList);
             renderPlayerQualityMenu();
             saveMovieQualities(movieTitle);
-            await playQualityStream(selectedIndex, movieTitle, true);
+            await playQualityStream(selectedIndex, movieTitle, true, qualityLoadToken, options.resumePosition);
         }
 
         function openPlayerQualityPicker() {
@@ -2267,7 +2335,7 @@
             });
         }
 
-        async function playQualityStream(index, movieTitle, automatic = false, requestToken = qualityRequestToken) {
+        async function playQualityStream(index, movieTitle, automatic = false, requestToken = qualityRequestToken, resumePosition = 0) {
             const folderObj = activeQualityList[index];
             if (!folderObj) return false;
             if (!automatic) {
@@ -2305,7 +2373,7 @@
                 if (directVideoUrl?.startsWith('//')) directVideoUrl = 'https:' + directVideoUrl;
 
                 closeBottomSheet();
-                const resumeAt = Number(cinemaVideo.currentTime) || 0;
+                const resumeAt = Number(resumePosition) || Number(cinemaVideo.currentTime) || 0;
                 currentDirectVideoUrl = directVideoUrl || '';
                 currentStreamPageUrl = streamPageUrl;
                 currentHistoryMeta = {
@@ -2317,27 +2385,24 @@
                     position: resumeAt
                 };
                 mediaFallbackAttempted = false;
-                if (directVideoUrl) {
-                    activePlayerEngine = 'direct';
-                    cinemaVideo.style.display = 'block';
-                    streamIframe.style.display = 'none';
-                    streamIframe.src = 'about:blank';
-                    cinemaVideo.src = directVideoUrl;
-                    cinemaVideo.load();
-                    playerLoading.classList.add('active');
-                    cinemaVideo.addEventListener('loadedmetadata', function restoreOnSwitch() {
-                        cinemaVideo.removeEventListener('loadedmetadata', restoreOnSwitch);
-                        if (resumeAt > 0 && resumeAt < cinemaVideo.duration - 2) cinemaVideo.currentTime = resumeAt;
-                    });
-                    cinemaVideo.play().catch(() => {
-                        playerLoading.classList.remove('active');
-                        setPlayIcon(true);
-                        showPlayerStatus('Tap play to start');
-                    });
-                } else {
-                    // A stream page is HTML, not a video file. Play it in the iframe engine.
-                    switchEngine('stream');
-                }
+                if (!directVideoUrl) throw new Error('No direct video URL was found');
+                activePlayerEngine = 'direct';
+                playerModal.classList.remove('stream-iframe-active');
+                cinemaVideo.style.display = 'block';
+                streamIframe.style.display = 'none';
+                streamIframe.src = 'about:blank';
+                cinemaVideo.src = directVideoUrl;
+                cinemaVideo.load();
+                playerLoading.classList.add('active');
+                cinemaVideo.addEventListener('loadedmetadata', function restoreOnSwitch() {
+                    cinemaVideo.removeEventListener('loadedmetadata', restoreOnSwitch);
+                    if (resumeAt > 0 && resumeAt < cinemaVideo.duration - 2) cinemaVideo.currentTime = resumeAt;
+                });
+                cinemaVideo.play().catch(() => {
+                    playerLoading.classList.remove('active');
+                    setPlayIcon(true);
+                    showPlayerStatus('Tap play to start');
+                });
                 playerDownloadBtn.href = directVideoUrl || streamPageUrl;
                 updateExternalPlayerOptions(directVideoUrl, movieTitle);
                 playerQualityBtn.textContent = folderObj.label || 'Auto';
@@ -2395,11 +2460,14 @@
                 externalPlayerMenu.innerHTML = '<div class="player-quality-option" aria-disabled="true"><span class="player-quality-option-label">Unsupported stream link</span><span class="player-quality-option-meta">External playback unavailable</span></div>';
                 return;
             }
-            const path = `${mediaUrl.host}${mediaUrl.pathname}${mediaUrl.search}`;
             const encodedTitle = encodeURIComponent(title || 'Video');
             const createIntent = (packageName, appStoreId) => {
                 const fallback = encodeURIComponent(`https://play.google.com/store/apps/details?id=${appStoreId}`);
-                return `intent://${path}#Intent;scheme=${mediaUrl.protocol.slice(0, -1)};package=${packageName};type=video/*;S.title=${encodedTitle};S.browser_fallback_url=${fallback};end`;
+                // Use ACTION_VIEW with the complete encoded media URL. Reconstructing
+                // the URL from host/path can corrupt signed query strings and make
+                // MX Player reject the link, especially when resuming from Recents.
+                const dataUrl = encodeURIComponent(mediaUrl.href);
+                return `intent:${dataUrl}#Intent;action=android.intent.action.VIEW;type=video/*;package=${packageName};S.title=${encodedTitle};S.browser_fallback_url=${fallback};end`;
             };
             const options = isAndroid
                 ? [
@@ -2561,27 +2629,11 @@
 
         function resumeFromHistory(item) {
             if (!item) return;
-
-            // Continue Watching must never run the quality/extraction scan again.
-            // Use the URL already saved in localStorage and open the player immediately.
-            const direct = item.directUrl || item.streamUrl || '';
-            if (!direct) return;
-
-            currentHistoryMeta = {
-                title: item.title,
-                year: item.year,
-                streamUrl: item.streamUrl || direct,
-                directUrl: direct,
-                position: Number(item.position) || 0,
-                duration: Number(item.duration) || 0,
-                progress: Number(item.progress) || 0
-            };
-
-            openPlayer(direct, item.title, item.streamUrl || direct, {
-                resumePosition: Number(item.position) || 0,
-                historyItem: item,
-                instantResume: true
-            });
+            // Direct file URLs can be signed and expire. Resolve the movie page
+            // again when resuming so Recents always gets a fresh playable URL.
+            const movie = movies.find(entry => (entry.title || '').trim().toLowerCase() === (item.title || '').trim().toLowerCase());
+            const movieLink = movie?.link || '';
+            openMovieQualities(item.title, movieLink, { resumePosition: Number(item.position) || 0, historyItem: item });
         }
 
         function openPlayer(videoUrl, title, streamUrl = '', options = {}) {
@@ -2918,14 +2970,8 @@
             mediaStallTimer = setTimeout(() => {
                 if (cinemaVideo.paused || cinemaVideo.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return;
                 playerLoading.classList.remove('active');
-                if (activePlayerEngine === 'direct' && currentStreamPageUrl && !mediaFallbackAttempted) {
-                    mediaFallbackAttempted = true;
-                    showPlayerStatus('Trying alternate player…');
-                    switchEngine('stream');
-                } else {
-                    showPlayerStatus('Stream stopped responding. Try another quality or player.');
-                    playerErrorNotice.style.display = 'flex';
-                }
+                showPlayerStatus('Stream stopped responding. Try another quality.');
+                playerErrorNotice.style.display = 'flex';
             }, 12000);
         });
         cinemaVideo.addEventListener('volumechange', setVolumeIcon);
@@ -2960,48 +3006,28 @@
         });
 
         // ---------- Engine fallback ----------
-        // If the direct file cannot play, try its source page in the iframe engine.
+        // Keep playback inside Cinexis. Never embed the external source page.
         function handleDirectVideoError() {
             playerLoading.classList.remove('active');
             if (currentHistoryMeta?.title) {
                 try { localStorage.removeItem(`cinexis_stream_${cleanTitleSlug(currentHistoryMeta.title)}_1080p`); } catch (e) {}
             }
-            if (activePlayerEngine === 'direct' && currentStreamPageUrl && !mediaFallbackAttempted) {
-                mediaFallbackAttempted = true;
-                showPlayerStatus('Trying alternate player…');
-                switchEngine('stream');
-            } else {
-                playerErrorNotice.style.display = 'flex';
-            }
+            streamIframe.src = 'about:blank';
+            playerErrorNotice.style.display = 'flex';
         }
 
         function switchEngine(engine) {
-            activePlayerEngine = engine;
+            // The legacy mode switch must not navigate to third-party pages.
+            activePlayerEngine = 'direct';
+            playerModal.classList.remove('stream-iframe-active');
+            streamIframe.style.display = 'none';
+            streamIframe.src = 'about:blank';
+            if (engine !== 'direct' || !currentDirectVideoUrl) return;
             playerErrorNotice.style.display = 'none';
-
-            if (engine === 'stream') {
-                playerModal.classList.add('stream-iframe-active');
-                cinemaVideo.pause();
-                cinemaVideo.removeAttribute('src');
-                cinemaVideo.style.display = 'none';
-                streamIframe.style.display = 'block';
-                playerLoading.classList.add('active');
-                streamIframe.src = currentStreamPageUrl;
-                streamIframe.onload = () => {
-                    playerLoading.classList.remove('active');
-                    hidePlayerStatus();
-                };
-                updateCurrentHistory(true);
-            } else {
-                mediaFallbackAttempted = false;
-                playerModal.classList.remove('stream-iframe-active');
-                streamIframe.style.display = 'none';
-                streamIframe.src = 'about:blank';
-                cinemaVideo.style.display = 'block';
-                cinemaVideo.src = currentDirectVideoUrl;
-                cinemaVideo.load();
-                cinemaVideo.play().catch(() => {});
-            }
+            cinemaVideo.style.display = 'block';
+            cinemaVideo.src = currentDirectVideoUrl;
+            cinemaVideo.load();
+            cinemaVideo.play().catch(() => {});
         }
 
         function closePlayer(updateRoute = true) {
@@ -3105,8 +3131,15 @@
         const initialPlayerRoute = readPlayerRoute();
         if (initialPlayerRoute?.title) {
             playerRouteActive = true;
-            openPlayer('', initialPlayerRoute.title, initialPlayerRoute.streamUrl, { deferred: true, routeAlreadyActive: true });
-            openMovieQualities(initialPlayerRoute.title, initialPlayerRoute.movieLink, { routeAlreadyActive: true });
+            const seriesLink = isSeriesCatalogLink(initialPlayerRoute.movieLink)
+                ? initialPlayerRoute.movieLink
+                : isSeriesCatalogLink(initialPlayerRoute.streamUrl) ? initialPlayerRoute.streamUrl : '';
+            if (seriesLink) {
+                openSeriesEpisodes({ title: initialPlayerRoute.title, rawTitle: initialPlayerRoute.title }, seriesLink, { routeAlreadyActive: true });
+            } else {
+                openPlayer('', initialPlayerRoute.title, initialPlayerRoute.streamUrl, { deferred: true, routeAlreadyActive: true });
+                openMovieQualities(initialPlayerRoute.title, initialPlayerRoute.movieLink, { routeAlreadyActive: true });
+            }
         }
     </script>
 </body>
