@@ -683,7 +683,7 @@
             box-shadow:0 30px 100px rgba(0,0,0,.9),0 0 50px rgba(229,9,20,.08);
         }
         .video-wrapper {
-            width:100%; height:100%; position:relative; background:#000;
+            width:100%; height:100%; position:relative; background:#000; touch-action:none;
             display:flex; align-items:center; justify-content:center;
         }
         .video-wrapper video,.video-wrapper iframe {
@@ -742,6 +742,21 @@
             pointer-events:none; opacity:0; transition:opacity .2s; z-index:35;
         }
         .player-status-pill.show { opacity:1; }
+        .gesture-indicator {
+            position:absolute; top:50%; z-index:40; display:flex; align-items:center; gap:.7rem;
+            min-width:132px; padding:.8rem 1rem; border:1px solid rgba(255,255,255,.14);
+            border-radius:16px; background:rgba(12,12,16,.82); color:#fff;
+            box-shadow:0 12px 36px rgba(0,0,0,.4); opacity:0; pointer-events:none;
+            transform:translateY(-50%) scale(.94); transition:opacity .14s,transform .14s;
+        }
+        .gesture-indicator.left { left:8%; }
+        .gesture-indicator.right { right:8%; }
+        .gesture-indicator.show { opacity:1; transform:translateY(-50%) scale(1); }
+        .gesture-indicator i { width:20px; color:var(--accent); font-size:1.1rem; text-align:center; }
+        .gesture-meter { width:5px; height:54px; overflow:hidden; border-radius:9px; background:rgba(255,255,255,.18); display:flex; align-items:flex-end; }
+        .gesture-meter-fill { width:100%; height:100%; border-radius:inherit; background:#fff; transform-origin:bottom; }
+        .gesture-value { min-width:42px; font-size:.8rem; font-weight:800; font-variant-numeric:tabular-nums; }
+        .video-wrapper.gesture-active { touch-action:none; }
 
         .player-loading {
             position:absolute; inset:0; display:none; place-items:center; z-index:60;
@@ -1289,6 +1304,13 @@
                     <div class="player-status-pill" id="playerStatusPill"></div>
                 </div>
 
+                <div class="gesture-indicator left" id="brightnessIndicator" aria-live="polite">
+                    <i class="fa-solid fa-sun"></i><div class="gesture-meter"><span class="gesture-meter-fill" id="brightnessMeter"></span></div><span class="gesture-value" id="brightnessValue">100%</span>
+                </div>
+                <div class="gesture-indicator right" id="volumeIndicator" aria-live="polite">
+                    <i class="fa-solid fa-volume-high" id="gestureVolumeIcon"></i><div class="gesture-meter"><span class="gesture-meter-fill" id="volumeMeter"></span></div><span class="gesture-value" id="gestureVolumeValue">100%</span>
+                </div>
+
                 <div class="player-hint">Tap video for controls • Double tap to seek</div>
 
                 <div class="player-controls" id="playerControls">
@@ -1356,6 +1378,7 @@
         const sheetMovieTitle = document.getElementById('sheetMovieTitle');
         const sheetBody = document.getElementById('sheetBody');
         const playerModal = document.getElementById('playerModal');
+        const videoWrapper = document.getElementById('videoWrapper');
         const cinemaVideo = document.getElementById('cinemaVideo');
         const streamIframe = document.getElementById('streamIframe');
         const playerTitle = document.getElementById('playerTitle');
@@ -1383,6 +1406,13 @@
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const playerCenterPlay = document.getElementById('playerCenterPlay');
         const playerStatusPill = document.getElementById('playerStatusPill');
+        const brightnessIndicator = document.getElementById('brightnessIndicator');
+        const volumeIndicator = document.getElementById('volumeIndicator');
+        const brightnessMeter = document.getElementById('brightnessMeter');
+        const volumeMeter = document.getElementById('volumeMeter');
+        const brightnessValue = document.getElementById('brightnessValue');
+        const gestureVolumeValue = document.getElementById('gestureVolumeValue');
+        const gestureVolumeIcon = document.getElementById('gestureVolumeIcon');
         const historySection = document.getElementById('historySection');
         const historyRow = document.getElementById('historyRow');
         const myListSection = document.getElementById('myListSection');
@@ -1463,6 +1493,12 @@
         let currentHistoryId = '';
         let currentHistoryMeta = null;
         let lastTapAt = 0;
+        let playerBrightness = 1;
+        let gestureState = null;
+        let gestureHudTimer = null;
+        let suppressNextPlayerClick = false;
+        let pendingSeekTarget = null;
+        let seekCommitTimer = null;
 
         function loadFavorites() {
             try {
@@ -2787,6 +2823,93 @@
             playerProgress.value = duration ? Math.round((current / duration) * 1000) : 0;
         }
 
+        // Commit seeks as a single accurate seek. Coalescing quick taps prevents
+        // overlapping decoder seeks, which can leave a stale/keyframe image on screen.
+        function seekVideo(target, label) {
+            const duration = Number(cinemaVideo.duration);
+            if (!Number.isFinite(duration) || duration <= 0) return;
+            pendingSeekTarget = Math.max(0, Math.min(duration, target));
+            clearTimeout(seekCommitTimer);
+            seekCommitTimer = setTimeout(() => {
+                const nextTarget = pendingSeekTarget;
+                pendingSeekTarget = null;
+                if (nextTarget == null || Math.abs(cinemaVideo.currentTime - nextTarget) < .05) return;
+                try { cinemaVideo.currentTime = nextTarget; } catch (_) { return; }
+                updateTimeUI();
+                if (label) {
+                    showPlayerStatus(label);
+                    setTimeout(hidePlayerStatus, 650);
+                }
+                updateCurrentHistory(true);
+            }, 45);
+            resetPlayerControlsTimer();
+        }
+
+        function showGestureIndicator(kind, level) {
+            const isBrightness = kind === 'brightness';
+            const percent = Math.round(Math.max(0, Math.min(isBrightness ? 1.5 : 1, level)) * 100);
+            (isBrightness ? brightnessMeter : volumeMeter).style.transform = `scaleY(${percent / (isBrightness ? 150 : 100)})`;
+            (isBrightness ? brightnessValue : gestureVolumeValue).textContent = `${percent}%`;
+            if (!isBrightness) gestureVolumeIcon.className = `fa-solid ${percent === 0 ? 'fa-volume-xmark' : percent < 50 ? 'fa-volume-low' : 'fa-volume-high'}`;
+            clearTimeout(gestureHudTimer);
+            brightnessIndicator.classList.toggle('show', isBrightness);
+            volumeIndicator.classList.toggle('show', !isBrightness);
+            gestureHudTimer = setTimeout(() => {
+                brightnessIndicator.classList.remove('show');
+                volumeIndicator.classList.remove('show');
+            }, 950);
+        }
+
+        videoWrapper.addEventListener('pointerdown', (event) => {
+            if (event.pointerType !== 'touch' || activePlayerEngine !== 'direct' || event.target.closest('.player-controls,.player-top-bar,#playerErrorNotice')) return;
+            const rect = videoWrapper.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+            gestureState = {
+                id: event.pointerId, startX: event.clientX, startY: event.clientY,
+                side: event.clientX < rect.left + rect.width / 2 ? 'brightness' : 'volume',
+                startValue: event.clientX < rect.left + rect.width / 2 ? playerBrightness : (cinemaVideo.muted ? 0 : cinemaVideo.volume),
+                active: false
+            };
+        });
+        videoWrapper.addEventListener('pointermove', (event) => {
+            if (!gestureState || gestureState.id !== event.pointerId) return;
+            const dx = event.clientX - gestureState.startX;
+            const dy = event.clientY - gestureState.startY;
+            if (!gestureState.active) {
+                if (Math.abs(dy) < 10 || Math.abs(dy) < Math.abs(dx) * 1.15) return;
+                gestureState.active = true;
+                videoWrapper.classList.add('gesture-active');
+                try { videoWrapper.setPointerCapture(event.pointerId); } catch (_) {}
+            }
+            event.preventDefault();
+            const rect = videoWrapper.getBoundingClientRect();
+            const delta = (gestureState.startY - event.clientY) / Math.max(1, rect.height) * 1.5;
+            if (gestureState.side === 'brightness') {
+                playerBrightness = Math.max(.35, Math.min(1.5, gestureState.startValue + delta));
+                cinemaVideo.style.filter = `brightness(${playerBrightness})`;
+                showGestureIndicator('brightness', playerBrightness);
+            } else {
+                const volume = Math.max(0, Math.min(1, gestureState.startValue + delta));
+                cinemaVideo.volume = volume;
+                cinemaVideo.muted = volume === 0;
+                volumeRange.value = String(volume);
+                setVolumeIcon();
+                showGestureIndicator('volume', volume);
+            }
+        });
+        function finishPlayerGesture(event) {
+            if (!gestureState || (event && gestureState.id !== event.pointerId)) return;
+            if (gestureState.active) {
+                suppressNextPlayerClick = true;
+                setTimeout(() => { suppressNextPlayerClick = false; }, 450);
+                resetPlayerControlsTimer();
+            }
+            gestureState = null;
+            videoWrapper.classList.remove('gesture-active');
+        }
+        videoWrapper.addEventListener('pointerup', finishPlayerGesture);
+        videoWrapper.addEventListener('pointercancel', finishPlayerGesture);
+
         function showPlayerStatus(message) {
             playerStatusPill.textContent = message;
             playerStatusPill.classList.add('show');
@@ -2844,18 +2967,10 @@
         // Custom controls.
         playPauseBtn.addEventListener('click', togglePlay);
         back10Btn.addEventListener('click', () => {
-            cinemaVideo.currentTime = Math.max(0, (cinemaVideo.currentTime || 0) - 10);
-            showPlayerStatus('-10 sec');
-            setTimeout(hidePlayerStatus, 600);
-            updateCurrentHistory(true);
-            resetPlayerControlsTimer();
+            seekVideo((pendingSeekTarget ?? cinemaVideo.currentTime ?? 0) - 10, '-10 sec');
         });
         forward10Btn.addEventListener('click', () => {
-            cinemaVideo.currentTime = Math.min(cinemaVideo.duration || Infinity, (cinemaVideo.currentTime || 0) + 10);
-            showPlayerStatus('+10 sec');
-            setTimeout(hidePlayerStatus, 600);
-            updateCurrentHistory(true);
-            resetPlayerControlsTimer();
+            seekVideo((pendingSeekTarget ?? cinemaVideo.currentTime ?? 0) + 10, '+10 sec');
         });
         muteBtn.addEventListener('click', () => {
             cinemaVideo.muted = !cinemaVideo.muted;
@@ -2871,8 +2986,12 @@
         });
         playerProgress.addEventListener('input', () => {
             const duration = Number(cinemaVideo.duration) || 0;
-            if (duration) cinemaVideo.currentTime = (Number(playerProgress.value) / 1000) * duration;
+            if (duration) currentTimeLabel.textContent = formatTime((Number(playerProgress.value) / 1000) * duration);
             resetPlayerControlsTimer();
+        });
+        playerProgress.addEventListener('change', () => {
+            const duration = Number(cinemaVideo.duration) || 0;
+            if (duration) seekVideo((Number(playerProgress.value) / 1000) * duration);
         });
 
         const speeds = [1, 1.25, 1.5, 1.75, 2, .75];
@@ -2988,6 +3107,7 @@
         // Single tap shows controls. Double tap seeks.
         videoWrapper.addEventListener('click', (e) => {
             if (e.target.closest('.player-controls,.player-top-bar,#playerErrorNotice')) return;
+            if (suppressNextPlayerClick) { suppressNextPlayerClick = false; return; }
             const now = Date.now();
             const delta = now - lastTapAt;
             lastTapAt = now;
@@ -2995,10 +3115,8 @@
             if (delta < 320) {
                 const rect = videoWrapper.getBoundingClientRect();
                 const goForward = e.clientX > rect.left + rect.width / 2;
-                cinemaVideo.currentTime = Math.max(0, Math.min(cinemaVideo.duration || Infinity, cinemaVideo.currentTime + (goForward ? 10 : -10)));
-                showPlayerStatus(goForward ? '+10 sec' : '-10 sec');
-                setTimeout(hidePlayerStatus, 650);
-                updateCurrentHistory(true);
+                const base = pendingSeekTarget ?? cinemaVideo.currentTime ?? 0;
+                seekVideo(base + (goForward ? 10 : -10), goForward ? '+10 sec' : '-10 sec');
             } else {
                 playerModal.classList.toggle('controls-hidden');
                 if (!playerModal.classList.contains('controls-hidden')) resetPlayerControlsTimer();
@@ -3099,11 +3217,9 @@
                 e.preventDefault();
                 togglePlay();
             } else if (e.key === 'ArrowLeft') {
-                cinemaVideo.currentTime = Math.max(0, (cinemaVideo.currentTime || 0) - 5);
-                resetPlayerControlsTimer();
+                seekVideo((pendingSeekTarget ?? cinemaVideo.currentTime ?? 0) - 5);
             } else if (e.key === 'ArrowRight') {
-                cinemaVideo.currentTime = Math.min(cinemaVideo.duration || Infinity, (cinemaVideo.currentTime || 0) + 5);
-                resetPlayerControlsTimer();
+                seekVideo((pendingSeekTarget ?? cinemaVideo.currentTime ?? 0) + 5);
             } else if (e.key.toLowerCase() === 'f') {
                 toggleFullscreen();
             } else if (e.key.toLowerCase() === 'm') {
