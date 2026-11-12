@@ -107,6 +107,39 @@
             align-items: center;
             gap: 0.8rem;
         }
+        .account-panel { display:none; position:fixed; inset:0; z-index:3000; align-items:center; justify-content:center; padding:1rem; background:rgba(0,0,0,.72); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+        .account-panel.open { display:flex; animation:fadeIn .18s ease-out; }
+        .account-card { width:min(100%,440px); position:relative; overflow:hidden; padding:1.65rem; border:1px solid rgba(255,255,255,.12); border-radius:24px; color:#f5f6fb; background:linear-gradient(150deg,#14161d 0%,#0a0b10 78%); box-shadow:0 28px 90px rgba(0,0,0,.78); animation:accountCardIn .28s cubic-bezier(.16,1,.3,1); }
+        @keyframes accountCardIn { from{opacity:0;transform:translateY(12px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+        .account-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; margin-bottom:1.15rem; }
+        .account-wordmark { margin:0 0 1rem; color:#fff; font-size:1.8rem; font-weight:900; letter-spacing:.12em; line-height:1; }
+        .account-wordmark span { color:#ef4654; }
+        .account-panel #accountPanelTitle { color:#f7f8fc !important; font-size:1.28rem; font-weight:850; letter-spacing:-.025em; margin-bottom:.4rem; }
+        .account-close-btn { flex:0 0 36px; width:36px; height:36px; display:grid; place-items:center; border:1px solid var(--border); border-radius:50%; color:#fff; background:rgba(255,255,255,.06); cursor:pointer; }
+        .account-close-btn:hover { background:rgba(255,255,255,.13); }
+        .account-panel .account-panel-copy,.account-panel .account-message { color:#b5bac6 !important; font-size:.82rem; line-height:1.55; }
+        .account-message { margin:.5rem 0; }
+        .account-panel .account-message.error { color:#ff9ca6; }
+        .account-panel .account-message.success { color:#86e7c5; }
+        .account-form { display:grid; gap:.75rem; margin-top:1rem; }
+        .account-field { display:grid; gap:.35rem; color:#dfe2eb; font-size:.75rem; font-weight:700; }
+        .account-form input { width:100%; min-height:48px; padding:.82rem .9rem; border:1px solid rgba(255,255,255,.16); border-radius:13px; background:rgba(4,6,10,.72); color:#fff; font:inherit; font-size:.9rem; outline:none; transition:border-color .2s,box-shadow .2s,background .2s; }
+        .account-form input:focus { border-color:rgba(229,9,20,.75); box-shadow:0 0 0 3px rgba(229,9,20,.13); }
+        .account-form input::placeholder { color:#858b9a; opacity:1; }
+        .account-form-actions { display:flex; flex-direction:column; align-items:stretch; gap:.55rem; }
+        .account-form .btn-primary { min-height:46px; justify-content:center; border-radius:13px; font-size:.9rem; }
+        .account-text-button { min-height:36px; border:0; background:none; color:#e4aab0; font:inherit; font-size:.8rem; cursor:pointer; }
+        .account-text-button:hover { color:#fff; text-decoration:underline; }
+        #accountSignedInActions { flex-direction:row; align-items:center; justify-content:space-between; }
+        .account-banner { display:none; padding:.65rem 1rem; background:rgba(111,23,31,.9); border-bottom:1px solid rgba(255,120,135,.28); color:#fff; font-size:.8rem; text-align:center; }
+        .account-banner.show { display:block; }
+        .account-banner.success { background:rgba(20,94,71,.92); border-color:rgba(125,224,191,.3); }
+        .site-usage-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.75rem; padding:.25rem 1rem .9rem; }
+        .site-usage-card { min-height:120px; display:flex; flex-direction:column; justify-content:space-between; gap:.7rem; padding:1rem; border:1px solid var(--border); border-radius:16px; background:linear-gradient(145deg,rgba(22,22,28,.92),rgba(10,10,14,.97)); }
+        .site-usage-label { display:flex; align-items:center; gap:.55rem; color:var(--text-muted); font-size:.78rem; font-weight:700; }
+        .site-usage-label i { color:var(--accent); }
+        .site-usage-value { color:#fff; font-size:clamp(1.8rem,4vw,2.35rem); font-weight:900; letter-spacing:-.05em; font-variant-numeric:tabular-nums; }
+        .site-usage-footnote { padding:0 1rem .7rem; color:var(--text-muted); font-size:.7rem; }
 
         .icon-btn {
             background: rgba(255, 255, 255, 0.05);
@@ -669,7 +702,7 @@
             padding:.52rem .8rem; font-size:.8rem; font-weight:800;
             text-decoration:none;
         }
-        .external-player-trigger { display:inline-flex!important; flex:0 0 42px; width:42px; min-width:42px; justify-content:center; }
+        .external-player-trigger { display:inline-flex!important; flex:0 0 auto; width:auto; min-width:42px; justify-content:center; white-space:nowrap; }
         .player-title-text {
             min-width:0; width:100%; max-width:none;
             font-size:.94rem; font-weight:800; white-space:nowrap; overflow:hidden;
@@ -702,6 +735,27 @@
             opacity:0; transition:opacity .18s,transform .18s;
         }
         .player-center-play.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+        .center-transport {
+            position:absolute; left:50%; top:50%; z-index:42; display:flex; align-items:center; gap:clamp(1rem,3vw,2.4rem);
+            transform:translate(-50%,-50%); opacity:1; pointer-events:auto;
+            transition:opacity .28s,transform .28s;
+        }
+        .center-transport.transport-entering { animation:transportEnter .48s cubic-bezier(.16,1,.3,1); }
+        @keyframes transportEnter { from{opacity:0;transform:translate(-50%,-46%) scale(.88)} to{opacity:1;transform:translate(-50%,-50%) scale(1)} }
+        .player-modal.controls-hidden .center-transport { opacity:0; transform:translate(-50%,-50%) scale(.92); pointer-events:none; }
+        .center-transport-btn {
+            position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.25rem;
+            width:clamp(54px,8vw,74px); height:clamp(58px,8vw,78px); border:0;
+            border-radius:0; color:#fff; background:transparent; cursor:pointer;
+            filter:drop-shadow(0 2px 8px rgba(0,0,0,.72));
+            transition:opacity .2s,transform .2s,color .2s;
+        }
+        .center-transport-btn i { font-size:1.35rem; }
+        .center-transport-btn span { font-size:.64rem; font-weight:800; letter-spacing:.02em; }
+        .center-transport-btn.primary { width:clamp(68px,10vw,92px); height:clamp(70px,10vw,94px); }
+        .center-transport-btn.primary i { font-size:2.05rem; }
+        .center-transport-btn:hover,.center-transport-btn:focus-visible { color:#fff; transform:scale(1.12); outline:none; }
+        .center-transport-btn:active { transform:scale(.94); opacity:.72; }
 
         .player-controls {
             position:absolute; left:0; right:0; bottom:0; z-index:50;
@@ -1155,6 +1209,8 @@
             .video-wrapper { width:100%; height:100%; }
             .player-top-bar { padding-top:max(.8rem,env(safe-area-inset-top)); }
             .player-controls { padding-bottom:max(.9rem,env(safe-area-inset-bottom)); }
+            .external-player-trigger { flex:0 0 42px; width:42px; min-width:42px; padding:.5rem; }
+            .external-player-trigger span { display:none; }
         }
     </style>
 </head>
@@ -1170,8 +1226,32 @@
             <button class="icon-btn" onclick="toggleSearch()" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
             <button class="icon-btn" onclick="document.getElementById('myListSection').scrollIntoView({behavior:'smooth'})" title="My List"><i class="fa-solid fa-bookmark"></i></button>
             <button class="icon-btn" onclick="openWatchHistory()" title="Watch History"><i class="fa-solid fa-clock-rotate-left"></i></button>
+            <button class="icon-btn" id="accountToggleBtn" type="button" title="Account" aria-label="Account" aria-expanded="false"><i class="fa-regular fa-user"></i></button>
         </div>
     </header>
+    <section class="account-panel" id="accountPanel" aria-label="Account and sync" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="account-card">
+            <div class="account-card-head">
+                <div><div class="account-wordmark">CINE<span>XIS</span></div><div class="account-panel-title" id="accountPanelTitle">Your account</div></div>
+                <button class="account-close-btn" id="accountCloseBtn" type="button" aria-label="Close account"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="account-panel-copy" id="accountPanelCopy">Sign in to sync watch history and favorites across your devices. Browsing and playback stay available while signed out.</div>
+            <div class="account-message" id="accountMessage" role="status" aria-live="polite"></div>
+            <form class="account-form" id="accountForm">
+                <label class="account-field">Email address<input id="accountEmail" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required></label>
+                <label class="account-field">Password<input id="accountPassword" type="password" autocomplete="current-password" minlength="6" maxlength="128" placeholder="6 characters minimum" required></label>
+                <div class="account-form-actions">
+                    <button class="btn-primary" id="accountSubmitBtn" type="submit">Sign in</button>
+                    <button class="account-text-button" id="accountModeBtn" type="button">Create account</button>
+                </div>
+            </form>
+            <div class="account-form-actions" id="accountSignedInActions" style="display:none;margin-top:.7rem;">
+                <span id="accountEmailLabel" class="account-panel-copy"></span>
+                <button class="account-text-button" id="accountSignOutBtn" type="button">Sign out</button>
+            </div>
+        </div>
+    </section>
+    <div class="account-banner" id="accountBanner" role="status" aria-live="polite"></div>
 
     <!-- Collapsible Search Bar -->
     <div id="searchDrawer" class="search-container">
@@ -1246,6 +1326,18 @@
         <div class="section-header" style="padding:0 1rem;"><div class="section-title"><i class="fa-solid fa-bookmark"></i> My List</div></div>
         <div class="ott-row" id="myListRow"></div>
     </section>
+    <section class="ott-section" id="siteUsageSection">
+        <div class="section-header" style="padding:0 1rem;">
+            <div><div class="section-title"><i class="fa-solid fa-chart-line"></i> People using Cinexis</div><div class="card-meta" style="margin-top:.3rem;">Anonymous site usage since tracking began.</div></div>
+            <button class="player-action-link" id="refreshSiteUsageBtn" type="button" style="font-size:.72rem;padding:.4rem .65rem;"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        </div>
+        <div class="site-usage-grid" id="siteUsageGrid">
+            <article class="site-usage-card"><div class="site-usage-label"><i class="fa-solid fa-users"></i> Unique visitors</div><strong class="site-usage-value" id="siteTotalVisitors">—</strong></article>
+            <article class="site-usage-card"><div class="site-usage-label"><i class="fa-solid fa-circle-dot"></i> Active in 5 minutes</div><strong class="site-usage-value" id="siteActiveVisitors">—</strong></article>
+            <article class="site-usage-card"><div class="site-usage-label"><i class="fa-solid fa-arrow-rotate-right"></i> Total visits</div><strong class="site-usage-value" id="siteTotalVisits">—</strong></article>
+        </div>
+        <div class="site-usage-footnote">Counts are approximate browser/device visitors, not verified individual people. Activity tracking starts with this version.</div>
+    </section>
     <section class="ott-section" id="recommendedSection">
         <div class="section-header" style="padding:0 1rem;"><div class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Picked for you</div></div>
         <div class="ott-row" id="recommendedRow"></div>
@@ -1302,6 +1394,11 @@
                 <div class="player-click-layer" id="playerClickLayer">
                     <div class="player-center-play" id="playerCenterPlay"><i class="fa-solid fa-play"></i></div>
                     <div class="player-status-pill" id="playerStatusPill"></div>
+                </div>
+                <div class="center-transport" id="centerTransport" aria-label="Playback controls">
+                    <button class="center-transport-btn" id="centerBack10Btn" type="button" aria-label="Rewind 10 seconds"><i class="fa-solid fa-rotate-left"></i><span>10 SEC</span></button>
+                    <button class="center-transport-btn primary" id="centerPlayPauseBtn" type="button" aria-label="Play"><i class="fa-solid fa-play"></i></button>
+                    <button class="center-transport-btn" id="centerForward10Btn" type="button" aria-label="Forward 10 seconds"><i class="fa-solid fa-rotate-right"></i><span>10 SEC</span></button>
                 </div>
 
                 <div class="gesture-indicator left" id="brightnessIndicator" aria-live="polite">
@@ -1378,6 +1475,19 @@
         const sheetMovieTitle = document.getElementById('sheetMovieTitle');
         const sheetBody = document.getElementById('sheetBody');
         const playerModal = document.getElementById('playerModal');
+        const accountPanel = document.getElementById('accountPanel');
+        const accountToggleBtn = document.getElementById('accountToggleBtn');
+        const accountForm = document.getElementById('accountForm');
+        const accountMessage = document.getElementById('accountMessage');
+        const accountBanner = document.getElementById('accountBanner');
+        const accountPanelTitle = document.getElementById('accountPanelTitle');
+        const accountPanelCopy = document.getElementById('accountPanelCopy');
+        const accountSubmitBtn = document.getElementById('accountSubmitBtn');
+        const accountModeBtn = document.getElementById('accountModeBtn');
+        const accountSignedInActions = document.getElementById('accountSignedInActions');
+        const accountEmailLabel = document.getElementById('accountEmailLabel');
+        const accountSignOutBtn = document.getElementById('accountSignOutBtn');
+        const accountCloseBtn = document.getElementById('accountCloseBtn');
         const videoWrapper = document.getElementById('videoWrapper');
         const cinemaVideo = document.getElementById('cinemaVideo');
         const streamIframe = document.getElementById('streamIframe');
@@ -1405,6 +1515,10 @@
         const speedBtn = document.getElementById('speedBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const playerCenterPlay = document.getElementById('playerCenterPlay');
+        const centerTransport = document.getElementById('centerTransport');
+        const centerPlayPauseBtn = document.getElementById('centerPlayPauseBtn');
+        const centerBack10Btn = document.getElementById('centerBack10Btn');
+        const centerForward10Btn = document.getElementById('centerForward10Btn');
         const playerStatusPill = document.getElementById('playerStatusPill');
         const brightnessIndicator = document.getElementById('brightnessIndicator');
         const volumeIndicator = document.getElementById('volumeIndicator');
@@ -1417,6 +1531,11 @@
         const historyRow = document.getElementById('historyRow');
         const myListSection = document.getElementById('myListSection');
         const myListRow = document.getElementById('myListRow');
+        const siteUsageSection = document.getElementById('siteUsageSection');
+        const siteTotalVisitors = document.getElementById('siteTotalVisitors');
+        const siteActiveVisitors = document.getElementById('siteActiveVisitors');
+        const siteTotalVisits = document.getElementById('siteTotalVisits');
+        const refreshSiteUsageBtn = document.getElementById('refreshSiteUsageBtn');
         const recommendedSection = document.getElementById('recommendedSection');
         const recommendedRow = document.getElementById('recommendedRow');
         const recentSection = document.getElementById('recentSection');
@@ -1444,8 +1563,8 @@
             scrollRevealObserver.observe(element);
         }
 
-        heroBanner.after(historySection, myListSection, recommendedSection, recentSection);
-        [heroBanner, historySection.querySelector('.section-header'), myListSection.querySelector('.section-header'), recommendedSection.querySelector('.section-header'), recentSection.querySelector('.section-header'), document.querySelector('.year-pills-wrapper'), document.querySelector('.movies-grid-container .section-header')]
+        heroBanner.after(historySection, myListSection, siteUsageSection, recommendedSection, recentSection);
+        [heroBanner, historySection.querySelector('.section-header'), myListSection.querySelector('.section-header'), siteUsageSection.querySelector('.section-header'), recommendedSection.querySelector('.section-header'), recentSection.querySelector('.section-header'), document.querySelector('.year-pills-wrapper'), document.querySelector('.movies-grid-container .section-header')]
             .forEach(revealOnScroll);
 
         heroBanner.addEventListener('pointermove', (event) => {
@@ -1479,8 +1598,16 @@
         const FAVORITE_DETAILS_KEY = 'cinexis_favorite_details_v1';
         const PREFERRED_QUALITY_KEY = 'cinexis_preferred_quality_v1';
         const MAX_HISTORY = 30;
-        let favoriteMovies = loadFavorites();
-        let favoriteMovieDetails = loadFavoriteDetails();
+        let favoriteMovies = new Set();
+        let favoriteMovieDetails = new Map();
+        let accountData = { watchHistory: [], favorites: [] };
+        let accountSession = null;
+        let accountReady = false;
+        let accountMode = 'login';
+        let accountSyncTimer = null;
+        let accountSyncRunning = false;
+        let accountSyncQueued = false;
+        let accountNoticeShown = false;
         let favoritesOnly = false;
         let catalogSourceMovies = [];
         let controlsTimer = null;
@@ -1492,6 +1619,10 @@
         let subtitleMovieTitle = '';
         let currentHistoryId = '';
         let currentHistoryMeta = null;
+        let historyResumePending = false;
+        let skipNextPauseHistory = false;
+        let lastHistorySavedPosition = 0;
+        let lastHistorySavedAt = 0;
         let lastTapAt = 0;
         let playerBrightness = 1;
         let gestureState = null;
@@ -1499,6 +1630,210 @@
         let suppressNextPlayerClick = false;
         let pendingSeekTarget = null;
         let seekCommitTimer = null;
+
+        function setAccountMessage(message, kind = '') {
+            accountMessage.textContent = message;
+            accountMessage.className = `account-message${kind ? ` ${kind}` : ''}`;
+        }
+
+        function showAccountNotice(message, kind = 'error') {
+            accountBanner.textContent = message;
+            accountBanner.className = `account-banner show${kind === 'success' ? ' success' : ''}`;
+        }
+
+        function openAccountPanel(message = '') {
+            accountPanel.classList.add('open');
+            accountToggleBtn.setAttribute('aria-expanded', 'true');
+            accountPanel.setAttribute('aria-hidden', 'false');
+            if (message) setAccountMessage(message, 'error');
+        }
+
+        function closeAccountPanel() {
+            accountPanel.classList.remove('open');
+            accountToggleBtn.setAttribute('aria-expanded', 'false');
+            accountPanel.setAttribute('aria-hidden', 'true');
+        }
+
+        function updateAccountUi() {
+            const signedIn = !!accountSession;
+            accountPanelTitle.textContent = signedIn ? 'Your account' : 'Sign in to your account';
+            accountPanelCopy.textContent = signedIn
+                ? 'Watch history and favorites are synced to your account.'
+                : 'Sign in to sync watch history and favorites across your devices. Browsing and playback stay available while signed out.';
+            accountForm.style.display = signedIn ? 'none' : 'grid';
+            accountSignedInActions.style.display = signedIn ? 'flex' : 'none';
+            accountEmailLabel.textContent = signedIn ? accountSession.email : '';
+            accountToggleBtn.title = signedIn ? `Account: ${accountSession.email}` : 'Sign in';
+            accountToggleBtn.setAttribute('aria-label', signedIn ? `Account: ${accountSession.email}` : 'Sign in');
+            accountToggleBtn.innerHTML = signedIn ? '<i class="fa-solid fa-user-check"></i>' : '<i class="fa-regular fa-user"></i>';
+            accountModeBtn.textContent = accountMode === 'login' ? 'Create account' : 'Already have an account? Sign in';
+            accountSubmitBtn.textContent = accountMode === 'login' ? 'Sign in' : 'Create account';
+        }
+
+        function requireAccountForSave() {
+            if (accountSession && accountReady) return true;
+            if (accountSession && !accountReady) {
+                showAccountNotice('Loading your account data. Try again in a moment.', 'success');
+                return false;
+            }
+            const message = accountReady
+                ? 'Sign in to save favorites and watch history to your account.'
+                : 'Checking your account. Sign in to sync favorites and watch history.';
+            if (!accountNoticeShown) {
+                openAccountPanel(message);
+                showAccountNotice(message);
+                accountNoticeShown = true;
+            }
+            return false;
+        }
+
+        async function apiRequest(path, options = {}) {
+            const response = await fetch(path, {
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                ...options
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (response.status === 401 && (payload.code === 'SESSION_EXPIRED' || accountSession)) {
+                accountSession = null;
+                accountData = { watchHistory: [], favorites: [] };
+                favoriteMovies.clear();
+                favoriteMovieDetails.clear();
+                updateAccountUi();
+                renderWatchHistory();
+                renderHomeShelves();
+                const message = 'Your session expired. Sign in again to save and sync favorites and watch history.';
+                setAccountMessage(message, 'error');
+                showAccountNotice(message);
+            }
+            if (!response.ok) throw new Error(payload.error || 'Account service is unavailable.');
+            return payload;
+        }
+
+        function normalizeAccountData(data) {
+            const watchHistory = Array.isArray(data?.watchHistory) ? data.watchHistory.slice(0, MAX_HISTORY) : [];
+            const favorites = Array.isArray(data?.favorites) ? data.favorites : [];
+            return { watchHistory, favorites };
+        }
+
+        function hydrateAccountData(data) {
+            accountData = normalizeAccountData(data);
+            favoriteMovieDetails = new Map(accountData.favorites.map(movie => [movieFavoriteKey(movie), movie]).filter(([key]) => key));
+            favoriteMovies = new Set(favoriteMovieDetails.keys());
+            renderWatchHistory();
+            renderHomeShelves();
+            applyCatalogFilters();
+        }
+
+        async function persistAccountData() {
+            if (!accountSession) return false;
+            if (accountSyncRunning) {
+                accountSyncQueued = true;
+                return false;
+            }
+            accountSyncRunning = true;
+            try {
+                await apiRequest('/api/account/data', {
+                    method: 'PUT',
+                    body: JSON.stringify(normalizeAccountData(accountData))
+                });
+                return true;
+            } catch (error) {
+                if (accountSession) showAccountNotice(error.message || 'Could not sync your account data.');
+                return false;
+            } finally {
+                accountSyncRunning = false;
+                if (accountSyncQueued) {
+                    accountSyncQueued = false;
+                    scheduleAccountSync();
+                }
+            }
+        }
+
+        function scheduleAccountSync() {
+            if (!accountSession) return;
+            clearTimeout(accountSyncTimer);
+            accountSyncTimer = setTimeout(() => persistAccountData(), 350);
+        }
+
+        function readLegacyAccountData() {
+            let watchHistory = [];
+            try {
+                const saved = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+                if (Array.isArray(saved)) watchHistory = saved;
+            } catch (_) {}
+            const legacyFavorites = loadFavorites();
+            const legacyDetails = loadFavoriteDetails();
+            const favorites = [...legacyDetails.values()];
+            legacyFavorites.forEach(key => {
+                if (!favorites.some(movie => movieFavoriteKey(movie) === key)) favorites.push({ title: key, link: key });
+            });
+            return { watchHistory, favorites };
+        }
+
+        function clearLegacyAccountData() {
+            try { localStorage.removeItem(HISTORY_KEY); } catch (_) {}
+            try { localStorage.removeItem(FAVORITES_KEY); } catch (_) {}
+            try { localStorage.removeItem(FAVORITE_DETAILS_KEY); } catch (_) {}
+        }
+
+        function mergeAccountData(remoteData, legacyData) {
+            const historyById = new Map();
+            [...(legacyData.watchHistory || []), ...(remoteData.watchHistory || [])].forEach(item => {
+                if (!item?.title) return;
+                const normalized = { ...item, id: makeHistoryId(item.title, item.movieLink || '', item.year) };
+                const previous = historyById.get(normalized.id);
+                if (!previous || Number(normalized.updatedAt || 0) >= Number(previous.updatedAt || 0)) historyById.set(normalized.id, normalized);
+            });
+            const favoritesByKey = new Map();
+            [...(legacyData.favorites || []), ...(remoteData.favorites || [])].forEach(movie => {
+                const key = movieFavoriteKey(movie);
+                if (key) favoritesByKey.set(key, movie);
+            });
+            return {
+                watchHistory: [...historyById.values()].sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0)).slice(0, MAX_HISTORY),
+                favorites: [...favoritesByKey.values()]
+            };
+        }
+
+        async function loadSignedInAccountData(migrateLegacy = false) {
+            const remoteData = normalizeAccountData(await apiRequest('/api/account/data'));
+            if (migrateLegacy) {
+                const legacyData = readLegacyAccountData();
+                const hasLegacyData = legacyData.watchHistory.length || legacyData.favorites.length;
+                if (hasLegacyData) {
+                    accountData = mergeAccountData(remoteData, legacyData);
+                    hydrateAccountData(accountData);
+                    if (!await persistAccountData()) return false;
+                } else hydrateAccountData(remoteData);
+                clearLegacyAccountData();
+            } else hydrateAccountData(remoteData);
+            accountReady = true;
+            return true;
+        }
+
+        async function checkAccountSession() {
+            try {
+                const { user } = await apiRequest('/api/auth/session');
+                accountSession = user;
+                updateAccountUi();
+                if (!await loadSignedInAccountData(true)) throw new Error('Account data could not be synced.');
+                setAccountMessage('Signed in. Your watch history and favorites sync automatically.', 'success');
+            } catch (error) {
+                accountSession = null;
+                accountData = { watchHistory: [], favorites: [] };
+                favoriteMovies = new Set();
+                favoriteMovieDetails = new Map();
+                updateAccountUi();
+                if (!/sign in|expired/i.test(error.message || '')) {
+                    showAccountNotice('Account sync is temporarily unavailable.');
+                }
+            } finally {
+                accountReady = true;
+                renderWatchHistory();
+                renderHomeShelves();
+            }
+        }
 
         function loadFavorites() {
             try {
@@ -1515,7 +1850,8 @@
         }
 
         function saveFavoriteDetails() {
-            try { localStorage.setItem(FAVORITE_DETAILS_KEY, JSON.stringify([...favoriteMovieDetails.values()])); } catch (_) {}
+            accountData.favorites = [...favoriteMovieDetails.values()];
+            scheduleAccountSync();
         }
 
         function movieFavoriteKey(movie) {
@@ -1537,7 +1873,7 @@
 
         function toggleMovieFavorite(movie) {
             const key = movieFavoriteKey(movie);
-            if (!key) return;
+            if (!key || !requireAccountForSave()) return;
             if (favoriteMovies.has(key)) {
                 favoriteMovies.delete(key);
                 favoriteMovieDetails.delete(key);
@@ -1545,7 +1881,6 @@
                 favoriteMovies.add(key);
                 favoriteMovieDetails.set(key, movie);
             }
-            try { localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favoriteMovies])); } catch (_) {}
             saveFavoriteDetails();
             applyCatalogFilters();
         }
@@ -2374,6 +2709,12 @@
         async function playQualityStream(index, movieTitle, automatic = false, requestToken = qualityRequestToken, resumePosition = 0) {
             const folderObj = activeQualityList[index];
             if (!folderObj) return false;
+            const currentPosition = historyResumePending
+                ? Number(currentHistoryMeta?.position) || 0
+                : cinemaVideo.readyState >= HTMLMediaElement.HAVE_METADATA
+                    ? Number(cinemaVideo.currentTime) || 0
+                    : Number(currentHistoryMeta?.position) || 0;
+            const resumeAt = Number(resumePosition) > 0 ? Number(resumePosition) : currentPosition;
             if (!automatic) {
                 rememberPreferredQuality(folderObj.label);
                 closeBottomSheet();
@@ -2409,17 +2750,18 @@
                 if (directVideoUrl?.startsWith('//')) directVideoUrl = 'https:' + directVideoUrl;
 
                 closeBottomSheet();
-                const resumeAt = Number(resumePosition) || Number(cinemaVideo.currentTime) || 0;
                 currentDirectVideoUrl = directVideoUrl || '';
                 currentStreamPageUrl = streamPageUrl;
                 currentHistoryMeta = {
                     ...(currentHistoryMeta || {}),
                     title: movieTitle,
-                    year: currentYear,
+                    year: currentHistoryMeta?.year || currentYear,
+                    movieLink: currentHistoryMeta?.movieLink || '',
                     directUrl: directVideoUrl || streamPageUrl,
                     streamUrl: streamPageUrl,
                     position: resumeAt
                 };
+                currentHistoryId = makeHistoryId(movieTitle, currentHistoryMeta.movieLink, currentHistoryMeta.year);
                 mediaFallbackAttempted = false;
                 if (!directVideoUrl) throw new Error('No direct video URL was found');
                 activePlayerEngine = 'direct';
@@ -2427,13 +2769,23 @@
                 cinemaVideo.style.display = 'block';
                 streamIframe.style.display = 'none';
                 streamIframe.src = 'about:blank';
+                if (!cinemaVideo.paused) skipNextPauseHistory = true;
+                cinemaVideo.pause();
+                historyResumePending = resumeAt > 0;
+                const restorePosition = () => {
+                    cinemaVideo.removeEventListener('loadedmetadata', restorePosition);
+                    if (resumeAt > 0 && Number.isFinite(cinemaVideo.duration) && cinemaVideo.duration > 0) {
+                        try { cinemaVideo.currentTime = Math.min(resumeAt, Math.max(0, cinemaVideo.duration - .15)); }
+                        catch (_) { historyResumePending = false; }
+                    } else {
+                        historyResumePending = false;
+                    }
+                    updateTimeUI();
+                };
+                cinemaVideo.addEventListener('loadedmetadata', restorePosition);
                 cinemaVideo.src = directVideoUrl;
                 cinemaVideo.load();
                 playerLoading.classList.add('active');
-                cinemaVideo.addEventListener('loadedmetadata', function restoreOnSwitch() {
-                    cinemaVideo.removeEventListener('loadedmetadata', restoreOnSwitch);
-                    if (resumeAt > 0 && resumeAt < cinemaVideo.duration - 2) cinemaVideo.currentTime = resumeAt;
-                });
                 cinemaVideo.play().catch(() => {
                     playerLoading.classList.remove('active');
                     setPlayIcon(true);
@@ -2474,8 +2826,14 @@
         }
 
         // ---------- Premium Player + Local Watch History ----------
-        function makeHistoryId(title, streamUrl = '') {
-            return (title || '').trim().toLowerCase() + '|' + (streamUrl || '').trim();
+        function makeHistoryId(title, movieLink = '', year = 0) {
+            let stableMovieKey = '';
+            if (movieLink) {
+                try { stableMovieKey = new URL(toAbsoluteUrl(movieLink), window.location.href).pathname.toLowerCase().replace(/\/+$/, ''); }
+                catch (_) { stableMovieKey = String(movieLink).trim().toLowerCase().replace(/[?#].*$/, '').replace(/\/+$/, ''); }
+            }
+            if (!stableMovieKey) stableMovieKey = `${cleanTitleSlug(title) || String(title || 'untitled').trim().toLowerCase()}:${Number(year) || ''}`;
+            return `movie:${stableMovieKey}`;
         }
 
         function updateExternalPlayerOptions(videoUrl, title) {
@@ -2525,51 +2883,54 @@
         }
 
         function loadWatchHistory() {
-            try {
-                const raw = localStorage.getItem(HISTORY_KEY);
-                const list = JSON.parse(raw || '[]');
-                return Array.isArray(list) ? list : [];
-            } catch (_) {
-                return [];
-            }
+            return accountData.watchHistory.slice(0, MAX_HISTORY);
         }
 
         function saveWatchHistory(list) {
-            try {
-                localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, MAX_HISTORY)));
-            } catch (_) {}
+            accountData.watchHistory = list.slice(0, MAX_HISTORY);
+            scheduleAccountSync();
         }
 
         function upsertWatchHistory(meta) {
+            if (!requireAccountForSave()) return;
             const list = loadWatchHistory();
-            const id = makeHistoryId(meta.title, meta.streamUrl || meta.directUrl);
-            const existing = list.find(x => x.id === id);
+            const id = makeHistoryId(meta.title, meta.movieLink, meta.year);
+            const titleKey = cleanTitleSlug(meta.title) || String(meta.title || '').trim().toLowerCase();
+            const sameLegacyMovie = x => {
+                const sameTitle = (cleanTitleSlug(x.title) || String(x.title || '').trim().toLowerCase()) === titleKey;
+                const sameYear = Number(x.year || 0) === Number(meta.year || currentYear);
+                return sameTitle && sameYear && (!x.movieLink || !meta.movieLink);
+            };
+            const existing = list.find(x => x.id === id || sameLegacyMovie(x));
 
             const item = {
                 id,
                 title: meta.title || 'Untitled',
                 year: meta.year || currentYear,
-                streamUrl: meta.streamUrl || '',
-                directUrl: meta.directUrl || '',
+                movieLink: meta.movieLink || existing?.movieLink || '',
                 position: Number(meta.position) || 0,
                 duration: Number(meta.duration) || 0,
                 progress: Number(meta.progress) || 0,
                 updatedAt: Date.now()
             };
 
-            if (existing) Object.assign(existing, item);
-            else list.unshift(item);
+            const updatedList = list.filter(x => x !== existing && x.id !== id && !sameLegacyMovie(x));
+            updatedList.unshift({ ...(existing || {}), ...item });
 
-            list.sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-            saveWatchHistory(list);
+            updatedList.sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+            saveWatchHistory(updatedList);
             renderWatchHistory();
         }
 
         function updateCurrentHistory(force = false) {
             if (!currentHistoryMeta || (!currentDirectVideoUrl && !currentStreamPageUrl)) return;
+            if (historyResumePending || cinemaVideo.readyState < HTMLMediaElement.HAVE_METADATA) return;
             const duration = Number(cinemaVideo.duration) || currentHistoryMeta.duration || 0;
             const position = Number(cinemaVideo.currentTime) || 0;
             const progress = duration > 0 ? Math.min(100, (position / duration) * 100) : 0;
+
+            const now = Date.now();
+            if (!force && Math.abs(position - lastHistorySavedPosition) < 3 && now - lastHistorySavedAt < 5000) return;
 
             currentHistoryMeta.position = position;
             currentHistoryMeta.duration = duration;
@@ -2577,10 +2938,13 @@
 
             if (force || activePlayerEngine === 'direct') {
                 upsertWatchHistory(currentHistoryMeta);
+                lastHistorySavedPosition = position;
+                lastHistorySavedAt = now;
             }
         }
 
         function removeWatchHistory(id) {
+            if (!requireAccountForSave()) return;
             const list = loadWatchHistory().filter(item => item.id !== id);
             saveWatchHistory(list);
             renderWatchHistory();
@@ -2588,7 +2952,8 @@
         }
 
         function clearWatchHistory() {
-            try { localStorage.removeItem(HISTORY_KEY); } catch (_) {}
+            if (!requireAccountForSave()) return;
+            saveWatchHistory([]);
             renderWatchHistory();
             renderHomeShelves();
         }
@@ -2606,11 +2971,17 @@
 
             if (!list.length) {
                 historySection.style.display = 'block';
-                historyRow.innerHTML = `
+                historyRow.innerHTML = accountSession ? `
                     <div class="history-empty" style="grid-column:1/-1;">
                         <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);font-size:1.2rem;margin-bottom:.4rem;"></i>
-                        <div style="font-weight:800;color:#fff;">No pending movies yet</div>
-                        <div style="margin-top:.25rem;">Start a movie and your resume position will be saved here automatically.</div>
+                        <div style="font-weight:800;color:#fff;">No watch history yet</div>
+                        <div style="margin-top:.25rem;">Start a movie and your resume position will sync here automatically.</div>
+                    </div>
+                ` : `
+                    <div class="history-empty" style="grid-column:1/-1;">
+                        <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);font-size:1.2rem;margin-bottom:.4rem;"></i>
+                        <div style="font-weight:800;color:#fff;">Sign in to sync Continue Watching</div>
+                        <div style="margin-top:.25rem;">Browsing and playback work while signed out. Your watch history is saved to your account after sign-in.</div>
                     </div>
                 `;
                 return;
@@ -2650,8 +3021,35 @@
         }
 
         function openWatchHistory() {
+            if (!accountSession) {
+                const message = 'Sign in to sync and view your watch history across devices.';
+                openAccountPanel(message);
+                showAccountNotice(message);
+                return;
+            }
             renderWatchHistory();
             historySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        async function refreshSiteUsage() {
+            try {
+                const stats = await apiRequest('/api/site-stats');
+                const number = value => new Intl.NumberFormat().format(Number(value) || 0);
+                siteTotalVisitors.textContent = number(stats.totalVisitors);
+                siteActiveVisitors.textContent = number(stats.activeVisitors);
+                siteTotalVisits.textContent = number(stats.totalVisits);
+            } catch (_) {
+                siteTotalVisitors.textContent = '—';
+                siteActiveVisitors.textContent = '—';
+                siteTotalVisits.textContent = '—';
+            }
+        }
+
+        async function registerSiteVisit() {
+            try {
+                await apiRequest('/api/site-visit', { method: 'POST', body: '{}' });
+                await refreshSiteUsage();
+            } catch (_) {}
         }
 
         function escapeHtml(value) {
@@ -2663,19 +3061,29 @@
                 .replace(/'/g, '&#039;');
         }
 
-        function resumeFromHistory(item) {
+        async function resumeFromHistory(item) {
             if (!item) return;
             // Direct file URLs can be signed and expire. Resolve the movie page
             // again when resuming so Recents always gets a fresh playable URL.
-            const movie = movies.find(entry => (entry.title || '').trim().toLowerCase() === (item.title || '').trim().toLowerCase());
-            const movieLink = movie?.link || '';
+            const titleKey = String(item.title || '').trim().toLowerCase();
+            const findMovie = () => [...allYearMovies, ...globalIndexedMovies, ...favoriteMovieDetails.values()]
+                .find(entry => (entry.title || '').trim().toLowerCase() === titleKey || (entry.rawTitle || '').trim().toLowerCase() === titleKey);
+            let movie = findMovie();
+            let movieLink = item.movieLink || movie?.link || movie?.url || '';
+            if (!movieLink) {
+                await indexAllYears();
+                movie = findMovie();
+                movieLink = movie?.link || movie?.url || '';
+            }
             openMovieQualities(item.title, movieLink, { resumePosition: Number(item.position) || 0, historyItem: item });
         }
 
         function openPlayer(videoUrl, title, streamUrl = '', options = {}) {
+            updateCurrentHistory(true);
+            clearInterval(historyTimer);
             const routeAlreadyActive = !!options.routeAlreadyActive;
             if (routeAlreadyActive) playerRouteActive = true;
-            else syncPlayerRoute(title, streamUrl || videoUrl || '', options.movieLink || '');
+            else syncPlayerRoute(title, streamUrl || videoUrl || '', options.movieLink || options.historyItem?.movieLink || '');
             playerTitle.textContent = title;
             if (subtitleMovieTitle && subtitleMovieTitle !== title) clearLocalSubtitles();
             subtitleMovieTitle = title;
@@ -2689,13 +3097,17 @@
             currentHistoryMeta = {
                 title: title || 'Untitled',
                 year: savedItem?.year || currentYear,
+                movieLink: options.movieLink || savedItem?.movieLink || '',
                 streamUrl: currentStreamPageUrl,
                 directUrl: currentDirectVideoUrl,
                 position: resumePosition,
                 duration: Number(savedItem?.duration || 0),
                 progress: Number(savedItem?.progress || 0)
             };
-            currentHistoryId = makeHistoryId(title, currentStreamPageUrl);
+            currentHistoryId = makeHistoryId(title, currentHistoryMeta.movieLink, currentHistoryMeta.year);
+            historyResumePending = resumePosition > 0;
+            lastHistorySavedPosition = resumePosition;
+            lastHistorySavedAt = Date.now();
 
             playerDownloadBtn.href = currentDirectVideoUrl || currentStreamPageUrl;
             updateExternalPlayerOptions(currentDirectVideoUrl, title);
@@ -2721,6 +3133,7 @@
             streamIframe.style.display = 'none';
             streamIframe.src = 'about:blank';
 
+            if (!cinemaVideo.paused) skipNextPauseHistory = true;
             cinemaVideo.pause();
             mediaFallbackAttempted = false;
             if (options.deferred) cinemaVideo.removeAttribute('src');
@@ -2744,11 +3157,14 @@
             if (!options.deferred) {
                 cinemaVideo.addEventListener('loadedmetadata', function restoreOnce() {
                     cinemaVideo.removeEventListener('loadedmetadata', restoreOnce);
-                    if (resumePosition > 0 && resumePosition < cinemaVideo.duration - 5) {
-                        cinemaVideo.currentTime = resumePosition;
-                        showPlayerStatus(`Resume from ${formatTime(resumePosition)}`);
-                        setTimeout(() => hidePlayerStatus(), 1700);
-                    }
+                    if (resumePosition > 0 && Number.isFinite(cinemaVideo.duration) && cinemaVideo.duration > 0) {
+                        try {
+                            cinemaVideo.currentTime = Math.min(resumePosition, Math.max(0, cinemaVideo.duration - .15));
+                            showPlayerStatus(`Resume from ${formatTime(resumePosition)}`);
+                            setTimeout(() => hidePlayerStatus(), 1700);
+                        } catch (_) { historyResumePending = false; }
+                    } else historyResumePending = false;
+                    updateTimeUI();
                 });
 
                 cinemaVideo.play().catch(() => {
@@ -2780,19 +3196,23 @@
 
         function resetPlayerControlsTimer() {
             playerModal.classList.remove('controls-hidden');
+            centerTransport.classList.remove('transport-entering');
+            void centerTransport.offsetWidth;
+            centerTransport.classList.add('transport-entering');
             clearTimeout(controlsTimer);
             controlsTimer = setTimeout(() => {
-                if (!cinemaVideo.paused) playerModal.classList.add('controls-hidden');
+                playerModal.classList.add('controls-hidden');
             }, 3500);
         }
 
         function setPlayIcon(paused) {
-            playPauseBtn.innerHTML = paused
-                ? '<i class="fa-solid fa-play"></i>'
-                : '<i class="fa-solid fa-pause"></i>';
+            const icon = paused ? 'fa-play' : 'fa-pause';
+            playPauseBtn.innerHTML = `<i class="fa-solid ${icon}"></i>`;
             playerCenterPlay.innerHTML = paused
                 ? '<i class="fa-solid fa-play"></i>'
                 : '<i class="fa-solid fa-pause"></i>';
+            centerPlayPauseBtn.innerHTML = `<i class="fa-solid ${icon}"></i>`;
+            centerPlayPauseBtn.setAttribute('aria-label', paused ? 'Play' : 'Pause');
         }
 
         function togglePlay() {
@@ -2840,7 +3260,6 @@
                     showPlayerStatus(label);
                     setTimeout(hidePlayerStatus, 650);
                 }
-                updateCurrentHistory(true);
             }, 45);
             resetPlayerControlsTimer();
         }
@@ -2886,7 +3305,7 @@
             const delta = (gestureState.startY - event.clientY) / Math.max(1, rect.height) * 1.5;
             if (gestureState.side === 'brightness') {
                 playerBrightness = Math.max(.35, Math.min(1.5, gestureState.startValue + delta));
-                cinemaVideo.style.filter = `brightness(${playerBrightness})`;
+                playerModal.style.filter = `brightness(${playerBrightness})`;
                 showGestureIndicator('brightness', playerBrightness);
             } else {
                 const volume = Math.max(0, Math.min(1, gestureState.startValue + delta));
@@ -2966,6 +3385,9 @@
 
         // Custom controls.
         playPauseBtn.addEventListener('click', togglePlay);
+        centerPlayPauseBtn.addEventListener('click', (event) => { event.stopPropagation(); togglePlay(); });
+        centerBack10Btn.addEventListener('click', (event) => { event.stopPropagation(); back10Btn.click(); });
+        centerForward10Btn.addEventListener('click', (event) => { event.stopPropagation(); forward10Btn.click(); });
         back10Btn.addEventListener('click', () => {
             seekVideo((pendingSeekTarget ?? cinemaVideo.currentTime ?? 0) - 10, '-10 sec');
         });
@@ -3046,7 +3468,11 @@
         cinemaVideo.addEventListener('durationchange', updateTimeUI);
         cinemaVideo.addEventListener('timeupdate', () => {
             updateTimeUI();
-            if (currentHistoryMeta && Math.floor(cinemaVideo.currentTime) % 5 === 0) updateCurrentHistory(false);
+            updateCurrentHistory(false);
+        });
+        cinemaVideo.addEventListener('seeked', () => {
+            historyResumePending = false;
+            updateCurrentHistory(true);
         });
         cinemaVideo.addEventListener('loadstart', () => {
             playerLoading.classList.add('active');
@@ -3071,9 +3497,13 @@
             resetPlayerControlsTimer();
         });
         cinemaVideo.addEventListener('pause', () => {
+            if (skipNextPauseHistory) {
+                skipNextPauseHistory = false;
+                return;
+            }
             playerLoading.classList.remove('active');
             setPlayIcon(true);
-            playerModal.classList.remove('controls-hidden');
+            resetPlayerControlsTimer();
             updateCurrentHistory(true);
         });
         cinemaVideo.addEventListener('waiting', () => {
@@ -3104,7 +3534,13 @@
         });
         cinemaVideo.addEventListener('error', handleDirectVideoError);
 
-        // Single tap shows controls. Double tap seeks.
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') updateCurrentHistory(true);
+        });
+        window.addEventListener('pagehide', () => updateCurrentHistory(true));
+
+        // A tap reveals controls; double tap seeks. Playback controls then
+        // auto-hide after the idle timer while the movie keeps playing.
         videoWrapper.addEventListener('click', (e) => {
             if (e.target.closest('.player-controls,.player-top-bar,#playerErrorNotice')) return;
             if (suppressNextPlayerClick) { suppressNextPlayerClick = false; return; }
@@ -3118,8 +3554,7 @@
                 const base = pendingSeekTarget ?? cinemaVideo.currentTime ?? 0;
                 seekVideo(base + (goForward ? 10 : -10), goForward ? '+10 sec' : '-10 sec');
             } else {
-                playerModal.classList.toggle('controls-hidden');
-                if (!playerModal.classList.contains('controls-hidden')) resetPlayerControlsTimer();
+                resetPlayerControlsTimer();
             }
         });
 
@@ -3156,6 +3591,11 @@
             externalPlaylistUrl = '';
             updateCurrentHistory(true);
             clearInterval(historyTimer);
+            currentHistoryMeta = null;
+            currentHistoryId = '';
+            currentDirectVideoUrl = '';
+            currentStreamPageUrl = '';
+            historyResumePending = false;
 
             cinemaVideo.pause();
             cinemaVideo.removeAttribute('src');
@@ -3238,12 +3678,70 @@
             openWatchHistory();
         }
 
+        accountToggleBtn.addEventListener('click', () => {
+            const isOpen = accountPanel.classList.toggle('open');
+            accountToggleBtn.setAttribute('aria-expanded', String(isOpen));
+            accountPanel.setAttribute('aria-hidden', String(!isOpen));
+        });
+        accountCloseBtn.addEventListener('click', closeAccountPanel);
+        accountPanel.addEventListener('click', event => { if (event.target === accountPanel) closeAccountPanel(); });
+        document.addEventListener('keydown', event => { if (event.key === 'Escape' && accountPanel.classList.contains('open')) closeAccountPanel(); });
+        accountModeBtn.addEventListener('click', () => {
+            accountMode = accountMode === 'login' ? 'register' : 'login';
+            document.getElementById('accountPassword').setAttribute('autocomplete', accountMode === 'login' ? 'current-password' : 'new-password');
+            updateAccountUi();
+            setAccountMessage(accountMode === 'register' ? 'Create an account to sync your Cinexis history and favorites.' : 'Sign in to your Cinexis account.');
+        });
+        accountForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const email = document.getElementById('accountEmail').value.trim().toLowerCase();
+            const password = document.getElementById('accountPassword').value;
+            accountSubmitBtn.disabled = true;
+            setAccountMessage(accountMode === 'register' ? 'Creating your account…' : 'Signing in…');
+            try {
+                const endpoint = accountMode === 'register' ? '/api/auth/register' : '/api/auth/login';
+                const { user } = await apiRequest(endpoint, { method: 'POST', body: JSON.stringify({ email, password }) });
+                accountSession = user;
+                accountReady = false;
+                accountNoticeShown = false;
+                updateAccountUi();
+                const loaded = await loadSignedInAccountData(true);
+                if (!loaded) throw new Error('Account data could not be synced. Please try again.');
+                setAccountMessage('Signed in. Watch history and favorites are synced to your account.', 'success');
+                showAccountNotice('Signed in. Your favorites and watch history are syncing across devices.', 'success');
+                setTimeout(() => { accountBanner.classList.remove('show'); }, 3500);
+                document.getElementById('accountPassword').value = '';
+                closeAccountPanel();
+            } catch (error) {
+                setAccountMessage(error.message || 'Could not sign in. Please try again.', 'error');
+            } finally {
+                accountSubmitBtn.disabled = false;
+            }
+        });
+        accountSignOutBtn.addEventListener('click', async () => {
+            try { await apiRequest('/api/auth/logout', { method: 'POST', body: '{}' }); } catch (_) {}
+            accountSession = null;
+            accountData = { watchHistory: [], favorites: [] };
+            favoriteMovies.clear();
+            favoriteMovieDetails.clear();
+            updateAccountUi();
+            setAccountMessage('You are signed out. Local browsing and playback are still available.');
+            renderWatchHistory();
+            renderHomeShelves();
+            applyCatalogFilters();
+        });
+        refreshSiteUsageBtn.addEventListener('click', registerSiteVisit);
+
         // Init App
         populateYearFilter();
         initYearPills();
         renderWatchHistory();
         renderHomeShelves();
         loadMovies(2026);
+        updateAccountUi();
+        checkAccountSession();
+        registerSiteVisit();
+        setInterval(registerSiteVisit, 60 * 1000);
         const initialPlayerRoute = readPlayerRoute();
         if (initialPlayerRoute?.title) {
             playerRouteActive = true;
